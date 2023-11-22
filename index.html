@@ -77,7 +77,7 @@
   
   <div class="article-meta">
     <a href="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/" class="article-date">
-  <time datetime="2023-11-22T08:59:05.000Z" itemprop="datePublished">2023-11-22</time>
+  <time datetime="2023-11-22T09:42:08.000Z" itemprop="datePublished">2023-11-22</time>
 </a>
     
     
@@ -88,10 +88,9 @@
     
     <div class="article-content article-content-cloud" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h2 id="1-实验目的"><a href="#1-实验目的" class="headerlink" title="1 实验目的"></a>1 实验目的</h2><p><img src="/%5Cwsl.localhost%5CUbuntu-22.04%5Chome%5Cwingee%5Cw1ngee%5Cwingee%5Csource_posts%5C1.png" alt="1"></p>
+        <h2 id="1-实验目的"><a href="#1-实验目的" class="headerlink" title="1 实验目的"></a>1 实验目的</h2><p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png" alt="1"></p>
 <h2 id="2-实验原理："><a href="#2-实验原理：" class="headerlink" title="2 实验原理："></a>2 实验原理：</h2><p>将上学期写过的单周期CPU改为流水线CPU，并实现5级stall。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，实现指令的执行并与此同时<strong>大大提高CPU的运行速率。</strong></p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023014421229.png" alt="image-20231023014421229"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/2.png" alt="2"></p>
 <h2 id="3-实验步骤"><a href="#3-实验步骤" class="headerlink" title="3 实验步骤"></a>3 实验步骤</h2><h3 id="3-1-SCPU-to-PipeLine"><a href="#3-1-SCPU-to-PipeLine" class="headerlink" title="3-1 SCPU to PipeLine"></a>3-1 SCPU to PipeLine</h3><p>由上述原理图可以看到，我们在SCPU中使用的许多模块在PipeLine中仍然需要用到，且这些模块的内部结构并未发生很大变化。</p>
 <p>所以为将SCPU改写成PipeLine首先要明确Pipeline的每个阶段所要用到的模块。</p>
 <p>同时我们注意到除了各个阶段的划分，Pipeline中<strong>还添加了四个阶段间寄存器</strong>分别为：</p>
@@ -180,9 +179,9 @@ emperor7 .-> EXE;</pre>
 </li>
 </ul>
 <p>类似于上面展示出的IFID阶段间寄存器，我们可以写出IDEXE, EXEMEM, MEMWB。代码在此不表~</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023023739091.png" alt="image-20231023023739091"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/3.png" alt="image-20231023023739091"></p>
 <h4 id="3-1-3-阶段间寄存器与模块间布局引线"><a href="#3-1-3-阶段间寄存器与模块间布局引线" class="headerlink" title="3-1-3 阶段间寄存器与模块间布局引线"></a>3-1-3 阶段间寄存器与模块间布局引线</h4><p>嗯，在这个部分嘛，我们需要在通过阶段间寄存器把阶段与阶段的模块之间连上线。各个阶段间需要传递的数据主要是：</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023024512543.png" alt="image-20231023024512543"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/4.png" alt="image-20231023024512543"></p>
 <ul>
 <li>IF -&gt;ID : pc, inst</li>
 <li>ID -&gt; EXE: rs1, rs2, op_code, control, pc , inst, rd</li>
@@ -200,7 +199,7 @@ emperor7 .-> EXE;</pre>
 
 <p>各种信号在每次时钟信号上升沿进行传递，在其他时间隔离，保证了阶段与阶段间指令处理的独立性。</p>
 <p>按照上述IDEXE的信号传递逻辑对IFID, EXEMEM, MEMWB三模块进行模块内外的布局引线。</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023151934792.png" alt="image-20231023151934792"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/5.png" alt="image-20231023151934792"></p>
 <h3 id="3-2-Stall-and-Flush"><a href="#3-2-Stall-and-Flush" class="headerlink" title="3-2 Stall and Flush"></a>3-2 Stall and Flush</h3><p>在Pipeline中，冲突是非常常见的现象，具体分为以下几类：</p>
 <ul>
 <li><strong>结构冲突</strong>：是指令在重叠执行的过程中，硬件资源满足不了指令重叠执行的要求，发生硬件资源冲突而产生的冲突。</li>
@@ -381,27 +380,26 @@ MEM --> DataTrunc;</pre>
 <h2 id="4-仿真与上板测试："><a href="#4-仿真与上板测试：" class="headerlink" title="4 仿真与上板测试："></a>4 仿真与上板测试：</h2><p><strong>现在我们已经完成了所有Pipeline的模块编写，下面开始测试：</strong></p>
 <h3 id="4-1-仿真测试："><a href="#4-1-仿真测试：" class="headerlink" title="4-1 仿真测试："></a>4-1 仿真测试：</h3><p>将lab1文件夹中的v文件移至上学期的lab5文件夹并执行<code>make TESTCASE=full</code>样例测试：</p>
 <p>pass~</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023181648041.png" alt="image-20231023181648041"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/6.png" alt="image-20231023181648041"></p>
 <h4 id="4-2-上板测试："><a href="#4-2-上板测试：" class="headerlink" title="4-2 上板测试："></a>4-2 上板测试：</h4><p>拨下debug开关，观察pc_WB，数值为9A8，pass~</p>
-<img src="C:\Users\Wingee\Documents\WeChat Files\wxid_xwp62x3o5hlw22\FileStorage\Temp\bc35a2dad5170ed796d1911aa55271a.jpg" alt="bc35a2dad5170ed796d1911aa55271a" style="zoom:50%;" />
-
-<h2 id="5-Questions"><a href="#5-Questions" class="headerlink" title="5 Questions"></a>5 Questions</h2><p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023182339155.png" alt="image-20231023182339155"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/7.jpg" alt="image-20231023181648041"></p>
+<h2 id="5-Questions"><a href="#5-Questions" class="headerlink" title="5 Questions"></a>5 Questions</h2><p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/6.png" alt="image-20231023182339155">8.png)</p>
 <h3 id="5-1-Test1-CPI"><a href="#5-1-Test1-CPI" class="headerlink" title="5-1 Test1 CPI"></a>5-1 Test1 CPI</h3><p>代码段如下，起始pc &#x3D; 0xc ，结束pc &#x3D; 0x24</p>
 <div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAINTEXT"><figure class="iseeu highlight /plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">000000000000000c &lt;fibonacci&gt;:</span><br><span class="line">   c:	002081b3          	add	gp,ra,sp</span><br><span class="line">  10:	003100b3          	add	ra,sp,gp</span><br><span class="line">  14:	00308133          	add	sp,ra,gp</span><br><span class="line">  18:	fff20213          	addi	tp,tp,-1</span><br><span class="line">  1c:	fe4018e3          	bne	zero,tp,c &lt;fibonacci&gt;</span><br><span class="line">  20:	63d00293          	addi	t0,zero,1597</span><br><span class="line">  24:	0c511e63          	bne	sp,t0,100 &lt;fail&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <h4 id="5-1-2-PipeLine-CPU"><a href="#5-1-2-PipeLine-CPU" class="headerlink" title="5-1-2 PipeLine CPU"></a>5-1-2 PipeLine CPU</h4><p>使用Pipeline CPU运行syn.hex，<code>make wave</code>观察仿真波形，调取test1处的的波段，<strong>计算运行的周期数（T）和指令条数（N）</strong>，算出CPI。</p>
 <p>起始时间$Start_time&#x3D;23ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023195135453.png" alt="image-20231023195135453"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/9.png" alt="image-20231023195135453">9.png)</p>
 <p>结束时间$Finish_time&#x3D;201ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023195337350.png" alt="image-20231023195337350"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/10.png" alt="image-20231023195337350"></p>
 <p>周期数 $T &#x3D; \frac{Finish_time - Start_time}{2ps} &#x3D; 89$</p>
 <p>共执行的指令条数 $N &#x3D; 27$</p>
 <p>所以<br>$$<br>CPI_{pipeline} &#x3D; \frac{T}{N} &#x3D; 3.296<br>$$</p>
 <h4 id="5-1-3-SCPU"><a href="#5-1-3-SCPU" class="headerlink" title="5-1-3 SCPU"></a>5-1-3 SCPU</h4><p>使用SCPU 运行syn.hex， <code>make wave</code>观察仿真波形，调取test1处的的波段，<strong>计算运行的周期数（T）和指令条数（N）</strong>，算出CPI。</p>
 <p>起始时间$Start_time &#x3D; 17ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023183034058.png" alt="image-20231023183034058"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/11.png" alt="image-20231023183034058"></p>
 <p>结束时间$Finish_time&#x3D;71ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023183216110.png" alt="image-20231023183216110"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/12.png" alt="image-20231023183216110"></p>
 <p>周期数 $T &#x3D; \frac{Finish_time - Start_time}{2ps} &#x3D; 27$</p>
 <p>共执行的指令条数 $N &#x3D; 27$</p>
 <p>所以<br>$$<br>CPI_{scpu} &#x3D; \frac{T}{N} &#x3D; 1<br>$$<br>综上$CPI_{pipeline} &#x2F; CPI_{scpu} &#x3D; 3.296$</p>
@@ -410,17 +408,17 @@ MEM --> DataTrunc;</pre>
 
 <h4 id="5-2-2-PipeLine-CPU"><a href="#5-2-2-PipeLine-CPU" class="headerlink" title="5-2-2 PipeLine CPU"></a>5-2-2 PipeLine CPU</h4><p>使用Pipeline CPU运行syn.hex，<code>make wave</code>观察仿真波形，调取test1处的的波段，<strong>计算运行的周期数（T）和指令条数（N）</strong>，算出CPI。</p>
 <p>起始时间$Start_time&#x3D;187ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023201537456.png" alt="image-20231023201537456"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/13.png" alt="image-20231023201537456"></p>
 <p>结束时间$Finish_time&#x3D;323ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023201558445.png" alt="image-20231023201558445"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/14.png" alt="image-20231023201558445"></p>
 <p>周期数 $T &#x3D; \frac{Finish_time - Start_time}{2ps} &#x3D; 68$</p>
 <p>共执行的指令条数 $N &#x3D; 26$</p>
 <p>所以<br>$$<br>CPI_{pipeline} &#x3D; \frac{T}{N} &#x3D; 2.615<br>$$</p>
-<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="5-2-3-SCPU"><a href="#5-2-3-SCPU" class="headerlink" title="5-2-3 SCPU"></a>5-2-3 SCPU</h4><p>使用SCPU 运行syn.hex， <code>make wave</code>观察仿真波形，调取test1处的的波段，<strong>计算运行的周期数（T）和指令条数（N）</strong>，算出CPI。</p>
+<h4 id="5-2-3-SCPU"><a href="#5-2-3-SCPU" class="headerlink" title="5-2-3 SCPU"></a>5-2-3 SCPU</h4><p>使用SCPU 运行syn.hex， <code>make wave</code>观察仿真波形，调取test1处的的波段，<strong>计算运行的周期数（T）和指令条数（N）</strong>，算出CPI。</p>
 <p>起始时间$Start_time&#x3D;71ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023194035203.png" alt="image-20231023194035203"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/15.png" alt="image-20231023194035203"></p>
 <p>结束时间$Finish_time&#x3D;123ps$</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023194134229.png" alt="image-20231023194134229"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/16.png" alt="image-20231023194134229"></p>
 <p>周期数 $T &#x3D; \frac{Finish_time - Start_time}{2ps} &#x3D; 26$</p>
 <p>共执行的指令条数 $N &#x3D; 26$</p>
 <p>所以<br>$$<br>CPI_{scpu} &#x3D; \frac{T}{N} &#x3D; 1<br>$$<br>综上$CPI_{pipeline} &#x2F; CPI_{scpu} &#x3D; 2.615$</p>
@@ -508,22 +506,22 @@ MEM --> DataTrunc;</pre>
 </ul>
 <p><strong>结论：辩证地来看，我们需要根据实际的硬件环境来决定是否要采用Bram来实现寄存器组。</strong></p>
 <h3 id="5-7-关键路径"><a href="#5-7-关键路径" class="headerlink" title="5-7 关键路径"></a>5-7 关键路径</h3><p>打开vivado，综合，打开 Time summary</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231023235900520.png" alt="image-20231023235900520"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/17.png" alt="image-20231023235900520"></p>
 <p>找到slack最短的Path，即Path1, 此路径即为Pipeline的关键路径。看到时延$Total Delay&#x3D;11.646$</p>
 <blockquote>
 <p>在计算机体系结构中，”slack”（松弛时间）是指指令流水线中的额外等待时间。它表示在特定情况下，由于冲突或其他原因，流水线中的某些阶段需要等待以便继续执行。</p>
 <p>Slack的存在是由于指令流水线中的依赖关系和冲突。当一个指令需要等待之前的指令完成某个操作（如读取数据）时，就会产生松弛时间。这可能是由于数据冲突、控制冲突、结构冲突或资源冲突等原因引起的</p>
 </blockquote>
 <p>将该路径用电路图展示出来：</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231024000051687.png" alt="image-20231024000051687"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/18.png" alt="image-20231024000051687"></p>
 <p>对该电路图进行分析：…….</p>
 <p>好吧分析不了一点根本看不明白是啥，而且这好像不是一条从IF到WB的完整通路，而是中间的一段回路？</p>
 <p>该Path从ID_EXE阶段间寄存器起始，将rs1的值传入ALU_result_MEM，接着生成br_taken。</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231024000110255.png" alt="image-20231024000110255"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/19.png" alt="image-20231024000110255"></p>
 <p>之后br_taken有传给EXE。。。。（这信号不是从EXE传出去的么，and为什么ALU_result_MEM会传给EXE，，这玩应不也是EXE传出去的么。。。）</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231024000329090.png" alt="image-20231024000329090"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/20.png" alt="image-20231024000329090"></p>
 <p>之后，，好像到了IF。。。？嗯。。好像把什么莫名其妙的东西传给了IF阶段的pc。。。</p>
-<p><img src="C:\Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231024000621927.png" alt="image-20231024000621927"></p>
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/21.png" alt="image-20231024000621927"></p>
 <p>好的，不妨让我们大胆猜测一下这是<strong>Pipeline在EXE阶段处理一条跳转指令。</strong></p>
 <ul>
 <li><p><strong>EXE阶段产判断跳转指令的跳转条件，并生成br_taken信号</strong></p>
