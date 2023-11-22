@@ -39,7 +39,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/20.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/21.png">
 <meta property="article:published_time" content="2023-11-22T09:42:08.000Z">
-<meta property="article:modified_time" content="2023-11-22T13:55:27.735Z">
+<meta property="article:modified_time" content="2023-11-22T16:31:16.293Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="计算机系统II">
 <meta name="twitter:card" content="summary">
@@ -334,9 +334,7 @@ emperor7 .-&gt; EXE;</pre>
 <ul>
 <li><strong>结构冲突</strong>：是指令在重叠执行的过程中，硬件资源满足不了指令重叠执行的要求，发生硬件资源冲突而产生的冲突。</li>
 </ul>
-<blockquote>
 <p>但在我们写的MIPS流水，使用stall方案来解决，不存在结构冲突，由此结构冲突的内容及解决方案在此不表。</p>
-</blockquote>
 <ul>
 <li><strong>数据冲突</strong>：是指在同时重叠执行的几条指令中，一条指令依赖于前面指令执行结果数据，但是又得不到时发生的冲突。</li>
 <li><strong>控制冲突</strong>：它是指流水线中的分支指令或者其他需要改写PC的指令造成的冲突。</li>
@@ -350,9 +348,7 @@ emperor7 .-&gt; EXE;</pre>
 <p><strong>通俗来讲，也就是我们所说的吞指令。</strong></p>
 <p>但在我们的MIPS指令流水中<strong>并不会发生WAW冲突，只有RAW冲突。</strong></p>
 <h4 id="3-2-2-控制冲突"><a href="#3-2-2-控制冲突" class="headerlink" title="3-2-2 控制冲突"></a>3-2-2 控制冲突</h4><p>控制冲突主要发生在 <code>bne,beq,jal,jalr</code>等跳转指令的执行过程中。</p>
-<blockquote>
 <p>在我们所写的MIPS指令流水中，默认把跳转判断放在EXE阶段进行。当然该判断可以放在EXE之后的任何阶段，只不过需要bubble次数更多，CPU性能会有所下降而已~</p>
-</blockquote>
 <p>当EXE阶段判断指令跳转时，需要更改pcIF为跳转的pc，并将IF, ID的现处理指令flush掉。</p>
 <h4 id="3-2-3-RaceControl"><a href="#3-2-3-RaceControl" class="headerlink" title="3-2-3 RaceControl"></a>3-2-3 RaceControl</h4><p><strong>那么为了解决数据冲突和控制冲突，我们需要两个信号去控制阶段间寄存器，让他们在本拍内：</strong></p>
 <ul>
@@ -410,9 +406,7 @@ ADD .-&gt; rd .-&gt; WB .-&gt; x1;</pre>
 <ul>
 <li>RaceControl触发，ID_EXE_STALL，IF_ID_STALL，PC_STALL</li>
 </ul>
-<blockquote>
 <p>因为停ID不能只停ID，前面的所有阶段都要等待EXE，MEM，WB走完，所以当IDstall的时候IF, PC也不能走。</p>
-</blockquote>
 <pre class="mermaid">graph LR;
 RaceControl -.Stall.-&gt; IF --&gt; O(NOP);
 RaceControl -.Stall.-&gt; ID --&gt; SUB;
