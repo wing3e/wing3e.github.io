@@ -10,12 +10,12 @@
   
   
   
-  <meta name="description" content="1 实验目的 2 实验原理：将上学期写过的单周期CPU改为流水线CPU，并实现5级stall。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，实现指令的执行并与此同时大大提高CPU的运行速率。  3 实验步骤3-1 SCPU to PipeLine由上述原理图可以看到，我们在SCPU中使用的许多模块在PipeLine中仍然需要用到，且这些模块的内部结构并未发生很大变化。 所以为将">
+  <meta name="description" content="1 实验目的在这个实验中我们要实现Pipeline——流水线CPU">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Computer System II Lab1 ：基于Stall的五级流水线">
 <meta property="og:url" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1 实验目的 2 实验原理：将上学期写过的单周期CPU改为流水线CPU，并实现5级stall。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，实现指令的执行并与此同时大大提高CPU的运行速率。  3 实验步骤3-1 SCPU to PipeLine由上述原理图可以看到，我们在SCPU中使用的许多模块在PipeLine中仍然需要用到，且这些模块的内部结构并未发生很大变化。 所以为将">
+<meta property="og:description" content="1 实验目的在这个实验中我们要实现Pipeline——流水线CPU">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/2.png">
@@ -39,7 +39,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/20.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/21.png">
 <meta property="article:published_time" content="2023-11-22T09:42:08.000Z">
-<meta property="article:modified_time" content="2023-11-22T09:47:08.167Z">
+<meta property="article:modified_time" content="2023-11-22T09:59:30.807Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png">
@@ -116,7 +116,10 @@
     
     <div class="article-content article-content-cloud" itemprop="articleBody">
       
-        <h2 id="1-实验目的"><a href="#1-实验目的" class="headerlink" title="1 实验目的"></a>1 实验目的</h2><p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png" alt="1"></p>
+        <h2 id="1-实验目的"><a href="#1-实验目的" class="headerlink" title="1 实验目的"></a>1 实验目的</h2><p>在这个实验中我们要实现Pipeline——流水线CPU</p>
+<span id="more"></span>
+
+<p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png" alt="1"></p>
 <h2 id="2-实验原理："><a href="#2-实验原理：" class="headerlink" title="2 实验原理："></a>2 实验原理：</h2><p>将上学期写过的单周期CPU改为流水线CPU，并实现5级stall。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，实现指令的执行并与此同时<strong>大大提高CPU的运行速率。</strong></p>
 <p><img src="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/2.png" alt="2"></p>
 <h2 id="3-实验步骤"><a href="#3-实验步骤" class="headerlink" title="3 实验步骤"></a>3 实验步骤</h2><h3 id="3-1-SCPU-to-PipeLine"><a href="#3-1-SCPU-to-PipeLine" class="headerlink" title="3-1 SCPU to PipeLine"></a>3-1 SCPU to PipeLine</h3><p>由上述原理图可以看到，我们在SCPU中使用的许多模块在PipeLine中仍然需要用到，且这些模块的内部结构并未发生很大变化。</p>
