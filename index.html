@@ -32,7 +32,119 @@
   
 <link rel="stylesheet" href="/css/highlight.css">
 
-<meta name="generator" content="Hexo 7.0.0"></head>
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
 <body>
   <div id="fullpage" class="mobile-nav-right">
@@ -63,6 +175,46 @@
       <div id="middlecontent" title class="global-width sidebar-right">
         <section id="main">
   
+    <article id="post-Computer-System-II-Lab-2-：Forwarding-及-AXI4-lite-总线内存模型" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">Computer System II Lab2 ：Forwarding 及 AXI4-lite 总线内存模型</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="article-date">
+  <time datetime="2023-11-22T11:56:35.000Z" itemprop="datePublished">2023-11-22</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h3 id="引言："><a href="#引言：" class="headerlink" title="引言："></a>引言：</h3><p>在lab1的流水线CPU中，我们通过stall去解决指令与指令之间存在的数据冲突，但如果指令中存在的冲突过多，就会因为大量的stall而使CPU的CPI降低。且在本实验中，要将Core和RAM模块用总线加以连接，为满足Axi_liteCore在等待RAM的返回值时对Core中冲突控制的接管，我们需要将数据冲突用另一种方式去解决。<br></p>
+        
+          <p class="article-more-link">
+            <a href="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/#more">阅读全文</a>
+          </p>
+        
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
     <article id="post-Computer-System-II-Lab1-：基于Stall的五级流水线" class="article global-container article-type-post" itemscope itemprop="blogPost">
   
     <header class="article-header">
@@ -88,7 +240,7 @@
     
     <div class="article-content article-content-cloud" itemprop="articleBody">
       
-        <h2 id="1-实验目的"><a href="#1-实验目的" class="headerlink" title="1 实验目的"></a>1 实验目的</h2><p>在这个实验中我们要实现Pipeline——流水线CPU</p>
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>单周期CPU固然可以顺序，安全地执行指令，但不可否认的是会有大量时间的浪费。本实验将单周期CPU优化为基于stall的流水线CPU。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，并通过一些手段避免冲突，在安全执行指令的同时，大大提高CPU的运行效率。<br></p>
         
           <p class="article-more-link">
             <a href="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/#more">阅读全文</a>
@@ -147,6 +299,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">Computer System II Lab2 ：Forwarding 及 AXI4-lite 总线内存模型</a>
+          </li>
         
           <li>
             <a href="/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/">Computer System II Lab1 ：基于Stall的五级流水线</a>
@@ -216,5 +372,20 @@ document.body.write(script);
   <div class="mobile-nav-img  mobile-nav-bottom"></div>
 </nav>    
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
