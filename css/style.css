@@ -180,7 +180,7 @@ html, body, #fullpage{
   /* display: none; */
 }
 #wrapper {
-  background-image: url('../images/bg.jpg');
+  background-image: url('../images/bg2.png');
   background-color: #C7C9EA;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -219,10 +219,12 @@ html, body, #fullpage{
 #header {
   position: relative;
   height: 50px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, .3)
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .3);
+  background-color: white;
 }
 
 .head-box {
+
 }
 .nav-box {
   display: flex;
@@ -337,7 +339,10 @@ html, body, #fullpage{
   border-radius: 100%;
 }
 .avatar-name {
-  writing-mode: vertical-lr
+  writing-mode: vertical-lr;
+  font-size: large;
+  position: relative;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 .avatar-slogan {
   writing-mode: vertical-lr;
