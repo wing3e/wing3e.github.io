@@ -39,7 +39,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/20.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/21.png">
 <meta property="article:published_time" content="2023-11-22T09:42:08.000Z">
-<meta property="article:modified_time" content="2023-11-22T16:36:10.733Z">
+<meta property="article:modified_time" content="2023-11-22T16:38:27.213Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="计算机系统II">
 <meta name="twitter:card" content="summary">
@@ -268,7 +268,7 @@ emperor7 .-&gt; EXE;</pre>
 <p><strong>请注意！在这里我将Mux选择（寄存器or立即数）与Immgen解码均放在ID部分，ID传给EXE的只有数据和op_code。这个更改将贯通Pipeline的始终。</strong></p>
 <p>具体解释一下：</p>
 <ul>
-<li>RAM：RAM中有数据段也有内存段，所以使用RAM结构的有两个阶段，分别是IF和MEM。但两者并不冲突：</li>
+<li>RAM：RAM中有数据段也有内存段，所以使用RAM结构的有两个阶段，分别是IF和MEM：</li>
 </ul>
 <div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">RAM ram( <span class="comment">// 时序电路，均为时钟上升沿读写。</span></span><br><span class="line">    <span class="variable">.clk</span>(clk),  </span><br><span class="line">    <span class="variable">.rstn</span>(rstn),</span><br><span class="line">    <span class="variable">.rw_wmode</span>(rw_wmode), <span class="comment">//mem </span></span><br><span class="line">    <span class="variable">.rw_addr</span>(addr_out&gt;&gt;<span class="number">3</span>), <span class="comment">//mem</span></span><br><span class="line">    <span class="variable">.rw_wdata</span>(rw_wdata), <span class="comment">//mem</span></span><br><span class="line">    <span class="variable">.rw_wmask</span>(mask_offset), <span class="comment">//mem</span></span><br><span class="line">    <span class="variable">.rw_rdata</span>(Ram_to_Path_temp), <span class="comment">//mem</span></span><br><span class="line">    <span class="variable">.ro_addr</span>(((npc_sel_EXE)?pc_in:((IF_stall)?pc_IF:(pc_IF+<span class="number">4</span>)))&gt;&gt;<span class="number">3</span>),  <span class="comment">//IF</span></span><br><span class="line">    <span class="variable">.ro_rdata</span>(inst_temp)  <span class="comment">//IF</span></span><br><span class="line">); </span><br></pre></td></tr></table></figure></div>
 <p><strong>可以看到对于接口来讲，MEM和IF并不冲突，且均在时钟上升沿进行取指令or读写内存，所以可以很好地共用RAM结构。</strong></p>
@@ -276,9 +276,8 @@ emperor7 .-&gt; EXE;</pre>
 <li>Regs：Regs结构需要用的阶段有WB（写回），ID译码。两者也不冲突，代码如下：</li>
 </ul>
 <div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Regs register( <span class="comment">//Regs模块</span></span><br><span class="line">    <span class="variable">.clk</span>(clk),</span><br><span class="line">    <span class="variable">.rst</span>(rstn),</span><br><span class="line">    <span class="variable">.we</span>(reg_write),</span><br><span class="line">    <span class="variable">.read_addr_1</span>(inst_ID[<span class="number">19</span>:<span class="number">15</span>]), <span class="comment">// ID</span></span><br><span class="line">    <span class="variable">.read_addr_2</span>(inst_ID[<span class="number">24</span>:<span class="number">20</span>]), <span class="comment">// ID</span></span><br><span class="line">    <span class="variable">.write_addr</span>(inst_WB[<span class="number">11</span>:<span class="number">7</span>]), <span class="comment">// WB</span></span><br><span class="line">    <span class="variable">.write_data</span>(Ram_to_Path), <span class="comment">// WB</span></span><br><span class="line">    <span class="variable">.read_data_1</span>(read_data_1), <span class="comment">// ID</span></span><br><span class="line">    <span class="variable">.read_data_2</span>(read_data_2), <span class="comment">// ID</span></span><br><span class="line">    <span class="variable">.debug_reg</span>(debug_reg), <span class="comment">// ?</span></span><br><span class="line">    <span class="variable">.fin_reg</span>(fin_reg) <span class="comment">// ?</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
-<p>对于接口来讲，二者并不冲突。</p>
-<p>但请注意，<strong>在Regs内部，WB的数据协会是通过时序电路控制的，也就是说，仅在时钟上升沿进行数据的传入写回</strong>。</p>
-<p><strong>而ID的译码，即访问寄存器中数值是通过组合电路进行的，也就是说二者的写回和读取有可能不同步</strong>。由于我们将实验指导中推荐放在EXE阶段的MUX和Immgen均放在了ID阶段，所以这里需要特别注意，尤其是后期加入stall控制拍数的时候。</p>
+<p>但请注意，<strong>在Regs内部，WB的数据写回是通过时序电路控制的，也就是说，仅在时钟上升沿进行数据的传入写回</strong>。</p>
+<p><strong>而ID的译码，即访问寄存器中数值，是通过组合电路进行的，也就是说二者的写回和读取有可能不同步</strong>。由于我们将实验指导中推荐放在EXE阶段的MUX和Immgen均放在了ID阶段，所以这里需要特别注意，尤其是后期加入stall控制拍数的时候。</p>
 <p>剩下的结构就没什么好说的了：</p>
 <ul>
 <li>Control：对传入ID阶段的指令进行译码。</li>
