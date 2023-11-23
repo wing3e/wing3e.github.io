@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/14.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/15.png">
 <meta property="article:published_time" content="2023-11-22T11:56:35.000Z">
-<meta property="article:modified_time" content="2023-11-22T13:55:35.345Z">
+<meta property="article:modified_time" content="2023-11-23T07:44:04.234Z">
 <meta property="article:tag" content="计算机系统II">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/1.png">
@@ -242,8 +242,10 @@ Forwarding_unit -.处理.-&gt; Data_hazard;</pre>
 <pre class="mermaid">graph LR;
 Pipeline --&gt; Core;
 Pipeline --&gt; RAM;
-RAM --&gt; ro_addr --&gt; ro_rdata;
-RAM --&gt; rw_addr --&gt; rw_wdata;</pre>
+RAM --&gt; ro_addr;
+ro_addr --&gt; ro_rdata;
+RAM --&gt; rw_addr;
+rw_addr --&gt; rw_wdata;</pre>
 
 <p>但在我们的AX14-lite总线内存模型时，RAM只有一个接口，且Core与RAM的数据传输通过axi-lite协议，数据传输间隔不止一个时钟周期：</p>
 <p><img src="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/2.png" alt="2"></p>
@@ -260,12 +262,18 @@ RAM --&gt; rw_addr --&gt; rw_wdata;</pre>
 <li><p>由L型指令通过访存读取出来的rw_rdata</p>
 <p>  在MEM阶段读出的rw_rdata会在下一时钟周期传输到WB阶段，实际上WB阶段不会进行访存，但该数据的来源仍然是RAM并非ALU，在本人的Pipeline中需要在WB阶段将这两种数据来源分开考虑，在本实验报告中将WB阶段来自MEM阶段的rw_rdata成为WB阶段的rw_rdata。</p>
 <pre class="mermaid">  graph LR;
-O((Data_Select)) --&gt; rs1 --&gt; EXE;
-O --&gt; rs2 --&gt; EXE;
-MEM --&gt; ALU_result_MEM --&gt; O;
-MEM --&gt; rw_rdata_MEM --&gt; O;
-WB --&gt; P(ALU_result_WB) --&gt; O;
-WB --&gt; rw_rdata_WB --&gt; O</pre>
+O((Data_Select)) --&gt; rs1;
+rs1 --&gt; EXE;
+O --&gt; rs2;
+rs2 --&gt; EXE;
+MEM --&gt; ALU_result_MEM;
+ALU_result_MEM --&gt; O;
+MEM --&gt; rw_rdata_MEM;
+rw_rdata_MEM --&gt; O;
+WB --&gt; P(ALU_result_WB);
+P(ALU_result_WB) --&gt; O;
+WB --&gt; rw_rdata_WB;
+rw_rdata_WB --&gt; O;</pre>
 
 
 
@@ -595,6 +603,14 @@ document.body.write(script);
 
 
 
+
+
+  <script src='https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({theme: 'forest'});
+    }
+  </script>
 
     </div>
     <nav id="mobile-nav" class="mobile-nav-box">
