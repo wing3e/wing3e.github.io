@@ -105,9 +105,9 @@
 }
 .article-content pre,
 .article-content .highlight {
-  background: #282C34;
+  background: #ffffff;
   overflow: auto;
-  color: #ABB2BF;
+  color: #0d0f05;
   line-height: 22px;
 }
 
@@ -121,6 +121,7 @@
 }
 .article-content pre,
 .article-content code {
+  background-color: white;
   font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
 }
 .article-content code {
@@ -129,7 +130,7 @@
   padding: 0 0.3em;
 }
 .article-content pre code {
-  background: none;
+  background: white;
   text-shadow: none;
   padding: 0;
 }
