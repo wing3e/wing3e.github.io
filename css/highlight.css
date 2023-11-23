@@ -105,6 +105,7 @@
 }
 .article-content pre,
 .article-content .highlight {
+  
   background: #ffffff;
   overflow: auto;
   color: #0d0f05;
@@ -121,6 +122,7 @@
 }
 .article-content pre,
 .article-content code {
+  opacity: 0.7;
   background-color: white;
   font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
 }

@@ -362,8 +362,8 @@ html, body, #fullpage{
   margin-bottom: 50px;
 }
 .article-title {
-  
-  font-size: 1.7em;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 .article-meta {
   display: flex;
@@ -400,10 +400,10 @@ html, body, #fullpage{
   line-height: 1.5;
 }
 .article-content h2{
-  font-size: 1.8em;
+  font-size: 1.7em;
 }
 .article-content h3{
-  font-size: 1.6em;
+  font-size: 1.5em;
 }
 .article-content h4{
   font-size: 1.3em;
