@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/14.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/15.png">
 <meta property="article:published_time" content="2023-11-22T11:56:35.000Z">
-<meta property="article:modified_time" content="2023-11-23T07:44:04.234Z">
+<meta property="article:modified_time" content="2023-11-23T07:50:58.284Z">
 <meta property="article:tag" content="计算机系统II">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/1.png">
@@ -446,13 +446,6 @@ CPI_{forwarding} = \frac{T}{N} = 9.4539....</script><ul>
 <li><p><strong>br_taken信号指挥调度IF阶段的pc为跳转之后的pc。</strong></p>
 </li>
 </ul>
-<pre class="mermaid">graph LR;
-EXE --&gt; o(br_taken);
-o --&gt; L((RaceControl)) -.flush.-&gt;IFID;
-L -.flush.-&gt; IDEXE;
-o --&gt; IF -.-&gt; pc_jump;
-EXE --&gt; ALU -.-&gt; pc_jump;
-o -.-&gt; K((AXI-liteMEM)) -.-&gt; inst_jump -.-&gt; IF;</pre>
 
       
     </div>
@@ -625,5 +618,20 @@ document.body.write(script);
   <div class="mobile-nav-img  mobile-nav-bottom"></div>
 </nav>    
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
