@@ -118,6 +118,7 @@
   font-size: 0.85em;
 }
 .article-content img {
+  opacity: 0.85;
   max-width: 100%;
 }
 .article-content pre,
