@@ -73,8 +73,8 @@ figure {
   outline: 0;
   font-weight: inherit;
   font-style: inherit;
-  font-family: inherit;
-  font-size: 100%;
+  font-family: "fangsong";
+  font-size: 102%;
   vertical-align: baseline;
 }
 * {
@@ -362,6 +362,7 @@ html, body, #fullpage{
   margin-bottom: 50px;
 }
 .article-title {
+  
   font-size: 1.7em;
 }
 .article-meta {
@@ -395,20 +396,20 @@ html, body, #fullpage{
   margin: 1.1em 0;
 }
 .article-content h1{
-  font-size: 1.7em;
+  font-size: 2.0em;
   line-height: 1.5;
 }
 .article-content h2{
-  font-size: 1.5em;
+  font-size: 1.8em;
 }
 .article-content h3{
-  font-size: 1.17em;
+  font-size: 1.6em;
 }
 .article-content h4{
-  font-size: 1em;
+  font-size: 1.3em;
 }
 .article-content h5{
-  font-size: 0.83em;
+  font-size: 1.1em;
 }
 .article-content p {
   line-height: 1.6em;
