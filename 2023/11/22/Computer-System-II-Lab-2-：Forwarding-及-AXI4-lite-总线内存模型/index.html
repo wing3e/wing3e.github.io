@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/14.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/15.png">
 <meta property="article:published_time" content="2023-11-22T11:56:35.000Z">
-<meta property="article:modified_time" content="2023-11-23T13:06:42.094Z">
+<meta property="article:modified_time" content="2023-11-23T14:33:21.254Z">
 <meta property="article:tag" content="计算机系统II">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/1.png">
@@ -342,7 +342,7 @@ rw_rdata_WB --&gt; O;</pre></li>
 <img src="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/4.png" alt><figcaption>6</figcaption>
 </figure>
 <p>由于没有了stall，1358ps就跑完了全部指令。</p>
-<p><strong>/ / /</strong></p>
+<p><strong>\遥遥领先/ \遥遥领先/ \遥遥领先/</strong></p>
 <h4 id="axi4-lite总线模型">3-2 AxI4-lite总线模型</h4>
 <h5 id="racecontrol接管">3-2-1 RaceControl接管</h5>
 <p>在Forwarding中，我们将RaceControl释放了出来，在AXI4-lite总线中，RaceControl的stall机制不再为数据冲突服务，而会被AXI_liteCore接管，<strong>解决在RAM尚未返回valid信号时，Core中指令的等待</strong>。</p>
