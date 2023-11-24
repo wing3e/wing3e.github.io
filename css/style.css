@@ -73,8 +73,8 @@ figure {
   outline: 0;
   font-weight: inherit;
   font-style: inherit;
-  font-family: "fangsong";
-  font-size: 102%;
+  
+  font-size: 100%;
   vertical-align: baseline;
 }
 * {
@@ -84,11 +84,13 @@ figure {
 menu,
 ul,
 ol {
+  font-family:"fangsong";
   list-style: none;
   margin: 0;
   padding: 0;
 }
 table {
+  font-family:"fangsong";
   border-collapse: separate;
   border-spacing: 0;
   vertical-align: middle;
@@ -117,11 +119,12 @@ button::-moz-focus-inner {
 }
 
 body{
+  font-family:"fangsong";
   line-height: 1.5;
   color: #333;
   background: #FAF3E1;
   font-size: 14px;
-  font-family: Arial, Roboto, "Droid Sans", "Hiragino Sans GB", "Microsoft YaHei", "Simsun", STXihei, "sans-serif";
+  /* font-family: Arial, Roboto, "Droid Sans", "Hiragino Sans GB", "Microsoft YaHei", "Simsun", STXihei, "sans-serif"; */
 }
 
 iframe {
@@ -523,6 +526,7 @@ html, body, #fullpage{
 }
 .article-content p,
 .article-content table {
+  font-family:"fangsong";
   line-height: 1.6em;
   margin: 1.6em 0;
 }
