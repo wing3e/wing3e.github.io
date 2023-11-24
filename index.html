@@ -178,6 +178,51 @@ mjx-container[display="true"] + br {
       <div id="middlecontent" title class="global-width sidebar-right">
         <section id="main">
   
+    <article id="post-Shamir秘密共享" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/11/24/Shamir%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB/">Secret Sharing —— 秘密共享</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2023/11/24/Shamir%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB/" class="article-date">
+  <time datetime="2023-11-24T06:26:18.000Z" itemprop="datePublished">2023-11-24</time>
+</a>
+    
+    
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag">密码学</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" rel="tag">数学建模</a></li></ul>
+
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>秘密分享（英语：Secret sharing），又称秘密拆分（英语：Secret splitting），是将秘密分散到人群的方法，每人得到秘密的一部分，称为份额（英文：Share）。只有集齐份额满足方案的要求，将其结合后，才能还原出秘密；每件份额各自则没有用途。 <br> 一种特殊的分享方案里，角色分为一名1荷官及n名玩家。荷官将秘密分配给玩家，但只有满足特定条件时，玩家可以还原出秘密。方案中每个玩家收到一件份额。只要有至少t（阈值，"threshold"）个玩家合作，就可以还原出秘密，但不足t个人则不能。这样的秘密分享方案称为(t, n)—阈值方案（有时亦写成(n, t)—阈值方案）。 <br> 本文主要介绍两种秘密共享方案——Shamir秘密共享机制，Asmuth-Bloom门限机制，以及他们各自的数学原理。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/11/24/Shamir%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB/#more">阅读全文</a>
+          </p>
+        
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
     <article id="post-Computer-System-II-Lab-2-：Forwarding-及-AXI4-lite-总线内存模型" class="article global-container article-type-post" itemscope itemprop="blogPost">
   
     <header class="article-header">
@@ -293,7 +338,7 @@ mjx-container[display="true"] + br {
   <div class="widget-box">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" rel="tag">计算机系统II</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag">密码学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" rel="tag">数学建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" rel="tag">计算机系统II</a></li></ul>
     </div>
   </div>
 
@@ -313,6 +358,10 @@ mjx-container[display="true"] + br {
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/11/24/Shamir%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB/">Secret Sharing —— 秘密共享</a>
+          </li>
         
           <li>
             <a href="/2023/11/22/Computer-System-II-Lab-2-%EF%BC%9AForwarding-%E5%8F%8A-AXI4-lite-%E6%80%BB%E7%BA%BF%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">Computer System II Lab2 ：Forwarding 及 AXI4-lite 总线内存模型</a>
@@ -405,5 +454,20 @@ document.body.write(script);
   <div class="mobile-nav-img  mobile-nav-bottom"></div>
 </nav>    
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
