@@ -353,7 +353,7 @@ html, body, #fullpage{
   writing-mode: vertical-lr;
   font-family:'Times New Roman', Times, "楷体" ;
   font-size: 2ch;
-  max-height: 250px;
+  max-height: 240px;
 }
 .global-container {
   box-shadow: 1px 2px 3px #ddd;
