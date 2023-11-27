@@ -249,7 +249,7 @@ a {
   -moz-transition: all 0.2s ease-in;
   -ms-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
-  opacity: 0.7;
+  opacity: 0.8;
   top: 10px;
   left: 10px;
   bottom: 10px;
@@ -586,7 +586,7 @@ a {
   cursor: default;
 }
 #header .header-menu li a {
-  color: #dfff00;
+  color: #fff;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 14px;
   letter-spacing: 2px;
@@ -628,7 +628,7 @@ a {
   box-shadow: 0px 0px 10px 2px #9fe2bf;
   border-radius: 40px;
   cursor: default;
-  color: #dfff00;
+  color: #fff;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 12px;
   letter-spacing: 2px;
@@ -1111,7 +1111,7 @@ a {
 .article-entry li code {
   padding: 1px 3px;
   margin: 0 3px;
-  background: #9fe2e1;
+  background: #e8e8e8;
   border: 1px solid #ccc;
   font-family: Menlo, Monaco, monospace;
   word-wrap: break-word;
@@ -1155,10 +1155,12 @@ a {
   background: #dedede;
 }
 .article-entry h1 {
+  font-weight: bold;
   margin-top: 30px;
   color: #2b6c8a;
 }
 .article-entry h2 {
+  font-weight: bold;
   margin-top: 20px;
   font-weight: 300;
   color: #2b6c8a;
@@ -1169,6 +1171,7 @@ a {
 .article-entry h4,
 .article-entry h5,
 .article-entry h6 {
+  font-weight: bold;
   margin-top: 20px;
   font-weight: 300;
   color: #2b6c8a;
