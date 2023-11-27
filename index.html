@@ -379,7 +379,7 @@ mjx-container[display="true"] + br {
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 <h3 id="引言">引言:</h3>
-<p>2023年ZJUCTF-Pwn方向部分题题解，包含5rop，welcome，nya，game，logger，drawer。考点基本在栈和数组溢出上。其中有些题目支持本地环境可以在本地复现出来，有些题目需要远程打不能复现。Pwn方向的题难度真的好大…有哪里写的不对的地方还请指出呜呜</p>
+<p>2023年ZJUCTF-Pwn方向部分题题解，包含5rop，welcome，nya，game，logger，drawer。考点基本在栈和数组溢出上。其中有些题目支持本地环境可以在本地复现出来，有些题目需要远程打不能复现。Pwn方向的题难度真的好大......有哪里写的不对的地方还请指出呜呜</p>
       
     </div>
     
@@ -443,10 +443,8 @@ mjx-container[display="true"] + br {
       
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<h3 id="引言：">引言：</h3>
-<p>秘密分享（英语：Secret sharing），又称秘密拆分（英语：Secret splitting），是将秘密分散到人群的方法，每人得到秘密的一部分，称为份额（英文：Share）。只有集齐份额满足方案的要求，将其结合后，才能还原出秘密；每件份额各自则没有用途。 <br><br>
-一种特殊的分享方案里，角色分为一名1荷官及n名玩家。荷官将秘密分配给玩家，但只有满足特定条件时，玩家可以还原出秘密。方案中每个玩家收到一件份额。只要有至少t（阈值，“threshold”）个玩家合作，就可以还原出秘密，但不足t个人则不能。这样的秘密分享方案称为(t, n)—阈值方案（有时亦写成(n, t)—阈值方案）。 <br><br>
-本文主要介绍两种秘密共享方案——Shamir秘密共享机制，Asmuth-Bloom门限机制，以及他们各自的数学原理。</p>
+<h3 id="引言">引言：</h3>
+<p>秘密分享（英语：Secret sharing），又称秘密拆分（英语：Secret splitting），是将秘密分散到人群的方法，每人得到秘密的一部分，称为份额（英文：Share）。只有集齐份额满足方案的要求，将其结合后，才能还原出秘密；每件份额各自则没有用途。 <br> 一种特殊的分享方案里，角色分为一名1荷官及n名玩家。荷官将秘密分配给玩家，但只有满足特定条件时，玩家可以还原出秘密。方案中每个玩家收到一件份额。只要有至少t（阈值，"threshold"）个玩家合作，就可以还原出秘密，但不足t个人则不能。这样的秘密分享方案称为(t, n)—阈值方案（有时亦写成(n, t)—阈值方案）。 <br> 本文主要介绍两种秘密共享方案——Shamir秘密共享机制，Asmuth-Bloom门限机制，以及他们各自的数学原理。</p>
       
     </div>
     
@@ -508,7 +506,7 @@ mjx-container[display="true"] + br {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="引言：">引言：</h2>
+        <h2 id="引言">引言：</h2>
 <p>在lab1的流水线CPU中，我们通过stall去解决指令与指令之间存在的数据冲突，但如果指令中存在的冲突过多，就会因为大量的stall而使CPU的CPI降低。且在本实验中，要将Core和RAM模块用总线加以连接，为满足Axi_liteCore在等待RAM的返回值时对Core中冲突控制的接管，我们需要将数据冲突用另一种方式去解决。</p>
       
     </div>
