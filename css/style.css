@@ -506,8 +506,8 @@ a {
 #header .profilepic {
   text-align: center;
   display: block;
-  -webkit-box-shadow: 0 0 30px 2px #9fe2bf;
-  box-shadow: 0 0 30px 2px #9fe2bf;
+  -webkit-box-shadow: 0 0 30px 2px #fff;
+  box-shadow: 0 0 30px 2px #fff;
   border-radius: 50% 20%/10% 40%;
   padding: 10px;
   -webkit-box-sizing: border-box;
@@ -580,8 +580,8 @@ a {
   -moz-box-shadow: 0px 0px 10px 2px #9fe2bf;
   -ms-box-shadow: 0px 0px 10px 2px #9fe2bf;
   -o-box-shadow: 0px 0px 10px 2px #9fe2bf;
-  -webkit-box-shadow: 0px 0px 10px 2px #9fe2bf;
-  box-shadow: 0px 0px 10px 2px #9fe2bf;
+  -webkit-box-shadow: 0px 0px 10px 2px #fff;
+  box-shadow: 0px 0px 10px 2px #fff;
   border-radius: 40px 10px;
   cursor: default;
 }
@@ -624,8 +624,8 @@ a {
   -moz-box-shadow: 0px 0px 10px 2px #9fe2bf;
   -ms-box-shadow: 0px 0px 10px 2px #9fe2bf;
   -o-box-shadow: 0px 0px 10px 2px 2BF;
-  -webkit-box-shadow: 0px 0px 10px 2px #9fe2bf;
-  box-shadow: 0px 0px 10px 2px #9fe2bf;
+  -webkit-box-shadow: 0px 0px 10px 2px #fff;
+  box-shadow: 0px 0px 10px 2px #fff;
   border-radius: 40px;
   cursor: default;
   color: #fff;
@@ -854,8 +854,8 @@ a {
   -moz-box-shadow: 0px 0px 30px 10px #76827f;
   -ms-box-shadow: 0px 0px 30px 10px #76827f;
   -o-box-shadow: 0px 0px 30px 10px #76827f;
-  -webkit-box-shadow: 0px 0px 30px 10px #76827f;
-  box-shadow: 0px 0px 30px 10px #76827f;
+  -webkit-box-shadow: 0px 0px 30px 10px #fff;
+  box-shadow: 0px 0px 30px 10px #fff;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   -ms-border-radius: 15px;
@@ -986,8 +986,8 @@ a {
   -moz-box-shadow: 0px 0px 30px 10px #76827f;
   -ms-box-shadow: 0px 0px 30px 10px #76827f;
   -o-box-shadow: 0px 0px 30px 10px #76827f;
-  -webkit-box-shadow: 0px 0px 30px 10px #76827f;
-  box-shadow: 0px 0px 30px 10px #76827f;
+  -webkit-box-shadow: 0px 0px 30px 10px #fff;
+  box-shadow: 0px 0px 30px 10px #fff;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   -ms-border-radius: 15px;
