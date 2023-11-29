@@ -40,9 +40,13 @@
 <meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231128235038399.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231128235442881.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129002257507.png">
+<meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129015803032.png">
+<meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129015924272.png">
+<meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129020835990.png">
+<meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129021859411.png">
 <meta property="og:image" content="http://47.96.29.144/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129003829830.png">
 <meta property="article:published_time" content="2023-11-28T17:30:16.000Z">
-<meta property="article:modified_time" content="2023-11-28T16:59:32.641Z">
+<meta property="article:modified_time" content="2023-11-29T05:45:21.052Z">
 <meta property="article:tag" content="ZJUCTF">
 <meta property="article:tag" content="Reverse">
 <meta name="twitter:card" content="summary">
@@ -463,9 +467,46 @@ mjx-container[display="true"] + br {
 <p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231128235442881.png"></p>
 <p>现在就很显然了，这个函数的功能就是实现了字符串中相邻两个字符的位置调换。好好好，这个算法就逆完了。</p>
 <p>接下来看下面的加密函数<code>verify</code></p>
-<p>其实根据上面的算法我们已经可知需要输入的字符串的长度了。</p>
+<p><strong>正片开始</strong>：</p>
+<p>其实根据上面的算法我们已经可知需要输入的字符串的长度为32了。</p>
 <p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129002257507.png"></p>
-<p>（未完待续......）</p>
+<p><strong>很明显，第二个32次迭代循环做的是加密后的明文和密文的一致性检测</strong>，<strong>所以本题是针对明文的加密，使其等于密文。</strong></p>
+<p>那么我们只需要关注第一个循环即可。</p>
+<p>可以看到，第一个循环有一个内部的函数<code>sub_9600</code>，这个我们待会再看，先摸清楚这个算法的整体逻辑：</p>
+<p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129015803032.png"></p>
+<p>进入<code>sub9600</code>：</p>
+<p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129015924272.png"></p>
+<p>先将传入的数据与一个奇怪的数字进行异或，然后对其进行一系列的操作，最后返回一个莫名其妙的数。</p>
+<p><strong>注意：</strong>该函数返回的是一个64位的无符号数。经过分析可知，该函数的作用为：</p>
+<ol type="1">
+<li>将传入的数字与<code>0x88884424</code>取与</li>
+<li>将取与后的结果转化为二进制，统计位数为1的个数</li>
+<li>如果统计结果是奇数，v3为1，否则为0</li>
+<li>将传入的数字左移1位并将v3 与 其最低位进行异或。由于a1左移一位，最低位必然是0，所以相当于输出0则补1，输出1则补0。</li>
+<li><strong>最后将该数字作为返回值的高32位，将v3作为低32位，返回给原加密函数。</strong></li>
+</ol>
+<p><strong>就上述思路，一口气把原函数吃下来：</strong></p>
+<p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129020835990.png"></p>
+<p>逐条分析：</p>
+<ol type="1">
+<li><p><code>v19 = j/4</code>将原始的长度为32的明文以4个为一组，保证所取出的每个数据都是32位4bytes。</p></li>
+<li><p><code>v9 = ....</code>取出v23[j/4]下标的数据，连续取4个bytes，由小端规则转化为32位unsigned整形数。</p></li>
+<li><p><code>v20</code>和<code>v10</code>都表示<code>sub_9600</code>返回值的高32位数据，即进行移位补位之后的<code>*v9</code></p></li>
+<li><p>将第一次加密之后的结果放回去，迭代加密8次</p></li>
+</ol>
+<blockquote>
+<p>有一个小坑，刚才说到<code>sub_9600</code>返回的是一个64位的unsigned long long，但在最后的<code>v21=(2*v21)^(unsigend int)v22</code>中却使用了unsigned int，将v22强制转化为32位。<strong>此时一定是保留v22的低32位而不是高32位。</strong></p>
+</blockquote>
+<p>已然透彻？别停，下面还有两句：</p>
+<p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129021859411.png"></p>
+<p>这两句话的意思就是取迭代加密结果的低8位，也就是一个byte，push给result数组。</p>
+<p>可以发现，<code>LOBYTE</code>在外层大循环中，执行32次。</p>
+<blockquote>
+<p><strong>32个明文字符，共分为8组，每组4个进行加密。组与组之间加密相互独立。</strong></p>
+</blockquote>
+<p><strong>那也就是说，在每次加密的时候，当前密文值决定了生成的最低位的补位值（&lt;&lt;1）</strong></p>
+<p><strong>好，逆着说这句话——在每次解密的时候，当前密文值决定了生成的最高位的补位值（&gt;&gt;1）</strong></p>
+<p>好好好，下面根据这句话来写解密算法：（整体逻辑如上，细节不表）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">standard = [<span class="number">0xa6</span>, <span class="number">0xab</span>, <span class="number">0x38</span>, <span class="number">0xe0</span>, <span class="number">0xe7</span>, <span class="number">0xb8</span>, <span class="number">0xf2</span>, <span class="number">0x86</span>, <span class="number">0xc9</span>, <span class="number">0xbb</span>, <span class="number">0xd8</span>, <span class="number">0x6c</span>, <span class="number">0x3e</span>, <span class="number">0x8f</span>, <span class="number">0x6e</span>, <span class="number">0x6</span>, <span class="number">0xc8</span>, <span class="number">0xa2</span>, <span class="number">0xdc</span>, <span class="number">0x15</span>, <span class="number">0x91</span>, <span class="number">0x8e</span>, <span class="number">0x51</span>, <span class="number">0xff</span>, <span class="number">0xba</span>, <span class="number">0x9b</span> ,<span class="number">0x73</span>, <span class="number">0x70</span>, <span class="number">0xa2</span>, <span class="number">0x45</span>, <span class="number">0x93</span>, <span class="number">0xe9</span>]</span><br><span class="line">standard_h = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>)]</span><br><span class="line">cipher_list = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>)]</span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line">stange_num = <span class="number">0x88884424</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算一个数的二进制表示中 1 的个数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">simulator_of_1</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">if</span> num != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> num % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span> + simulator_of_1(num &gt;&gt; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> simulator_of_1(num &gt;&gt; <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">cipher</span>):</span><br><span class="line">    text_low_bit = <span class="number">0</span></span><br><span class="line">    text = <span class="number">0</span></span><br><span class="line">    text = cipher</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>):</span><br><span class="line">        low_bit = cipher % <span class="number">2</span></span><br><span class="line">        cipher &gt;&gt;= <span class="number">1</span></span><br><span class="line">        text_low_bit = low_bit ^ (simulator_of_1(cipher &amp; stange_num) % <span class="number">2</span>)</span><br><span class="line">        text += text_low_bit &lt;&lt; i</span><br><span class="line">        cipher += text_low_bit &lt;&lt; <span class="number">31</span></span><br><span class="line">    <span class="keyword">return</span> cipher</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将解密后的结果转换为字符串</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">string_change</span>(<span class="params">text</span>):</span><br><span class="line">    string = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        cha = text % <span class="number">0x100</span></span><br><span class="line">        text &gt;&gt;= <span class="number">8</span></span><br><span class="line">        string += <span class="built_in">chr</span>(cha)</span><br><span class="line">    n = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> string:</span><br><span class="line">        n = i + n</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line"></span><br><span class="line"><span class="comment"># 划分加密数据</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):</span><br><span class="line">        standard_h[<span class="number">4</span> * i + j] = standard[<span class="number">4</span> * i + j + <span class="number">2</span>]</span><br><span class="line">        standard_h[<span class="number">4</span> * i + j + <span class="number">2</span>] = standard[<span class="number">4</span> * i + j]</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        cipher_list[i] += standard_h[<span class="number">4</span> * i + k] &lt;&lt; (k * <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密数据并转换为字符串</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">    flag += string_change(decrypt(cipher_list[i]))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"ZJUCTF{"</span> + flag + <span class="string">"}"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
 <p><img src="/2023/11/29/2023-ZJUCT-Reverse-Partial-F/image-20231129003829830.png"></p>
