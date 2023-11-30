@@ -20,6 +20,7 @@ var Instagram = (function(){
 								<div class="img-box">\
 									<a class="img-bg" rel="example_group" href="'+data[em].bigSrclist[i]+'" title="'+data[em].text[i]+'"></a>\
 									<img lazy-src="'+data[em].srclist[i]+'" alt="">\
+									<p>123123</p>\
 								</div>\
 							</li>';
 			}
