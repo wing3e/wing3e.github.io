@@ -1128,19 +1128,22 @@ a {
 .article-entry em {
   font-style: italic;
 }
+.article-entry ul {
+  font-size: 17px;
+  margin: 10px 0px;
+}
 .article-entry ul li:before {
   content: "";
   width: 6px;
   height: 6px;
   border: 1px solid #999;
   border-radius: 10px;
-  background: #aaa;
+  background: #000;
   display: inline-block;
   margin-right: 10px;
   float: left;
   margin-top: 12px;
 }
-.article-entry ul,
 .article-entry ol {
   font-size: 14px;
   margin: 10px 0px;
