@@ -1305,15 +1305,15 @@ a {
 }
 #article-nav .article-nav-link-wrap .article-nav-title {
   display: inline-block;
-  font-size: 12px;
-  color: #aaa;
+  font-size: 16px;
+  color: #1b5990;
   -webkit-transition: color 0.3s;
   -moz-transition: color 0.3s;
   -ms-transition: color 0.3s;
   transition: color 0.3s;
 }
 #article-nav .article-nav-link-wrap strong {
-  background: #ddd;
+  background: #331818;
   color: #fff;
   border-radius: 100%;
   width: 15px;
