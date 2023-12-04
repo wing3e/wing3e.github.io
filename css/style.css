@@ -1115,7 +1115,7 @@ a {
   border: 1px solid #ccc;
   font-family: Menlo, Monaco, monospace;
   word-wrap: break-word;
-  font-size: 14px;
+  font-size: 17px;
 }
 .article-entry blockquote {
   padding: 15px 20px;
@@ -1142,7 +1142,7 @@ a {
 }
 .article-entry ul,
 .article-entry ol {
-  font-size: 17px;
+  font-size: 14px;
   margin: 10px 0px;
 }
 .article-entry li ul,
