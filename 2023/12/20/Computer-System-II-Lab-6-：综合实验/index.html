@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Computer System II Lab 6 ：综合实验 | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： 在之前的Lab中，我们已经分别进行了硬件系统（体系结构）和软件系统（操作系统）的学习；本次实验，我们将让之前lab5编写的操作系统运行在我们自行编写的微架构上，将硬件系统和软件系统充分结合起来，真正做到软硬件的协同开发。（2023SYS2实验指导）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer System II Lab 6 ：综合实验">
+<meta property="og:url" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： 在之前的Lab中，我们已经分别进行了硬件系统（体系结构）和软件系统（操作系统）的学习；本次实验，我们将让之前lab5编写的操作系统运行在我们自行编写的微架构上，将硬件系统和软件系统充分结合起来，真正做到软硬件的协同开发。（2023SYS2实验指导）">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219144433274.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219145917434.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219145818610.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219175059996.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219175417390.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219182511718.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219154110034.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219155634703.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219160721952.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231220172118662.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231220172151465.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219172330401.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231220172207358.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/Users/Wingee/AppData/Roaming/Typora/typora-user-images/image-20231220172218856.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219193744190.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219193838094.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219194523311.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219194604888.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200244380.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200350495.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219201246702.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200652923.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200952424.png">
+<meta property="article:published_time" content="2023-12-20T09:16:06.000Z">
+<meta property="article:modified_time" content="2023-12-20T09:30:34.370Z">
+<meta property="article:tag" content="计算机系统II">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219144433274.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/introduction">关于我</a></li>
+				        
+							<li><a href="/pp">晚栀的书房(building)</a></li>
+				        
+							<li><a href="/log">运维日志</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1830685896&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 12px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 14px;">ZJUCTF</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 12px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 16px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 18px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">计算机系统</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 20px;">计算机系统II</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://121.40.230.233:3303/">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好的标题</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/introduction">关于我</a></li>
+		        
+					<li><a href="/pp">晚栀的书房(building)</a></li>
+		        
+					<li><a href="/log">运维日志</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Computer-System-II-Lab-6-：综合实验" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/" class="article-date">
+  	<time datetime="2023-12-20T09:16:06.000Z" itemprop="datePublished">2023-12-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Computer System II Lab 6 ：综合实验
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" rel="tag">计算机系统II</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>在之前的Lab中，我们已经分别进行了硬件系统（体系结构）和软件系统（操作系统）的学习；本次实验，我们将让之前lab5编写的操作系统运行在我们自行编写的微架构上，将硬件系统和软件系统充分结合起来，真正做到软硬件的协同开发。（2023SYS2实验指导） <span id="more"></span></p>
+<h2 id="实验目的">1 实验目的</h2>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219144433274.png"></p>
+<h2 id="实验准备">2 实验准备</h2>
+<h3 id="文件结构">2.1 文件结构</h3>
+<p>本实验需要将lab5中的软件和lab2中的硬件结合起来，所以在完全完成实验之后的文件结构图如下：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line">├── Makefile</span><br><span class="line">├── ip</span><br><span class="line">├── sim</span><br><span class="line">│   ├── Axi_lite_DDR.sv</span><br><span class="line">│   ├── cosim.v</span><br><span class="line">│   ├── dpi.cpp</span><br><span class="line">│   └── testbench.sv</span><br><span class="line">├── <span class="keyword">submit</span></span><br><span class="line"><span class="keyword"></span>│   ├── ALU.sv</span><br><span class="line">│   ├── Axi_interface.sv</span><br><span class="line">│   ├── Axi_lite_Core.sv</span><br><span class="line">│   ├── Axi_lite_Displayer.sv</span><br><span class="line">│   ├── Axi_lite_Hub.sv</span><br><span class="line">│   ├── Axi_lite_RAM.sv</span><br><span class="line">│   ├── Axi_lite_Timer.sv</span><br><span class="line">│   ├── Axi_lite_Uart.sv</span><br><span class="line">│   ├── <span class="keyword">Bomb.v</span></span><br><span class="line"><span class="keyword"></span>│   ├── CSRModule.sv</span><br><span class="line">│   ├── CSRStruct.vh</span><br><span class="line">│   ├── Control.v</span><br><span class="line">│   ├── Core.sv</span><br><span class="line">│   ├── Core2MMIO_FSM.v</span><br><span class="line">│   ├── Core2Mem_FSM.v</span><br><span class="line">│   ├── CoreAxi_lite.sv</span><br><span class="line">│   ├── Cosim_MMIO.sv</span><br><span class="line">│   ├── <span class="keyword">DIsplayer.sv</span></span><br><span class="line"><span class="keyword"></span>│   ├── Define.vh</span><br><span class="line">│   ├── EXE.v</span><br><span class="line">│   ├── EXEMEM.sv</span><br><span class="line">│   ├── Examine.v</span><br><span class="line">│   ├── ExceptReg.sv</span><br><span class="line">│   ├── ExceptStruct.vh</span><br><span class="line">│   ├── Forward.v</span><br><span class="line">│   ├── ID.v</span><br><span class="line">│   ├── IDEXE.sv</span><br><span class="line">│   ├── IDExceptExamine.sv</span><br><span class="line">│   ├── IF.v</span><br><span class="line">│   ├── IFID.v</span><br><span class="line">│   ├── ImmGen.v</span><br><span class="line">│   ├── <span class="keyword">InstExamine.sv</span></span><br><span class="line"><span class="keyword"></span>│   ├── MEM.v</span><br><span class="line">│   ├── MEMWB.sv</span><br><span class="line">│   ├── MMIOStruct.vh</span><br><span class="line">│   ├── MemAxi_lite.sv</span><br><span class="line">│   ├── Memmap.v</span><br><span class="line">│   ├── Mux.v</span><br><span class="line">│   ├── PipelineCPU.sv</span><br><span class="line">│   ├── RAM.sv</span><br><span class="line">│   ├── RaceControl.v</span><br><span class="line">│   ├── RegStruct.vh</span><br><span class="line">│   ├── Regs.sv</span><br><span class="line">│   ├── Timer.sv</span><br><span class="line">│   ├── WB.v</span><br><span class="line">│   └── uart.sv</span><br><span class="line">├── syn</span><br><span class="line">│   ├── Axi_lite_DDR.sv</span><br><span class="line">│   ├── Axi_lite_DDR_sim.sv</span><br><span class="line">│   ├── DDR_Ctrl.sv</span><br><span class="line">│   ├── DebugModule.sv</span><br><span class="line">│   ├── DebugStruct.vh</span><br><span class="line">│   ├── VRAM.v</span><br><span class="line">│   ├── font_table.v</span><br><span class="line">│   ├── io.sv</span><br><span class="line">│   ├── mig.ucf</span><br><span class="line">│   ├── mig_a.prj</span><br><span class="line">│   ├── top.sv</span><br><span class="line">│   ├── top.xdc</span><br><span class="line">│   └── vram.hex</span><br><span class="line">├── tcl</span><br><span class="line">│   └── vivado.tcl</span><br><span class="line">├── testcode</span><br><span class="line">│   ├── Makefile</span><br><span class="line">│   ├── <span class="keyword">bootload</span></span><br><span class="line"><span class="keyword"></span>│   │   ├── Makefile</span><br><span class="line">│   │   ├── <span class="keyword">bootload.S</span></span><br><span class="line"><span class="keyword"></span>│   │   ├── link.ld</span><br><span class="line">│   │   ├── load_binary.c</span><br><span class="line">│   │   ├── load_binary.h</span><br><span class="line">│   ├── compress_elf.py</span><br><span class="line">│   ├── dummy</span><br><span class="line">│   │   ├── dummy.hex</span><br><span class="line">│   ├── endian.py</span><br><span class="line">│   ├── kernel</span><br><span class="line">│   │   ├── Makefile</span><br><span class="line">│   │   ├── arch</span><br><span class="line">│   │   │   └── riscv</span><br><span class="line">│   │   │       ├── Makefile</span><br><span class="line">│   │   │       ├── include</span><br><span class="line">│   │   │       │   ├── defs.h</span><br><span class="line">│   │   │       │   ├── mm.h</span><br><span class="line">│   │   │       │   ├── proc.h</span><br><span class="line">│   │   │       │   └── <span class="keyword">sbi.h</span></span><br><span class="line"><span class="keyword"></span>│   │   │       └── kernel</span><br><span class="line">│   │   │           ├── Makefile</span><br><span class="line">│   │   │           ├── <span class="keyword">clock.c</span></span><br><span class="line"><span class="keyword"></span>│   │   │           ├── <span class="keyword">clock.h</span></span><br><span class="line"><span class="keyword"></span>│   │   │           ├── entry.S</span><br><span class="line">│   │   │           ├── head.S</span><br><span class="line">│   │   │           ├── mm.c</span><br><span class="line">│   │   │           ├── proc.c</span><br><span class="line">│   │   │           ├── <span class="keyword">sbi.c</span></span><br><span class="line"><span class="keyword"></span>│   │   │           ├── trap.c</span><br><span class="line">│   │   │           └── vmlinux.lds</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   │   ├── defs.h</span><br><span class="line">│   │   │   ├── math.h</span><br><span class="line">│   │   │   ├── mm.h</span><br><span class="line">│   │   │   ├── print.h</span><br><span class="line">│   │   │   ├── printk.h</span><br><span class="line">│   │   │   ├── proc.h</span><br><span class="line">│   │   │   ├── rand.h</span><br><span class="line">│   │   │   ├── <span class="keyword">sbi.h</span></span><br><span class="line"><span class="keyword"></span>│   │   │   ├── stddef.h</span><br><span class="line">│   │   │   ├── string.h</span><br><span class="line">│   │   │   └── types.h</span><br><span class="line">│   │   ├── init</span><br><span class="line">│   │   │   ├── Makefile</span><br><span class="line">│   │   │   ├── main.c</span><br><span class="line">│   │   │   └── test.c</span><br><span class="line">│   │   └── lib</span><br><span class="line">│   │       ├── Makefile</span><br><span class="line">│   │       ├── math.c</span><br><span class="line">│   │       ├── printk.c</span><br><span class="line">│   │       ├── rand.c</span><br><span class="line">│   │       └── string.c</span><br><span class="line">│   ├── link.ld</span><br><span class="line">│   ├── mini_sbi</span><br><span class="line">│   │   ├── Makefile</span><br><span class="line">│   │   ├── def.h</span><br><span class="line">│   │   ├── mcsr.h</span><br><span class="line">│   │   ├── <span class="keyword">sbi_entry.S</span></span><br><span class="line"><span class="keyword"></span>│   │   ├── <span class="keyword">sbi_head.S</span></span><br><span class="line"><span class="keyword"></span>│   │   ├── <span class="keyword">sbi_trap.c</span></span><br><span class="line"><span class="keyword"></span>│   │   ├── <span class="keyword">sbi_trap.h</span></span><br><span class="line"><span class="keyword"></span>│   │   └── uart.c</span><br><span class="line">│   ├── rom</span><br><span class="line">│   │   ├── Makefile</span><br><span class="line">│   │   ├── link.ld</span><br><span class="line">│   │   ├── rom.S</span><br><span class="line">│   │   └── vmlinux</span><br><span class="line">│   └── testcase.ld</span><br><span class="line">└── tree.txt</span><br></pre></td></tr></table></figure>
+<p>此处的ip为系统一的lab5中所用的ip，需要搬过来供仿真使用。</p>
+<h3 id="环境配置">2.2 环境配置</h3>
+<ul>
+<li><code>riscv-unknwon-elf-gcc</code>安装</li>
+</ul>
+<p><code>sudo apt install gcc-riscv-unknown-elf</code></p>
+<ul>
+<li>Makefile的更改</li>
+</ul>
+<p>将ZJGG给的Makefile中的<code>--march=rv64i-zicsr</code>改为<code>--march=rv64imafd</code></p>
+<p>更改<code>/testcode/Makefile</code>中的编译命令，调用endian.py脚本使得生成的.hex文件满足小端格式：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219145917434.png"></p>
+<ul>
+<li>安装新版本verilator</li>
+</ul>
+<p>按照实验指导<code>git clone</code>之后执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> verilator</span><br><span class="line">git pull<span class="comment"># Make sure git repository is up-to-dategit tag# See what versions exist#git checkout master# Use development branch (e.g. recent bug fixes)#git checkout stable# Use most recent stable release#git checkout vlversion # Switch to specified release version</span></span><br><span class="line">autoconf</span><br><span class="line"><span class="comment"># Create ./configure script</span></span><br><span class="line"><span class="comment"># Configure and create Makefile</span></span><br><span class="line">./configure</span><br><span class="line"><span class="comment"># Build Verilator itself (if error, try just 'make')make -j ~nproc~sudo make install</span></span><br><span class="line">make -j `<span class="built_in">nproc</span>`</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219145818610.png"></p>
+<h3 id="硬件代码调整">2.3 硬件代码调整</h3>
+<h4 id="v-sv代码调整">2.3.1 <code>v-&gt;sv</code>代码调整</h4>
+<p>由于本实验中ZJGG给的代码全是.sv，在某些方面， .sv的代码规范和.v并不相同。比如.sv不允许相互连接的两条线（或寄存器和线，寄存器的寄存器）的位宽不相等。</p>
+<p>所以我们之前写的所有不等位宽赋值的语句都需要进行调整（才知道原来自己代码写得这么不规范）</p>
+<p>例如：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> cosim_br_taken = npc_sel_EXE; <span class="comment">// old </span></span><br><span class="line"><span class="keyword">assign</span> cosim_br_taken = {<span class="number">3'b0</span>, npc_sel_EXE}; <span class="comment">// new</span></span><br></pre></td></tr></table></figure>
+<p>其次，所有包含结构的文件必须为.sv文件，这个仿真倒不要求，但是上板综合的时候会报错的。那就把所有的.v改成.sv文件就好了</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEMEM.<span class="function"><span class="title">v</span> -&gt;</span> EXEMEM.sv</span><br></pre></td></tr></table></figure>
+<h4 id="访存的指令前递问题">2.3.2 访存的指令前递问题</h4>
+<p>这是个大问题，在Lab2的代码中，我们将访问内存的操作进行了前递，即本应在MEM阶段传地址的操作被我们前递到了EXE阶段进行，这样可以省略访问内存时的一拍stall。</p>
+<p>但本实验中助教在FSM外围引入了如下的逻辑：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219175059996.png"></p>
+<p>MEMMAP中：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">wire</span> is_mem=</span><br><span class="line">        (address_cpu&lt;(`ROM_BASE+`ROM_LEN))|</span><br><span class="line">        ((`BUFFER_BASE&lt;=address_cpu)&amp;</span><br><span class="line">        (address_cpu&lt;(`BUFFER_BASE+`BUFFER_LEN)))|</span><br><span class="line">        ((`MEM_BASE&lt;=address_cpu)&amp;</span><br><span class="line">        (address_cpu&lt;(`MEM_BASE+`MEM_LEN)));</span><br><span class="line">    <span class="keyword">wire</span> is_mmio=(`MTIME_BASE==address_cpu)|</span><br><span class="line">        (`MTIMECMP_BASE==address_cpu)|</span><br><span class="line">        (`DISP_BASE==address_cpu)|</span><br><span class="line">        ((`UART_BASE==address_cpu)&amp;((`UART_BASE+`UART_LEN)==address_cpu));</span><br></pre></td></tr></table></figure>
+<p>好好好，他这么一连不要紧，把address_cpu（EXE阶段产生）和is_mem连上了。由于我使用了指令前递，所以本该和MEM的线被改成了和EXE的线，直接在EXE外围给我把电路干成圈了，报巨错，贼心累.......</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219175417390.png"></p>
+<p>没办法，秉持着打死不改助教代码的原则， 只能把我的指令前递改掉了....</p>
+<p>看了看报错，发现是我从FSM里取出的数据直接塞给了MEM的问题，这样就会造成<code>address_cpu--&gt;Ram_to_Path--&gt;is_mem--&gt;address_cpu</code>的<code>Circular combinational logic</code>，想了个办法，能不能让这个值通过EXEMEM寄存器，即在下个时钟周期传给MEM。<strong>毕竟（我认为）解决这种问题最好的办法就是给这个环路加一个时序逻辑。</strong></p>
+<p>取出<code>rdata_mem</code>后把它塞给EXEMEM阶段间寄存器，等下个时钟周期再取出，塞给MEM进行处理</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EXEMEM EXEMEM1(</span><br><span class="line">    ....</span><br><span class="line">    <span class="variable">.Ram_to_Path_temp</span>(rdata_mem), <span class="comment">// input </span></span><br><span class="line">    ....</span><br><span class="line">    <span class="variable">.Ram_to_Path</span>(rdata_mem_delay_1), <span class="comment">// output</span></span><br><span class="line">    ....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>与此同时，整个流水线都要进行额外的一拍stall。</p>
+<p>在取内存的时候<code>MEM_stall</code>恒为1，整个流水线此时处于停滞的状态。那么我们现在只需要让<code>MEM_stall</code>再延续一拍，<code>MEMWB</code>,<code>EXEMEM</code>等<code>rdata_mem</code>的传递。</p>
+<p>如何将<code>MEM_stall</code>延续一拍：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">reg</span> MEM_stall_delay_1 = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk ) <span class="keyword">begin</span></span><br><span class="line">    MEM_stall_delay_1 &lt;= MEM_stall;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">....</span><br><span class="line"><span class="keyword">assign</span> EXEMEM_stall = MEM_stall | (MEM_stall_delay_1 &amp;&amp; we_MEM_EXE);</span><br><span class="line">....</span><br><span class="line"><span class="keyword">assign</span> MEMWB_flush = MEM_stall | (MEM_stall_delay_1 &amp;&amp; we_MEM_EXE) | switch_mode; </span><br></pre></td></tr></table></figure>
+<p>同时在<code>EXEMEM</code>中给<code>rdata_mem</code>开一个后门，即<code>stall</code>的时候只有我能走，其他信号不许动：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk ) <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(rst|flush) <span class="keyword">begin</span></span><br><span class="line">        ......</span><br><span class="line">        Ram_to_Path &lt;= <span class="number">64'b0</span>;</span><br><span class="line">        ......</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(~stall)<span class="keyword">begin</span></span><br><span class="line">        ......</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    Ram_to_Path &lt;= Ram_to_Path_temp; <span class="comment">// 开后门</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>问题完美解决~爱死时序逻辑了（bushi）</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219182511718.png"></p>
+<h3 id="软件代码调整">2.4 软件代码调整</h3>
+<p>由于本实验中我们使用助教提供的<code>mini-sbi</code>，但在<code>/lab6/testcode</code>目录下make编译的时候，会显示对<code>sbi_*</code>函数进行了重复定义。原因是助教的<code>mini_sbi</code>中提供了打印字符，接受字符，设置时间的函数。</p>
+<p>再看下我们的软件，也是直接调用<code>printk</code>，<code>putc</code>，其中<code>putc</code>的定义如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">putc</span><span class="params">(<span class="type">char</span> c)</span> {</span><br><span class="line">  sbi_ecall(SBI_PUTCHAR, <span class="number">0</span>, c, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>嗯，既然直接调<code>ecall</code>...也就是说我们的<code>sbi_*</code>在lab5就已经不需要了，那直接把我们写的两个函数注释掉就好了。</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219154110034.png"></p>
+<p>其次，我们之前写的<code>sbi_ecall</code>也有问题，代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">__asm__ <span class="title function_">volatile</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="string">"mv a7, %[ext]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a6, %[fid]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a0, %[arg0]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a1, %[arg1]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a2, %[arg2]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a3, %[arg3]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a4, %[arg4]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv a5, %[arg5]\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"ecall\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv %[err], a0\n"</span></span></span><br><span class="line"><span class="params">    <span class="string">"mv %[value], a1\n"</span></span></span><br><span class="line"><span class="params">    :[err]<span class="string">"=r"</span>(err),[value]<span class="string">"=r"</span>(value)</span></span><br><span class="line"><span class="params">    :[ext]<span class="string">"r"</span>(ext),[fid]<span class="string">"r"</span>(fid),[arg0]<span class="string">"r"</span>(arg0),[arg1]<span class="string">"r"</span>(arg1),[arg2]<span class="string">"r"</span>(arg2),[arg3]<span class="string">"r"</span>(arg3),[arg4]<span class="string">"r"</span>(arg4),[arg5]<span class="string">"r"</span>(arg5)</span></span><br><span class="line"><span class="params">    :<span class="string">"memory"</span></span></span><br><span class="line"><span class="params">  )</span>;</span><br></pre></td></tr></table></figure>
+<p>因为这些arg参数都是通过寄存器传递的，所以在这种顺序赋值的情况下，很可能出现这种情况</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">a0</span> = <span class="built_in">a1</span> <span class="comment">// a0 = 1 a1 = 2</span></span><br><span class="line"><span class="symbol">a1</span> = a0 <span class="comment">// a0 = 2 a1 = 2</span></span><br><span class="line"><span class="comment">// expect: a0 = 2 a1 = 1</span></span><br></pre></td></tr></table></figure>
+<p>之后运行仿真的时候会因为寄存器传参不对卡死.....请教了一下大神，用了另外一种内联汇编的写法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sbiret</span> <span class="title">ret</span>;</span></span><br><span class="line"><span class="keyword">register</span> uint64 a0 <span class="title function_">asm</span><span class="params">(<span class="string">"a0"</span>)</span> = (uint64)(arg0);</span><br><span class="line"><span class="keyword">register</span> uint64 a1 <span class="title function_">asm</span><span class="params">(<span class="string">"a1"</span>)</span> = (uint64)(arg1);</span><br><span class="line"><span class="keyword">register</span> uint64 a2 <span class="title function_">asm</span><span class="params">(<span class="string">"a2"</span>)</span> = (uint64)(arg2);</span><br><span class="line"><span class="keyword">register</span> uint64 a3 <span class="title function_">asm</span><span class="params">(<span class="string">"a3"</span>)</span> = (uint64)(arg3);</span><br><span class="line"><span class="keyword">register</span> uint64 a4 <span class="title function_">asm</span><span class="params">(<span class="string">"a4"</span>)</span> = (uint64)(arg4);</span><br><span class="line"><span class="keyword">register</span> uint64 a5 <span class="title function_">asm</span><span class="params">(<span class="string">"a5"</span>)</span> = (uint64)(arg5);</span><br><span class="line"><span class="keyword">register</span> uint64 a6 <span class="title function_">asm</span><span class="params">(<span class="string">"a6"</span>)</span> = (uint64)(fid);</span><br><span class="line"><span class="keyword">register</span> uint64 a7 <span class="title function_">asm</span><span class="params">(<span class="string">"a7"</span>)</span> = (uint64)(ext);</span><br><span class="line"><span class="keyword">asm</span> <span class="title function_">volatile</span> <span class="params">(</span></span><br><span class="line"><span class="params">    <span class="string">"ecall"</span></span></span><br><span class="line"><span class="params">    : <span class="string">"+r"</span> (a0), <span class="string">"+r"</span> (a1)</span></span><br><span class="line"><span class="params">    : <span class="string">"r"</span> (a2), <span class="string">"r"</span> (a3), <span class="string">"r"</span> (a4), <span class="string">"r"</span> (a5), <span class="string">"r"</span> (a6), <span class="string">"r"</span> (a7)</span></span><br><span class="line"><span class="params">    : <span class="string">"memory"</span></span></span><br><span class="line"><span class="params">)</span>;</span><br><span class="line">ret.error = a0;</span><br><span class="line">ret.value = a1;</span><br><span class="line"><span class="keyword">return</span> ret;</span><br></pre></td></tr></table></figure>
+<p>这样编译器编译的时候会自动规避上面的那种错误情况，使得寄存器可以正确传参。</p>
+<p>再次，由于我们的硬件还不支持<code>mul div rem</code>的指令，所以要把软件中所有乘除余换成助教给的函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">int_mul</span><span class="params">()</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">int_div</span><span class="params">()</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">int_mod</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<p>现在我们的环境配置就基本完成了，在<code>make</code>编译的时候会先编译<code>/testcode</code>下面的<code>*.c</code>和<code>*.S</code>，在将编译出来的.elf文件转化成.hex，把.hex放到硬件上面跑。</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219155634703.png"></p>
+<h2 id="实验步骤">3 实验步骤</h2>
+<p>### 3.1 RV64特权指令与CSRModule</p>
+<p>由于本实验需要我们的处理器可以处理CSR特权级指令，所以需要对特权指令进行识别和解码，并通过CSRModule进行寄存器的读取和写入：</p>
+<h4 id="rv64特权指令解码">3.1.2 RV64特权指令解码</h4>
+<p>观察到RV64特权级指令的op_code比较统一，均为：<code>1110011</code></p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219160721952.png"></p>
+<p>所以可以根据op_code，在<code>Control</code>对指令解码：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CSR Handler</span></span><br><span class="line">            <span class="number">7'b1110011</span>: <span class="keyword">begin</span></span><br><span class="line">                we_reg = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">case</span>(fun3)</span><br><span class="line">                    <span class="number">3'b001</span>: <span class="keyword">begin</span></span><br><span class="line">                        immgen_op = R;</span><br><span class="line">                        alu_asel = <span class="number">2'b01</span>; <span class="comment">// register</span></span><br><span class="line">                        alu_bsel = <span class="number">2'b00</span>; <span class="comment">// 0</span></span><br><span class="line">                        alu_op = ADD; <span class="comment">// 0 + register</span></span><br><span class="line">                        wb_sel = <span class="number">2'b01</span>;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="number">3'b010</span>:<span class="keyword">begin</span></span><br><span class="line">                        immgen_op = R;</span><br><span class="line">                        alu_asel = <span class="number">2'b01</span>; <span class="comment">// register</span></span><br><span class="line">                        alu_bsel = <span class="number">2'b00</span>; <span class="comment">// 0</span></span><br><span class="line">                        alu_op = ADD; <span class="comment">// 0 + register</span></span><br><span class="line">                        wb_sel = <span class="number">2'b01</span>;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="number">3'b011</span>: <span class="keyword">begin</span></span><br><span class="line">                        immgen_op = R;</span><br><span class="line">                        alu_asel = <span class="number">2'b01</span>; <span class="comment">// register</span></span><br><span class="line">                        alu_bsel = <span class="number">2'b00</span>; <span class="comment">// 0</span></span><br><span class="line">                        alu_op = ADD; <span class="comment">// 0 + register</span></span><br><span class="line">                        wb_sel = <span class="number">2'b01</span>;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="number">3'b101</span>:<span class="keyword">begin</span></span><br><span class="line">                        immgen_op = <span class="number">3'b111</span>;</span><br><span class="line">                        alu_asel = <span class="number">2'b00</span>; <span class="comment">//0</span></span><br><span class="line">                        alu_bsel = <span class="number">2'b10</span>;  <span class="comment">// imm</span></span><br><span class="line">                        wb_sel = <span class="number">2'b01</span>;</span><br><span class="line">                        alu_op = ADD; </span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="number">3'b110</span>: <span class="keyword">begin</span></span><br><span class="line">                        immgen_op = <span class="number">3'b111</span>;</span><br><span class="line">                        alu_asel = <span class="number">2'b00</span>; </span><br><span class="line">                        alu_bsel = <span class="number">2'b10</span>; </span><br><span class="line">                        wb_sel = <span class="number">2'b01</span>;</span><br><span class="line">                        alu_op = ADD; </span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="number">3'b111</span>: <span class="keyword">begin</span></span><br><span class="line">                        immgen_op = <span class="number">3'b111</span>;</span><br><span class="line">                        alu_asel = <span class="number">2'b00</span>; </span><br><span class="line">                        alu_bsel = <span class="number">2'b10</span>; </span><br><span class="line">                        wb_sel = <span class="number">2'b01</span>;</span><br><span class="line">                        alu_op = ADD; </span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="number">3'b000</span>: <span class="keyword">begin</span></span><br><span class="line">                        npc_sel = <span class="number">1</span>; 	<span class="comment">// mret, sret</span></span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line"> ............</span><br><span class="line"><span class="keyword">assign</span> CSR_if = (op_code == <span class="number">7'b1110011</span> &amp;&amp; inst[<span class="number">19</span>:<span class="number">15</span>] != <span class="number">5'b0</span>) ? <span class="number">1</span> : <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>由于指令的解码在ID阶段进行，读取特权寄存器的操作也在ID和EXE之间搞定，所以我们必须需要这几种情况</p>
+<h5 id="只读不写-csrr">3.1.2.1 只读不写 CSRR</h5>
+<p><code>0x0000000080200024 (0x104022f3) csrr    t0, sie</code></p>
+<p>这条指令的意思是将sie中的值读出来放到t0寄存器中。这条指令是条伪指令，其实他的全写是<code>csrrw t0, sie, x0</code></p>
+<p>指令展开</p>
+<blockquote>
+<p><code>000100000100 00000 010 00101 1110011</code></p>
+<p>​ <strong>sie rs fun3 rd op_code</strong></p>
+</blockquote>
+<p>很显然我们不能让x0写到sie中，所以需要对是否写入CSR寄存器进行额外的判断。输出一个信号，保证在写CSR的时候rs不是0</p>
+<p><code>assign CSR_if = (op_code == 7'b1110011 &amp;&amp; inst[19:15] != 5'b0) ? 1 : 0;</code></p>
+<h5 id="只写不读-csrw">3.1.2.2 只写不读 CSRW</h5>
+<p><code>0x000000008020002c (0x10429073) csrw    sie, t0</code></p>
+<p>这条指令的意思是说把t0的值写入CSR寄存器。显然他也是条伪指令，全写是<code>csrrw x0, sie, t0</code></p>
+<p>如果按照正常的解码的话，是把sie写入x0寄存器，但在<code>Reg.sv</code>中阻止了对x0寄存器的任何写入操作，保证x0寄存器的值为0，所以这种情况就不用管了，<code>reg_write</code>置0置1无所谓。</p>
+<h5 id="又读又写-csrrw">3.1.2.3 又读又写 CSRRW</h5>
+<p><code>0x0000000080000050 (0x34011173) csrrw   sp, mscratch, sp</code></p>
+<p>实际上就是对sp和mscratch两个寄存器做数值的交换，这里直接让两个写使能打开，互相读取互相交换即可。</p>
+<p>其次，对于这三种情况而言，由于取寄存器的操作在ID和EXE之间进行，之后取出的两个值（CSR和reg）还要在Pipeline中走一轮儿到WB阶段才能写回。所以为了避免在这个过程中发生一些不可描述乱码七糟的事情，我们直接设置:</p>
+<ul>
+<li><p><code>alu_bsel = 0 &amp;&amp; alu_op = ADD</code> 使得EXE阶段的运算结果<code>ALU_result</code> 为<code>rs + 0 = rs</code></p></li>
+<li><p><code>wb_sel=2'b01</code>保证在写回阶段选择写回<code>ALU_result</code></p></li>
+</ul>
+<p>这样就可以保证RV64特权指令的正确执行啦~</p>
+<h4 id="csrmodule">3.1.2 CSRModule</h4>
+<p>根据实验指导，CSRModule要放在ID和EXE之间，和Reg的位置相同，完成特权指令的提取</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231220172118662.png"></p>
+<p>根据提示链接CSRModule与Core的接口：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">CSRModule CSR(</span><br><span class="line">    <span class="variable">.clk</span>(clk),</span><br><span class="line">    <span class="variable">.rst</span>(!rstn),</span><br><span class="line">    <span class="variable">.csr_we_wb</span>(CSR_if_WB),</span><br><span class="line">    <span class="variable">.csr_addr_wb</span>(inst_WB[<span class="number">31</span>:<span class="number">20</span>]), <span class="comment">// CSR_id</span></span><br><span class="line">    <span class="variable">.csr_val_wb</span>(Ram_to_Path),</span><br><span class="line">    <span class="variable">.csr_addr_id</span>(inst_ID[<span class="number">31</span>:<span class="number">20</span>]),</span><br><span class="line">    <span class="variable">.csr_val_id</span>(CSR_value_ID),</span><br><span class="line">    <span class="variable">.pc_wb</span>(pc_WB),</span><br><span class="line">    <span class="variable">.valid_wb</span>(valid_WB),</span><br><span class="line">    <span class="variable">.time_int</span>(time_int), <span class="comment">// 外部时钟中断</span></span><br><span class="line">    <span class="variable">.csr_ret</span>({mret , sret}), <span class="comment">//csr_ret信号</span></span><br><span class="line">    <span class="variable">.except_commit</span>(except_WB), <span class="comment">// except_WB异常信号</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">.priv</span>(priv), <span class="comment">// 当前状态</span></span><br><span class="line">    <span class="variable">.switch_mode</span>(switch_mode), <span class="comment">// 是否切换状态</span></span><br><span class="line">    <span class="variable">.pc_csr</span>(pc_csr_ID),  <span class="comment">// 是否跳转</span></span><br><span class="line">    <span class="variable">.cosim_interrupt</span>(cosim_interrupt), </span><br><span class="line">    <span class="variable">.cosim_cause</span>(cosim_cause),</span><br><span class="line">    <span class="variable">.cosim_csr_info</span>(cosim_csr_info)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>其中mret和sret两条特权指令的指令码是一定的，所以这个信号可以单独判断一下</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> mret = (inst_WB == <span class="number">32'h30200073</span> );</span><br><span class="line"><span class="keyword">assign</span> sret = (inst_WB == <span class="number">32'h10200073</span> );</span><br></pre></td></tr></table></figure>
+<h3 id="idexceptexamine-异常检测">3.2 IDExceptExamine 异常检测</h3>
+<p>本实验要求我们不仅要处理时钟中断，还要处理指令异常，幸运的是在本实验中只有一条异常需要处理，就是<code>ecall</code>指令</p>
+<p>需要注意虽然这个...助教起的名字叫<code>IDExceptExamine</code>...但是...后面细说吧（小狗摇头）</p>
+<p>观察IDExceptExamine的内部结构：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">include</span> "ExceptStruct.vh"</span></span><br><span class="line"><span class="keyword">module</span> IDExceptExamine(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> rst,</span><br><span class="line">    <span class="keyword">input</span> stall,</span><br><span class="line">    <span class="keyword">input</span> flush,</span><br><span class="line"></span><br><span class="line">    <span class="keyword">input</span> [<span class="number">63</span>:<span class="number">0</span>] pc_id,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">1</span>:<span class="number">0</span>] priv,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] inst_id,</span><br><span class="line">    <span class="keyword">input</span> valid_id,</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">input</span> ExceptStruct::ExceptPack except_id,</span><br><span class="line">    <span class="keyword">output</span> ExceptStruct::ExceptPack except_exe,</span><br><span class="line">    <span class="keyword">output</span> except_happen_id</span><br><span class="line">);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">import</span> ExceptStruct::ExceptPack;</span><br><span class="line">    ExceptPack except_new;</span><br><span class="line">    ExceptPack except;</span><br><span class="line"></span><br><span class="line">    InstExamine instexmaine(</span><br><span class="line">        <span class="variable">.PC_i</span>(pc_id),</span><br><span class="line">        <span class="variable">.priv_i</span>(priv),</span><br><span class="line">        <span class="variable">.inst_i</span>(inst_id),</span><br><span class="line">        <span class="variable">.valid_i</span>(valid_id),</span><br><span class="line">        <span class="variable">.except_o</span>(except_new)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> except=except_id<span class="variable">.except</span>?except_id:except_new;</span><br><span class="line">    <span class="keyword">assign</span> except_happen_id=except_new<span class="variable">.except</span>&amp;~except_id<span class="variable">.except</span>;</span><br><span class="line"></span><br><span class="line">    ExceptReg exceptreg(</span><br><span class="line">        <span class="variable">.clk</span>(clk),</span><br><span class="line">        <span class="variable">.rst</span>(rst),</span><br><span class="line">        <span class="variable">.stall</span>(stall),</span><br><span class="line">        <span class="variable">.flush</span>(flush),</span><br><span class="line">        <span class="variable">.except_i</span>(except),</span><br><span class="line">        <span class="variable">.except_o</span>(except_exe)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>结构体ExceptReg如下：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">ifndef</span> __EXCEPT_STRUCT__</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> __EXCEPT_STRUCT__</span></span><br><span class="line"><span class="keyword">package</span> ExceptStruct;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">struct</span>{</span><br><span class="line">        <span class="keyword">logic</span> except; <span class="comment">// 是否发生异常</span></span><br><span class="line">        <span class="keyword">logic</span> [<span class="number">63</span>:<span class="number">0</span>] epc; <span class="comment">// 发生异常的pc</span></span><br><span class="line">        <span class="keyword">logic</span> [<span class="number">63</span>:<span class="number">0</span>] ecause; <span class="comment">// 发生异常的原因</span></span><br><span class="line">        <span class="keyword">logic</span> [<span class="number">63</span>:<span class="number">0</span>] etval; <span class="comment">// 发生异常的值（指令）</span></span><br><span class="line">    } ExceptPack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">endpackage</span></span><br><span class="line"><span class="meta">`<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>可以看到，IDExpcetExamine的执行逻辑分为以下三步：</p>
+<ol type="1">
+<li>接受外部ID阶段的指令，pc，及stall和flush的信号</li>
+<li>将收到的指令传入<code>InstExamine</code>检查是否为异常指令，并将信号打包输出出来。</li>
+<li>如果发生异常，将except_happen_id置1</li>
+</ol>
+<p>打包输出之后的信号要通过阶段间寄存器传递，传到WB之后塞给CSRModule，CSRModule就会根据ExceptReg输出一些信号。</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231220172151465.png"></p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ExceptStruct::ExceptPack except_ID='{except: <span class="number">1'b0</span>, epc:<span class="number">64'b0</span>, ecause:<span class="number">64'b0</span>, etval: <span class="number">64'b0</span>}; <span class="comment">//恒置0</span></span><br><span class="line">ExceptStruct::ExceptPack except_EXE;</span><br><span class="line">ExceptStruct::ExceptPack except_MEM;</span><br><span class="line">ExceptStruct::ExceptPack except_WB;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里绝对！！绝对！！绝对！！绝对不能直接在IDEXE阶段就把except_EXE塞给CSRModule，后面时钟中断会出大问题。</p>
+</blockquote>
+<h3 id="异常处理">3.3 异常处理</h3>
+<p>首先明确RV64的特权模式：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219172330401.png"></p>
+<p>异常主要有这几种情况：</p>
+<ul>
+<li>非法指令：在低特权态执行了高特权态才能执行的指令，或操作了高特权态才能访问的寄存器，比如在S态下<code>rdtime a0</code>就会因为权限不够陷入异常处理。或者输入的指令是条空指令，错误的指令，也会触发非法异常。</li>
+<li><code>ecall</code>异常：调用ecall时处理器会判定此条指令为异常，并传递此时的异常信息（通过sbi_ecal），根据<code>mcause</code>的值不同去执行不同的异常处理操作。比如S态ecall调用陷入M态
+<ul>
+<li><code>exception trap_supervisor_ecall, epc 0x0000000080200050</code></li>
+</ul></li>
+<li><code>ebreak</code>异常：在本实验中涉及不到，不提~</li>
+</ul>
+<p>具体如何判断这条指令是否发生异常的逻辑ZJGG已经帮我们写好了，不用管~</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">include</span> "Define.vh"</span></span><br><span class="line"><span class="meta">`<span class="keyword">include</span> "ExceptStruct.vh"</span></span><br><span class="line"><span class="keyword">module</span> InstExamine (</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">63</span>:<span class="number">0</span>] PC_i,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">1</span>:<span class="number">0</span>] priv_i,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] inst_i,</span><br><span class="line">    <span class="keyword">input</span> valid_i,</span><br><span class="line">    <span class="keyword">output</span> ExceptStruct::ExceptPack except_o</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">wire</span> is_ecall=inst_i==`ECALL;</span><br><span class="line">    <span class="keyword">wire</span> is_ebreak=inst_i==`EBREAK;</span><br><span class="line">    <span class="keyword">wire</span> is_illegal=(inst_i[<span class="number">1</span>:<span class="number">0</span>]!=<span class="number">2'b11</span>)&amp;valid_i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">63</span>:<span class="number">0</span>] ecall_code [<span class="number">3</span>:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">assign</span> ecall_code[<span class="number">0</span>]=`U_CALL;</span><br><span class="line">    <span class="keyword">assign</span> ecall_code[<span class="number">1</span>]=`S_CALL;</span><br><span class="line">    <span class="keyword">assign</span> ecall_code[<span class="number">2</span>]=`H_CALL;</span><br><span class="line">    <span class="keyword">assign</span> ecall_code[<span class="number">3</span>]=`M_CALL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> except_o<span class="variable">.except</span>=is_ebreak|is_ecall|is_illegal;</span><br><span class="line">    <span class="keyword">assign</span> except_o<span class="variable">.epc</span>=PC_i;</span><br><span class="line">    <span class="keyword">assign</span> except_o<span class="variable">.ecause</span>=is_ebreak?`BREAKPOINT:</span><br><span class="line">                           is_ecall?ecall_code[priv_i]:</span><br><span class="line">                           is_illegal?`ILLEAGAL_INST:</span><br><span class="line">                           <span class="number">64'h0</span>;</span><br><span class="line">    <span class="keyword">assign</span> except_o<span class="variable">.etval</span>=is_illegal?{<span class="number">32'b0</span>,inst_i}:<span class="number">64'h0</span>;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<p>重点：当CSRModule接收到传过来的异常信号包，输出的信号会有如下变化：</p>
+<ul>
+<li><p><code>switch_mode</code>置1，切换特权态</p></li>
+<li><p><code>priv</code>如果原来为<code>2'b11</code>即M态变为<code>2'b10</code>S态，如果是S态切换为M态</p></li>
+<li><p><code>pc_csr</code>输出异常处理的pc</p></li>
+</ul>
+<p>当发生异常时，我们通常需要做这几件事：</p>
+<ol type="1">
+<li>将<code>pc_IF</code>更改为<code>pc_csr</code>。</li>
+<li>由于我们的CSRModule是放在最后处理异常的，所以需要将所有阶段间寄存器<code>flush</code>掉。</li>
+</ol>
+<p>其余的事情ZJGG已经帮我们写好了,比如传递CSR的信息，切换特权态等等</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231220172207358.png"></p>
+<p>IF中：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rstn) <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(!rstn) <span class="keyword">begin</span></span><br><span class="line">        pc &lt;= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// inst &lt;= inst_reg;</span></span><br><span class="line">    <span class="keyword">end</span> </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(switch_mode) <span class="keyword">begin</span></span><br><span class="line">        pc &lt;= pc_csr;</span><br><span class="line">        pc_next &lt;= pc_csr + <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(br_taken) <span class="keyword">begin</span></span><br><span class="line">        pc &lt;= pc_in;</span><br><span class="line">        pc_next &lt;= pc_in + <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(~pc_stall)<span class="keyword">begin</span></span><br><span class="line">            valid &lt;= <span class="number">1</span>;</span><br><span class="line">            pc &lt;= pc_next;</span><br><span class="line">            pc_next &lt;= pc_next + <span class="number">4</span>;</span><br><span class="line">        <span class="comment">// inst_temp &lt;= inst_next_temp;</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>FSM中：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> IFID_flush =  (predict_flush | IF_stall)&amp;~IFID_stall | switch_mode;</span><br><span class="line"><span class="keyword">assign</span> IDEXE_flush = ~IDEXE_stall &amp; predict_flush | switch_mode;</span><br><span class="line"><span class="keyword">assign</span> EXEMEM_flush = ~EXEMEM_stall &amp; (data_race_if | predict_flush &amp; IF_stall) | switch_mode;</span><br><span class="line"><span class="keyword">assign</span> MEMWB_flush = MEM_stall | (delay_open == <span class="number">1</span> &amp;&amp; MEM_stall_delay_1 &amp;&amp; we_MEM_EXE) | switch_mode; </span><br></pre></td></tr></table></figure>
+<h3 id="中断响应">3.4 中断响应</h3>
+<p>本实验中只需要我们去处理时钟中断</p>
+<p>在软件中我们已经设置了第一次的时钟中断时间到达时，Core外围就会给Core输入<code>time_int</code>信号触发时钟中断</p>
+<p>对于时钟中断的处理方法和异常类似，只不过这次的信号传递是外部给的。</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20231220172218856.png"></p>
+<ul>
+<li><p><code>switch_mode</code>置1，切换特权态</p></li>
+<li><p><code>priv</code>如果原来为<code>2'b11</code>即M态变为<code>2'b10</code>S态，如果是S态切换为M态</p></li>
+<li><p><code>pc_csr</code>输出异常处理的pc</p></li>
+</ul>
+<p>这里我们需要注意，因为时钟中断不一定在哪个阶段产生，<strong>也就是说假如现在FSM在取指令，突然发生了时钟中断pc变为pc_csr，那么下面一条从MEM中取出的指令的pc是old_pc，并不是跳转之后的。</strong></p>
+<p><strong>这种情况下我们需要对此条指令进行舍弃。</strong></p>
+<p>FSM中的逻辑更改：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">reg</span> fake_inst_if = <span class="number">0</span>; <span class="comment">// 定义一个寄存器 fake_inst_if，并初始化为 0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> if_stall = (if_open == <span class="number">1'b1</span>) | switch_mode; <span class="comment">// 根据 if_open 和 switch_mode 的值来确定是否产生流水线停顿</span></span><br><span class="line"><span class="keyword">assign</span> mem_stall = (mem_open == <span class="number">1'b1</span>) ? <span class="number">1</span> : <span class="number">0</span>; <span class="comment">// 根据 mem_open 的值来确定是否产生内存访问停顿</span></span><br><span class="line"><span class="keyword">assign</span> inst = (inst_open) ? (((pc - <span class="number">4</span> &gt;&gt; <span class="number">2</span>) % <span class="number">2</span> == <span class="number">0</span>) ? inst_keep[<span class="number">31</span>:<span class="number">0</span>] : inst_keep[<span class="number">63</span>:<span class="number">32</span>]) : <span class="number">0</span>; <span class="comment">// 根据 inst_open 的值选择需要输出的指令数据</span></span><br><span class="line"><span class="keyword">assign</span> rdata_cpu = (rdata_open) ? rdata_mem : <span class="number">0</span>; <span class="comment">// 根据 rdata_open 的值选择需要输出的数据</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rstn) <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span> (!rstn) <span class="keyword">begin</span></span><br><span class="line">        <span class="comment">// 在复位期间的操作</span></span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">        <span class="comment">// 复位结束后的操作</span></span><br><span class="line">        <span class="keyword">case</span> (state)</span><br><span class="line">            <span class="comment">// 状态机的各个状态</span></span><br><span class="line">            <span class="number">2'b00</span>: <span class="keyword">begin</span></span><br><span class="line">                <span class="keyword">if</span> (keep)<span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果 keep 为真，则执行相关操作</span></span><br><span class="line">                    ...</span><br><span class="line">                <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> (wen_cpu | ren_cpu) <span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果 wen_cpu 或 ren_cpu 为真，则执行相关操作</span></span><br><span class="line">                    ...</span><br><span class="line">                <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> (if_request) <span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果 if_request 为真，则执行相关操作</span></span><br><span class="line">                    state &lt;= <span class="number">2'b10</span>;</span><br><span class="line">                    if_open &lt;= <span class="number">1</span>;</span><br><span class="line">                    wmask_mem &lt;= <span class="number">8'b11111111</span>;</span><br><span class="line">                    mem_open &lt;= <span class="number">0</span>;</span><br><span class="line">                    address_mem &lt;= pc;</span><br><span class="line">                    ren_mem &lt;= <span class="number">1</span>;</span><br><span class="line">                    wen_mem &lt;= <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="number">2'b01</span>: <span class="keyword">begin</span></span><br><span class="line">                <span class="keyword">if</span> (valid_mem) <span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果 valid_mem 为真，则执行相关操作</span></span><br><span class="line">                    ...</span><br><span class="line">                <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> (!valid_mem) <span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果 valid_mem 为假，则执行相关操作</span></span><br><span class="line">                    mem_open &lt;= mem_open;</span><br><span class="line">                <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="number">2'b10</span>: <span class="keyword">begin</span></span><br><span class="line">                <span class="keyword">if</span> (valid_mem) <span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果 valid_mem 为真，则执行相关操作</span></span><br><span class="line">                    <span class="keyword">if</span> (!fake_inst_if) <span class="keyword">begin</span> <span class="comment">// 分支判断</span></span><br><span class="line">                        if_open &lt;= <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">if</span> (~keep) mem_open &lt;= <span class="number">0</span>;</span><br><span class="line">                        inst_keep &lt;= rdata_mem;</span><br><span class="line">                        ren_mem &lt;= <span class="number">0</span>;</span><br><span class="line">                        wen_mem &lt;= <span class="number">0</span>;</span><br><span class="line">                        state &lt;= <span class="number">2'b00</span>;</span><br><span class="line">                        inst_open &lt;= <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">                        fake_inst_if &lt;= <span class="number">0</span>;</span><br><span class="line">                        state &lt;= <span class="number">2'b11</span>;</span><br><span class="line">                        ren_mem &lt;= <span class="number">0</span>;</span><br><span class="line">                        wen_mem &lt;= <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> (if_request == <span class="number">1</span>) <span class="keyword">begin</span></span><br><span class="line">                    fake_inst_if &lt;= <span class="number">1</span>; <span class="comment">// 标记垃圾指令</span></span><br><span class="line">                    address_mem &lt;= pc; <span class="comment">// 保存pc</span></span><br><span class="line">                <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">                    <span class="comment">// 如果以上条件都不满足，则执行相关操作</span></span><br><span class="line">                    ...</span><br><span class="line">                <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="number">2'b11</span>: <span class="keyword">begin</span></span><br><span class="line">                state &lt;= <span class="number">2'b10</span>;</span><br><span class="line">                if_open &lt;= <span class="number">1</span>;</span><br><span class="line">                wmask_mem &lt;= <span class="number">8'b11111111</span>;</span><br><span class="line">                mem_open &lt;= <span class="number">0</span>;</span><br><span class="line">                address_mem &lt;= pc;</span><br><span class="line">                ren_mem &lt;= <span class="number">1</span>;</span><br><span class="line">                wen_mem &lt;= <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<p>在FSM正在取指令时，假如这时<code>valid_mem</code>没有返回，却又接收到了<code>if_request</code>，此时<code>fake_inst_if</code>，传进来的，表示现在取的指令是假的需要舍弃。</p>
+<p>当<code>valid_mem</code>信号返回时，状态机不按照正常的状态跳转，而是跳转到另外一个状态<code>2'b11</code></p>
+<p><strong>区别于<code>2'b00</code>的状态，<code>2'b11</code>继续保持<code>if_open</code>信号开启即<code>if_stall</code>。由于该信号的存在，刚刚取出来的<code>fake_inst</code>只会停留于<code>IF</code>阶段传不下去，这样就跳过了这条指令的执行。</strong>之后，状态机由<code>2'b11</code>再次跳转到<code>2'b10</code>执行取指令的操作，这次取回来的就是中断函数的pc对应的<code>inst</code>了。</p>
+<p>同时在Core里面加这么一句：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> if_request = ~IF_stall | switch_mode ;</span><br></pre></td></tr></table></figure>
+<p>这样就能在时钟中断触发时及时改变FSM中的pc了。</p>
+<h4 id="关于时钟中断的触发问题">3.4.* 关于时钟中断的触发问题</h4>
+<p>这里想解释一下为什么之前强调不能把<code>except_EXE</code>取出来直接怼给<code>CSRModule</code>，而要一路传到<code>except_WB</code>，然后s塞给CSRModule。</p>
+<p>本实验处理的时钟中断过程中有两个关键点：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219193744190.png"></p>
+<ol type="1">
+<li>在时钟中断发生时触发<code>exception interrupt #7</code>，由S态切换到M态，执行<code>sbi_mti_handler</code></li>
+</ol>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219193838094.png"></p>
+<ol start="2" type="1">
+<li>在<code>sbi_mti_handler</code>函数结束运行，即<code>mret</code>时触发<code>exception interrupt #5</code>使程序返回S态并陷入S态的异常处理函数<code>traps</code></li>
+</ol>
+<p>假如我们把<code>except_EXE</code>直接怼给CSRModule，会发第二个中断无法触发。</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219194523311.png"></p>
+<p>观察波形：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219194604888.png"></p>
+<p>发现<code>switch_mode,pc_csr,s_trap</code>均成功载入，但是中断无法触发，导致框架认为我们跳转的地址是不正确的。</p>
+<p>后来发现是指令对应错了。</p>
+<p>当<code>s_trap</code>为1时，只有当<code>valid_WB</code>为0才能触发S态的中断。但很明显在错误的波形中，<code>s_trap</code>所对应的指令是<code>m_ret</code>并不是<code>j pc + 0x0</code>，导致我们不可能让这条指令valid为0 ，也不可能触发中断。</p>
+<p><strong>所以按照助教的代码逻辑，一定要一路传到<code>except_WB</code>，然后塞给CSRModule。</strong></p>
+<h2 id="实验结果">4 实验结果</h2>
+<h3 id="仿真验证">3.1仿真验证</h3>
+<p><code>make</code>指令仿真，一路到底</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200244380.png"></p>
+<p><code>make 2&gt;log.txt</code> 可以在屏幕上打印字符</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200350495.png"></p>
+<p><code>make board_sim</code> 一路到底~</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219201246702.png"></p>
+<h3 id="上板验证">3.2 上板验证</h3>
+<p>按照实验指导配置IP核，把<code>build</code>文件夹整个移到项目目录下，烧录<code>bit</code>流文件，上板发现寄了。</p>
+<p>用vivado跑个仿真试试：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200652923.png"></p>
+<p>后来问助教gg才知道要去魔改rand函数不然就会寄，那我直接注释掉就好了（笑）</p>
+<p>再次烧录上板：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/image-20231219200952424.png"></p>
+<p>Pass~</p>
+<h2 id="questions">5 Questions</h2>
+<h4 id="q1-使用-putc-函数输出一个字符-a-前后需要发生几次特权态切换请将切换的状态和切换的原因一一列举出来">5.1 Q1 <strong>使用 putc 函数输出一个字符 'a' 前后需要发生几次特权态切换，请将切换的状态和切换的原因一一列举出来。</strong></h4>
+<p>使用<code>putc</code>输出一个字符共进行两次特权态的切换</p>
+<ul>
+<li>第一次<code>ecall</code>触发异常，从S态切换到M态</li>
+<li>第二次<code>sbi_console_putchar</code> 运行结束<code>mret</code>，从M态切换到S态</li>
+</ul>
+<h4 id="q2-如果流水线的-ifidmem-阶段都检测到了异常发生应该选择那个流水级的异常作为-trap_handler-处理的异常请说说为什么这么选择">5.2 Q2 如果流水线的 IF、ID、MEM 阶段都检测到了异常发生，应该选择那个流水级的异常作为 trap_handler 处理的异常？请说说为什么这么选择。</h4>
+<p>应选择<code>MEM</code>阶段的异常进行处理</p>
+<p>因<code>except_regs</code>要一路传递到WB阶段才能进入CSRModule，CSRModule才能传出异常处理的信号给Core，将所有阶段间寄存器<code>flush</code>掉。所以应该以第一条遇到的异常指令为准，后面的指令没有参考价值。</p>
+<h4 id="q3-csr-寄存器的读写操作如-csrrwcsrrwi-会不会引入新的-stall如果会在你的实现中引入了哪些-stall可以用-forward-技术来减少这部分-stall-吗">5.3 Q3 CSR 寄存器的读写操作如 csrrw、csrrwi 会不会引入新的 stall？如果会，在你的实现中引入了哪些 stall？可以用 forward 技术来减少这部分 stall 吗？</h4>
+<ul>
+<li><p>会引入新的stall</p></li>
+<li><p>由于CSRModule的架构和Regs基本一致，即寄存器的读出是组合电路，而寄存器的写入是时序电路。</p></li>
+</ul>
+<p>即，寄存器的读取是瞬发的，而寄存器的写入需要stall一拍（上升沿写回）</p>
+<ul>
+<li><p>在我的设计中，由于我把CSRModule当做另一个Reg去处理，实际上没有引入额外的stall（与Reg交叉写入，共用一个stall）。</p></li>
+<li><p>可以利用forward技术来减少stall。我们可以注意到，实际上一个值在IDEXE阶段从Reg中读取出来要传到WB才能进行写入。<strong>由于RV64特权指令通常不需要进行很复杂的运算，也就用不到EXE,MEM阶段的功能</strong>，把<code>CSR_rdata</code>和<code>REG_rdata</code>一直传递到最后才写入实际上是一种时间的浪费。</p></li>
+</ul>
+<p>我们可以在IDEXE阶段读出CSR和Reg的值的同时进行交叉写入，这样只要在这里stall一拍就可以完成写回（上升沿写回）。如果是下降沿写回那就一拍都不用stall，上升沿取出，下降沿写回即可。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Computer System II Lab 5 ：RV64 内核线程调度</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2023 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
