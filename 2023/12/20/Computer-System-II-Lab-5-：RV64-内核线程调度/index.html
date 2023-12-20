@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Computer System II Lab 5 ：RV64 内核线程调度 | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： 线程是操作系统调度的基本单位，当一个线程的时间片结束之后，操作系统需要选择一个新的线程来占有CPU。本实验需要完成RV64架构下的线程调度机制，探究与线程有关的一些问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer System II Lab 5 ：RV64 内核线程调度">
+<meta property="og:url" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： 线程是操作系统调度的基本单位，当一个线程的时间片结束之后，操作系统需要选择一个新的线程来占有CPU。本实验需要完成RV64架构下的线程调度机制，探究与线程有关的一些问题。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211111940522.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211115218253.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120205071.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120730079.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120805687.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120828430.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120912161.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120935335.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211121141004.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211121230764.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211121255319.png">
+<meta property="article:published_time" content="2023-12-20T09:07:46.000Z">
+<meta property="article:modified_time" content="2023-12-20T09:13:02.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211111940522.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/introduction">关于我</a></li>
+				        
+							<li><a href="/pp">晚栀的书房(building)</a></li>
+				        
+							<li><a href="/log">运维日志</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1830685896&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Pwn/" style="font-size: 12.5px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 12.5px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 15px;">ZJUCTF</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 12.5px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 15px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 20px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">计算机系统</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 17.5px;">计算机系统II</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://121.40.230.233:3303/">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好的标题</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/introduction">关于我</a></li>
+		        
+					<li><a href="/pp">晚栀的书房(building)</a></li>
+		        
+					<li><a href="/log">运维日志</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Computer-System-II-Lab-5-：RV64-内核线程调度" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/" class="article-date">
+  	<time datetime="2023-12-20T09:07:46.000Z" itemprop="datePublished">2023-12-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Computer System II Lab 5 ：RV64 内核线程调度
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>线程是操作系统调度的基本单位，当一个线程的时间片结束之后，操作系统需要选择一个新的线程来占有CPU。本实验需要完成RV64架构下的线程调度机制，探究与线程有关的一些问题。 <span id="more"></span> ### 1 实验目的</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211111940522.png"></p>
+<h3 id="实验步骤">2 实验步骤</h3>
+<h4 id="实验准备">2.1 实验准备</h4>
+<p>按照实验指导在仓库下添加修改一些文件，包括<code>defs.h</code>,<code>proc.h</code>等</p>
+<p>并在<code>proc.c</code>中补全dummy函数和一些函数的定义。</p>
+<h4 id="task_init-线程初始化">2.2 task_init 线程初始化</h4>
+<p>按照实验指导并结合已给出的代码逻辑补全</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">task_init</span><span class="params">()</span> {</span><br><span class="line">    idle = (<span class="keyword">struct</span> task_struct*) kalloc();</span><br><span class="line">    <span class="comment">// 1. 调用 kalloc() 为 idle 分配一个物理页</span></span><br><span class="line">    idle-&gt;state = TASK_RUNNING;</span><br><span class="line">    <span class="comment">// 2. 设置 state 为 TASK_RUNNING;</span></span><br><span class="line">    idle-&gt;counter = <span class="number">0</span>;</span><br><span class="line">    idle-&gt;priority = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 3. 由于 idle 不参与调度 可以将其 counter / priority 设置为 0</span></span><br><span class="line">    idle-&gt;pid = <span class="number">0</span>;</span><br><span class="line">	 <span class="comment">// 4. 设置 idle 的 pid 为 0</span></span><br><span class="line">    current = idle;</span><br><span class="line">    task[<span class="number">0</span>] = idle;</span><br><span class="line">	<span class="comment">// 5. 将 current 和 task[0] 指向 idle</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">1</span>;i &lt; NR_TASKS; i++){</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> * <span class="title">temp</span> =</span> (<span class="keyword">struct</span> task_struct *)kalloc();</span><br><span class="line">        temp-&gt;state = TASK_RUNNING;</span><br><span class="line">        temp-&gt;counter = <span class="number">0</span>;</span><br><span class="line">        temp-&gt;priority = (uint64)rand()%(PRIORITY_MAX-PRIORITY_MIN+<span class="number">1</span>)+PRIORITY_MIN;</span><br><span class="line">        temp-&gt;pid = i;</span><br><span class="line">        (temp-&gt;thread).ra = (uint64)__dummy;</span><br><span class="line">        (temp-&gt;thread).sp = (uint64)temp+PGSIZE;</span><br><span class="line">        task[i] = temp;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 1. 参考 idle 的设置, 为 task[1] ~ task[NR_TASKS - 1] 进行初始化</span></span><br><span class="line">    <span class="comment">// 2. 其中每个线程的 state 为 TASK_RUNNING, counter 为 0, priority 使用 rand() 来设置, pid 为该线程在线程数组中的下标。</span></span><br><span class="line">    <span class="comment">// 3. 为 task[1] ~ task[NR_TASKS - 1] 设置 `thread_struct` 中的 `ra` 和 `sp`, </span></span><br><span class="line">    <span class="comment">// 4. 其中 `ra` 设置为 __dummy （见 4.3.2）的地址， `sp` 设置为 该线程申请的物理页的高地址</span></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    printk(<span class="string">"...proc_init done!\n"</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>在设置每个线程的<code>priority</code>时，需要注意数值的范围。因取余后数值是从0开始的，所以我们要加上<code>Priority_MIN</code>使得最后得到的数值是符合要求的。</p>
+<blockquote>
+<p>在C语言中，得到范围在（a，b）中的随机数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result = rand() % (b - a + <span class="number">1</span>) + a;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="switch_to-线程切换">2.3 switch_to 线程切换</h4>
+<p>当线程切换时需要保存该线程的上下文到该线程的运行栈上。现在我们需要计算一下具体保存在栈的什么位置。</p>
+<p><code>__swtich_to</code>接受两个参数，一个是当前线程的地址<code>a0</code>，一个是下一个现成的地址<code>a1</code>。 结构体的定义如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_struct</span> {</span></span><br><span class="line">    uint64 ra;</span><br><span class="line">    uint64 sp;</span><br><span class="line">    uint64 s[<span class="number">12</span>];</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 线程数据结构 */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> {</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">thread_info</span>* <span class="title">thread_info</span>;</span></span><br><span class="line">    uint64 state;    <span class="comment">// 线程状态</span></span><br><span class="line">    uint64 counter;  <span class="comment">// 运行剩余时间 </span></span><br><span class="line">    uint64 priority; <span class="comment">// 运行优先级</span></span><br><span class="line">    uint64 pid;      <span class="comment">// 线程id</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">thread_struct</span> <span class="title">thread</span>;</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<p>其中，<code>thread_info</code>是8bytes的地址值，剩下四个都是8bytes的<code>unsigned int</code>型常量。</p>
+<p>所以ra相对于地址值的偏移量为<code>5 * 8 = 40</code></p>
+<p>即我们需要把当前线程的寄存器值保存在<code>a0 + 40</code>的位置，并且从下一个线程的<code>40 + a1</code>处开始恢复寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">.globl __switch_to</span><br><span class="line">__switch_to:</span><br><span class="line">    sd ra, 40(a0)</span><br><span class="line">    sd sp, 48(a0)</span><br><span class="line">    sd s0, 56(a0)</span><br><span class="line">    sd s1, 64(a0)</span><br><span class="line">    sd s2, 72(a0)</span><br><span class="line">    sd s3, 80(a0)</span><br><span class="line">    sd s4, 88(a0)</span><br><span class="line">    sd s5, 96(a0)</span><br><span class="line">    sd s6, 104(a0)</span><br><span class="line">    sd s7, 112(a0)</span><br><span class="line">    sd s8, 120(a0)</span><br><span class="line">    sd s9, 128(a0)</span><br><span class="line">    sd s10, 136(a0)</span><br><span class="line">    sd s11, 144(a0)</span><br><span class="line"></span><br><span class="line">    ld ra, 40(a1)</span><br><span class="line">    ld sp, 48(a1)</span><br><span class="line">    ld s0, 56(a1)</span><br><span class="line">    ld s1, 64(a1)</span><br><span class="line">    ld s2, 72(a1)</span><br><span class="line">    ld s3, 80(a1)</span><br><span class="line">    ld s4, 88(a1)</span><br><span class="line">    ld s5, 96(a1)</span><br><span class="line">    ld s6, 104(a1)</span><br><span class="line">    ld s7, 112(a1)</span><br><span class="line">    ld s8, 120(a1)</span><br><span class="line">    ld s9, 128(a1)</span><br><span class="line">    ld s10, 136(a1)</span><br><span class="line">    ld s11, 144(a1)</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure>
+<p>在切换时，需要对两个线程进行pid值的比较，如果两个线程pid值相等，则不进行切换。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">void</span> __switch_to(<span class="keyword">struct</span> task_struct* prev, <span class="keyword">struct</span> task_struct* next);</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">switch_to</span><span class="params">(<span class="keyword">struct</span> task_struct* next)</span> {</span><br><span class="line">    <span class="keyword">if</span> (next-&gt;pid != current-&gt;pid) {</span><br><span class="line">        printk(<span class="string">"\nswitch to [PID = %d PRIORITY = %d COUNTER = %d]\n"</span>, next-&gt;pid, next-&gt;priority, next-&gt;counter);</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span>* <span class="title">prev</span> =</span> current;</span><br><span class="line">        current = next; <span class="comment">// 切换</span></span><br><span class="line">        __switch_to(prev, next);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<h4 id="do_timer-调度入口">2.4 do_timer 调度入口</h4>
+<p>这里需要判断当前线程是否已经运行完毕，是则使用<code>schedule</code>函数进行调度，如果不是继续运行当前线程并执行<code>counter--</code>，直到运行结束。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">do_timer</span><span class="params">()</span>{</span><br><span class="line">    <span class="keyword">if</span>(current == idle || current -&gt; counter == <span class="number">0</span>) schedule();</span><br><span class="line">    <span class="keyword">else</span>{</span><br><span class="line">        current-&gt;counter--;</span><br><span class="line">        <span class="keyword">if</span>(current-&gt;counter == <span class="number">0</span>) schedule();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<h4 id="schedule-线程调度">2.5 schedule 线程调度</h4>
+<p>在这里我们考虑这几种情况：</p>
+<ul>
+<li>当前线程运行完毕，需要切换到下一个进行运行</li>
+<li>所有线程均运行完毕，需重新设置</li>
+<li>在切换线程时保证先运行counter少的。</li>
+</ul>
+<p>根据实验指导中提供的linux执行该算法的源码，编写<code>schedule</code>函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">schedule</span><span class="params">()</span>{</span><br><span class="line">    <span class="type">int</span> i , next, c;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> ** <span class="title">p</span>;</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>){</span><br><span class="line">        c = <span class="number">-1</span>;</span><br><span class="line">        next = <span class="number">0</span>;</span><br><span class="line">        i = NR_TASKS;</span><br><span class="line">        p = &amp;task[NR_TASKS];</span><br><span class="line">        <span class="keyword">while</span>(--i){</span><br><span class="line">            <span class="keyword">if</span>(!*--p) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span>((*p)-&gt;state == TASK_RUNNING &amp;&amp; (<span class="type">signed</span>)(*p)-&gt;counter &gt; c){</span><br><span class="line">                c = (*p)-&gt;counter;</span><br><span class="line">                next = i;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span>(c) <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt; NR_TASKS; ++j) {</span><br><span class="line">            task[j]-&gt;counter = task[j]-&gt;priority;</span><br><span class="line">            <span class="keyword">if</span> (j == <span class="number">1</span>) printk(<span class="string">"\n"</span>);</span><br><span class="line">            printk(<span class="string">"SET [PID = %d PRIORITY = %d COUNTER = %d]\n"</span>, task[j]-&gt;pid, task[j]-&gt;priority, task[j]-&gt;counter);</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">    }</span><br><span class="line">    switch_to(task[next]);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，由于我们的<code>counter</code>设置的是<code>unsigned int</code>，如果根据linux的源码执行的话，<code>0 &gt; -1</code>是错误的，因为这时候<code>-1</code>也会被当成是<code>unsigned</code>类型变量。所以我们需要在比较之前加上一个<code>signed</code>指定有符号比较。</p>
+<p>linux源码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) {</span><br><span class="line">		c = <span class="number">-1</span>;</span><br><span class="line">		next = <span class="number">0</span>;</span><br><span class="line">		i = NR_TASKS;</span><br><span class="line">		p = &amp;task[NR_TASKS];</span><br><span class="line">		<span class="keyword">while</span> (--i) {</span><br><span class="line">			<span class="keyword">if</span> (!*--p)</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			<span class="keyword">if</span> ((*p)-&gt;state == TASK_RUNNING &amp;&amp; (*p)-&gt;counter &gt; c)</span><br><span class="line">				c = (*p)-&gt;counter, next = i;</span><br><span class="line">		}</span><br><span class="line">		<span class="keyword">if</span> (c) <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">for</span>(p = &amp;LAST_TASK ; p &gt; &amp;FIRST_TASK ; --p)</span><br><span class="line">			<span class="keyword">if</span> (*p)</span><br><span class="line">				(*p)-&gt;counter = ((*p)-&gt;counter &gt;&gt; <span class="number">1</span>) +</span><br><span class="line">						(*p)-&gt;priority;</span><br><span class="line">	}</span><br><span class="line">	switch_to(next);</span><br></pre></td></tr></table></figure>
+<h4 id="start段-更改">2.6 _start段 更改</h4>
+<p>在最后的跳转之前分别调用<code>mm_init</code>和<code>task_init</code></p>
+<p>如果不对内存初始化，在<code>task_init</code>的时候就会在<code>kalloc</code>这里死掉</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.........</span><br><span class="line">call mm_init</span><br><span class="line">call task_init</span><br><span class="line">j start_kernel</span><br></pre></td></tr></table></figure>
+<h3 id="实验结果">3 实验结果</h3>
+<p><code>make run</code>运行结果如图：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211115218253.png"></p>
+<h3 id="思考题">4 思考题</h3>
+<h4 id="在-rv6-4-中一-共用-3-2-个通用寄存器-为什么-context_switch-中只保-存了-14-个">4.1 在 RV6 4 中一 共用 3 2 个通用寄存器， 为什么 <code>context_switch</code> 中只保 存了 14 个？</h4>
+<p>在<code>swtich_to</code>中调用<code>__swtich_to</code>时，（由于<code>swtich</code>函数是用C语言写的）会自动把一些寄存保存在栈上，不需要我们手动保存。</p>
+<p>所以<code>__switch_to</code>只需要把C语言中没用保存的部分，保存在栈上即可。</p>
+<h4 id="当线程第一次调用时-其-ra-所代表的返回点是-__dummy-那么在之后的线程调用中-context_switch-中ra-保-存-恢复的函数返回点是什么呢-请同-学用g-db-尝试追踪一次完整的线程切换流程-并关注每一次-ra-的变换">4.2 当线程第一次调用时， 其 <code>ra</code> 所代表的返回点是 <code>__dummy</code>。 那么在之后的线程调用中 <code>context_switch</code> 中，<code>ra</code> 保 存 / 恢复的函数返回点是什么呢 ？ 请同 学用g db 尝试追踪一次完整的线程切换流程， 并关注每一次 <code>ra</code> 的变换。</h4>
+<p>追踪完整的线程切换流程，我们现在<code>switch_to</code>处打断点</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120205071.png"></p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120730079.png"></p>
+<p>查看__swtich_to段的地址，并在上下两天sd ra，ld ra处打断点</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120805687.png"></p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120828430.png"></p>
+<p>分别查看<code>ra</code>的值</p>
+<p>sd：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120912161.png"></p>
+<p>ld：</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211120935335.png"></p>
+<p>这是第一次，即对线程进行初始化。根据推测出可知前几次都是，所以我们直接<code>c</code>, 每次在这两个断点处查看<code>ra</code>的值</p>
+<p>第二次</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211121141004.png"></p>
+<p>第三次</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211121230764.png"></p>
+<p>第四次</p>
+<p><img src="/2023/12/20/Computer-System-II-Lab-5-%EF%BC%9ARV64-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6/image-20231211121255319.png"></p>
+<p>可以看到，从第四次开始，所有线程都已经有了保存的上下文，所以恢复的ra也就都是<code>switch_to+136</code></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/12/20/Computer-System-II-Lab-4-RV64-%E6%97%B6%E9%92%9F%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Computer System II Lab 4 : RV64 时钟中断处理</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2023 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
