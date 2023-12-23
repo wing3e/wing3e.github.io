@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/480b8c26497340e703f0eb61ade26c5.png">
 <meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224013629508.png">
 <meta property="article:published_time" content="2023-12-23T15:48:21.000Z">
-<meta property="article:modified_time" content="2023-12-23T18:12:41.367Z">
+<meta property="article:modified_time" content="2023-12-23T18:14:33.567Z">
 <meta property="article:tag" content="Pwn">
 <meta property="article:tag" content="安洵杯">
 <meta name="twitter:card" content="summary">
@@ -429,7 +429,7 @@ mjx-container[display="true"] + br {
 <p>执行exp，运行结果如下：</p>
 <p><img src="/2023/12/23/2023D0g3Pwn/image-20231224005656098.png"></p>
 <p>成功读取文件内容。</p>
-<h3 id="side-channel">Side Channel</h3>
+<h3 id="side-channel">2 Side Channel</h3>
 <p>这个题是上一道<code>seccomp</code>的plus版</p>
 <p><img src="/2023/12/23/2023D0g3Pwn/image-20231224011159513.png"></p>
 <p>好好好，把<code>write</code>也给我禁了，但允许<code>mprotect</code>和<code>srop</code>，但是他为什么还能输出字符串.....丢进IDA</p>
