@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>软件保护技术Review | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： 软件保护技术Review">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件保护技术Review">
+<meta property="og:url" content="http://47.96.29.144/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： 软件保护技术Review">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost/Ubuntu-22.04/home/wingee/w1ngee/wingee/source_posts/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/image-20240117205547473.png">
+<meta property="og:image" content="http://47.96.29.144/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost/Ubuntu-22.04/home/wingee/w1ngee/wingee/source_posts/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/image-20240117233215773.png">
+<meta property="og:image" content="http://47.96.29.144/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost/Ubuntu-22.04/home/wingee/w1ngee/wingee/source_posts/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/image-20240117233410533.png">
+<meta property="og:image" content="http://47.96.29.144/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost/Ubuntu-22.04/home/wingee/w1ngee/wingee/source_posts/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/image-20240118025752624.png">
+<meta property="article:published_time" content="2024-01-19T09:00:14.000Z">
+<meta property="article:modified_time" content="2024-01-19T09:06:05.472Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost/Ubuntu-22.04/home/wingee/w1ngee/wingee/source_posts/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/image-20240117205547473.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/introduction">关于我</a></li>
+				        
+							<li><a href="/pp">晚栀的书房(building)</a></li>
+				        
+							<li><a href="/log">运维日志</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1830685896&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Pwn/" style="font-size: 12.5px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 10px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 12.5px;">ZJUCTF</a> <a href="/tags/%E5%AE%89%E6%B4%B5%E6%9D%AF/" style="font-size: 10px;">安洵杯</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 10px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 15px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 17.5px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" style="font-size: 12.5px;">计算机体系结构</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 20px;">计算机系统II</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://121.40.230.233:3303/">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好的标题</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/introduction">关于我</a></li>
+		        
+					<li><a href="/pp">晚栀的书房(building)</a></li>
+		        
+					<li><a href="/log">运维日志</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-软件保护技术Review" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/" class="article-date">
+  	<time datetime="2024-01-19T09:00:14.000Z" itemprop="datePublished">2024-01-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      软件保护技术Review
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>软件保护技术Review <span id="more"></span> ## 1 工具使用</p>
+<h3 id="ida-pro">1-1 IDA Pro</h3>
+<p>IDA Pro是静态反编译软件（被exe转化成.asm甚至.c）</p>
+<p>大部分快捷键与Ollydbg通用</p>
+<h4 id="常用命令">1-1-1 常用命令</h4>
+<ul>
+<li><p>c命令可以把某部分机器码强行翻译成指令，纠错。</p></li>
+<li><p>d命令可以把某部分机器码强行翻译成变量，还可修改变量宽度（连按），db，dw，dd。ALT+D还可设置更多数据类型。</p></li>
+<li><p>u命令可以把某部分机器码强行转化为未定义状态，unknown。</p></li>
+<li><p>n命令可以更改变量名，函数名，标号等</p></li>
+<li><p>同样用分号进行注释（汇编界面非C语言）</p></li>
+<li><p>按shift+f5可查看程序所调用的特征库。</p></li>
+<li><p>ESC回退，Ctrl Enter前进，<strong>OD里面按Esc回退，`或~前进。</strong></p></li>
+<li><p>Tab 跳转到伪代码对应的汇编代码（已经打开伪代码窗口时，也可由汇编代码转到伪代码，即双向）</p></li>
+<li><p>定义数组 *</p></li>
+<li><p>定义字符串 a</p></li>
+</ul>
+<h4 id="交叉引用cross-reference">1-1-2交叉引用（Cross Reference）</h4>
+<p>通过交叉引用，可以直到某变量/函数在程序中被使用/调用的位置及次数。</p>
+<ul>
+<li>双击变量</li>
+<li>在地址处ctrl+x</li>
+<li>弹出窗口，即为调用位置，双击即可跳转。</li>
+</ul>
+<p>也可以用菜单栏实现：</p>
+<ul>
+<li>找到变量双击</li>
+<li>定位到地址处</li>
+<li>光标移动到分号后面，后面有一些引用</li>
+<li>选择view-open subview-cross referrence</li>
+<li>弹出窗口</li>
+</ul>
+<h4 id="字符串搜索">1-1-3 字符串搜索</h4>
+<ul>
+<li>在反编译窗口，<strong>ALT+T搜索字符串</strong>，不可加引号，对反编译的内容进行检索，速度较慢</li>
+<li>在反编译窗口，<strong>ALT+B搜索字节数据</strong>，<strong>字符串需加引号</strong>，搜到的是字符串本身的内容，用来对机器码进行搜索，默认十六进制。</li>
+</ul>
+<h4 id="ida-调试">1-1-4 IDA 调试</h4>
+<ul>
+<li><p>F2 打断点</p></li>
+<li><p>CTRL+ALT+B 打开断点列表</p></li>
+<li><p>F4 运行到光标所在位置</p></li>
+<li><p>F7单步步入，F8单步步过</p></li>
+<li><p>F9 run</p></li>
+</ul>
+<h3 id="ollydebug">1-2 OllyDebug</h3>
+<blockquote>
+<p>在调试时OD(Ollydebug)的<strong>函数跟随：</strong></p>
+<ul>
+<li><strong>选中一条call 敲回车</strong></li>
+<li>输入冒号，输入想定义的标签名。</li>
+<li>按esc退回。按~前进。call后变为标签</li>
+</ul>
+<p>（Ctrl + F9快速运行完该函数体，Alt + F9可以直接跳过多层内核函数返回到当前运行的程序函数当中）</p>
+</blockquote>
+<blockquote>
+<p>在调试时OD的<strong>注释</strong></p>
+<ul>
+<li>选中一条指令</li>
+<li>输入分号，输入想添加的注释</li>
+<li>从右边把白线拉进，即可看到。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>在调试时OD<strong>更改寄存器</strong>的值（包括EFL）。（EIP）除外</p>
+<ul>
+<li>选中寄存器</li>
+<li>双击（EIP的双击只能定位到EIP处，可起到goto的作用）</li>
+<li>输入想改变的数字。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>在调试时OD<strong>改变EIP</strong></p>
+<ul>
+<li>光标直到目标地址处</li>
+<li>点右键</li>
+<li>选择菜单</li>
+<li>选择此处为*EIP</li>
+<li>EIP则跳转到目标地址处。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>在调试时<strong>修改汇编语言</strong></p>
+<ul>
+<li>选中指令</li>
+<li>直接输入更改</li>
+<li>若要修改机器码，可在数据窗中修改。</li>
+<li>也可在代码窗中输入db+后续机器码，将指令直接修改掉。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>修改某个变量的值</strong></p>
+<ul>
+<li>先Ctrl + g定位到变量的地址</li>
+<li>选中首字节，敲键盘数字键或A-F字母弹出修改对话框</li>
+<li>输入要修改的内容即可</li>
+</ul>
+<p>（如果改坏了内存信息，可以选中这块内容按 Alt + Backspace恢复）</p>
+</blockquote>
+<ul>
+<li>F2 设置软件断点，F7跟踪进入，F9运行到断点处</li>
+</ul>
+<blockquote>
+<p>软件断点：<strong>把要设断点的指令的首字节改成0xCC,对应的*汇编指令为int 3。</strong>也就是说会直接修改代码段，此时如果有shellcode对代码段进行解密就会解密出错误的结果。</p>
+<p>在指令中打硬件断点：</p>
+<ul>
+<li><p><strong>选中某条指令右键-&gt;断点-&gt;硬件执行</strong></p></li>
+<li><p><strong>如何查看已设好的硬件断点: 调试-&gt;硬件断点硬件断点的触发条件除了执行(eXecute)外，还有读(Read)、写(Write)两种。</strong></p></li>
+</ul>
+<p>在内存中打硬件断点：</p>
+<ul>
+<li>选中某块内存的首字节-&gt;右键-&gt;断点-&gt;硬件写入-&gt; Dword（宽度，也可以是Byte，Word等）</li>
+<li>运行，如果有对该内存的访问就会断住。</li>
+</ul>
+</blockquote>
+<ul>
+<li>对函数，标号，变量重命名：冒号</li>
+<li>Alt + Enter 自动跳到指针所指的位置</li>
+<li>OD点菜单-查看-查看内存-Ctrl+B-ASCII码搜索字符串：查找字符串在内存中的位置。</li>
+</ul>
+<h3 id="turbo-debug">1-3 Turbo Debug</h3>
+<ul>
+<li><p>F8 Setup over为应用程序单步执行。</p></li>
+<li><p>F2 Toggle为插入断点(CCh)</p></li>
+<li><p>F4 Go to cursor运行至光标</p></li>
+<li><p>F7 Trace into跟踪进入函数</p></li>
+<li><p>F9 Run全程运行程序。</p></li>
+<li><p><strong>Ctrl+F2 program reset</strong></p></li>
+<li><p><strong>Ctrl+o 回到当前将要执行的指令处</strong></p></li>
+<li><p><strong>Ctrl+g 定位到某个地址</strong></p></li>
+</ul>
+<h3 id="soft-ice">1-4 Soft-Ice</h3>
+<p><strong>soft-ice比debug及turbo debugger更强大的最主要特性是其支持硬件断点:</strong></p>
+<p>硬件断点：</p>
+<blockquote>
+<p><strong>bpmb 内存地址 r; 读。此处的地址是变量地址</strong></p>
+<p><strong>bpmb 内存地址 w; 写。此处的地址是变量地址</strong></p>
+<p><strong>bpmb 内存地址 x; 执行。此处的地址是指令地址</strong></p>
+</blockquote>
+<p>x指令与F2的区别：</p>
+<blockquote>
+<p><strong>x断点并不改变指令中的任何机器码，只是把该地址存放在硬件调试寄存器中; 而F2断点则是把指令的首地址改成机器码0CCh，这个CCh对应的汇编指令为int 3，当调试器遇到int 3指令时会自动停住。</strong></p>
+</blockquote>
+<ul>
+<li><p><strong>u 地址; 表示反汇编, 帮助里面对应的键是c</strong></p></li>
+<li><p><strong>e 地址; 表示修改内存</strong></p></li>
+<li><p><strong>d 地址; 查看内存变量</strong></p></li>
+<li><p><strong>F8 跟踪一步</strong></p></li>
+<li><p><strong>F5 继续运行</strong></p></li>
+<li><p><strong>Alt+Pause 切换到debug窗口</strong></p></li>
+<li><p><strong>dos mcbs 查看进程的psp</strong></p></li>
+<li><p><strong>F2 设断点</strong></p></li>
+<li><p><strong>bpm 地址; 设硬件断点</strong></p></li>
+<li><p><strong>bc 清除断点</strong></p></li>
+<li><p><strong>bl 查看断点</strong></p></li>
+<li><p><strong>exit rd 强制结束对程序的运行</strong></p></li>
+</ul>
+<h3 id="bochs">1-5 Bochs</h3>
+<p>双击里面的bochsdbg.exe，点Load，选择dos.bxrc，再点start，在调试窗口中输入c，会起来一个dos系统，选择NO_soft-ice，再输入:</p>
+<p>**cd *</p>
+<p><strong>masm pro286x;</strong></p>
+<p><strong>link pro286x;</strong></p>
+<p><strong>pro286x</strong></p>
+<p><strong>自动断住，回到调试窗，点view-&gt;stack在右侧显示堆栈。</strong></p>
+<ul>
+<li><p><strong>输入n单步执行，以后按F8重复n命令。</strong></p></li>
+<li><p><strong>s命令表示trace into。</strong></p></li>
+<li><p><strong>"x/64bx 地址"命令用来查看该地址指向的数据。</strong></p></li>
+<li><p><strong>c命令表示继续运行。</strong></p></li>
+<li><p><strong>"pb 地址"用来设置断点。</strong></p></li>
+<li><p><strong>blist用来查看断点。</strong></p></li>
+<li><p><strong>delete n用来删除断点。</strong></p></li>
+</ul>
+<h3 id="quickview">1-1-5 QuickView</h3>
+<p><code>qv hello.exe</code>打开文件</p>
+<ul>
+<li>不选中任何东西敲回车/F2<strong>实现反汇编界面，十六进制编辑界面，文本界面的切换。</strong></li>
+<li>F1 弹出帮助窗口</li>
+</ul>
+<p>反汇编界面：</p>
+<ul>
+<li><p>F5 输入地址 跳转到地址</p></li>
+<li><p>F8 显示exe文件信息</p></li>
+<li><p>F8 + F5 跳转到程序入口地址处</p></li>
+<li><p>F8 + F3 快捷编辑文件信息</p></li>
+<li><p>F7 搜索十六进制串(HEX)</p></li>
+<li><p>F6 汇编代码搜索 直接跳转到代码所在位置</p></li>
+<li><p>shift + f5 插入代码块</p></li>
+<li><p>Insert 选中，上下左右选中数据区块 + F9 在制定区块内写入代码 再次 F9运行此代码</p></li>
+</ul>
+<h2 id="位exe脱壳">2 16位EXE脱壳</h2>
+<ul>
+<li>Process State Page（进程状态页）：在操作系统中，PSP是进程控制块（PCB）中的一部分，用于存储进程的状态信息。PSP包含了进程的程序计数器、寄存器值、堆栈指针等信息，以便在进程切换时保存和恢复进程的状态。</li>
+</ul>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">一般来说，PSP是<span class="number">256</span>个字节，当程序生成了可执行文件以后，在执行的时候，</span><br><span class="line">先将程序调入专属内存，这个时候<span class="built_in">DS</span>中存入程序在内存中的段地址，紧接着是程序的一些说明，</span><br><span class="line">比如说程序占用多大空间等等，这就是PSP，一般PSP占<span class="number">256</span>个字节，然后才是真正的程序地址，</span><br><span class="line">将<span class="built_in">CS</span>指向这里，<span class="built_in">IP</span>设为<span class="number">0000</span>，为什么一般<span class="built_in">CS</span>要比<span class="built_in">DS</span>大<span class="number">10H</span>，就是因为这个原因。</span><br><span class="line">简单说：<span class="built_in">DS</span>存放的是程序段地址，由于PSP的存在，真正要执行的地址是<span class="built_in">DS</span>再加上<span class="number">256</span>个字节，</span><br><span class="line">真正的地址是<span class="built_in">DS</span>*<span class="number">16</span>+<span class="number">256</span>化简一下：<span class="built_in">DS</span>*<span class="number">16</span>+<span class="number">0</span>+<span class="number">16</span>*<span class="number">16</span>=<span class="number">16</span>*（<span class="built_in">DS</span>+<span class="number">16</span>）</span><br><span class="line">真正的地址又可以写成：<span class="built_in">cs</span>*<span class="number">16</span>+<span class="number">0</span></span><br><span class="line">所以<span class="built_in">CS</span>相当于<span class="built_in">DS</span>+<span class="number">16</span>，化成十六制是<span class="built_in">DS</span>+<span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost\Ubuntu-22.04\home\wingee\w1ngee\wingee\source_posts\软件保护技术Review\image-20240117205547473.png"></p>
+<p>程序首段地址= cs = ds/es + 0x10</p>
+<h3 id="dos-文件头">2-1 Dos 文件头</h3>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DOS_HEADER</span> {</span>      <span class="comment">// DOS .EXE header</span></span><br><span class="line">    WORD   e_magic;                     <span class="comment">// +0 Magic number                             //EXE标志 "MZ"</span></span><br><span class="line">    WORD   e_cblp;                      <span class="comment">// +2 Bytes on last page of file               //最后部分（页中）的字节数</span></span><br><span class="line">    WORD   e_cp;                        <span class="comment">// +4 Pages in file			    //文件中的全部和部分页数</span></span><br><span class="line">    WORD   e_crlc;                      <span class="comment">// +6 Relocations				    //重定位表中的指针数</span></span><br><span class="line">    WORD   e_cparhdr;                   <span class="comment">// +8 Size of header in paragraphs	            //头部尺寸，以段落为单位</span></span><br><span class="line">    WORD   e_minalloc;                  <span class="comment">// +A Minimum extra paragraphs needed          //所需的最大附加段</span></span><br><span class="line">    WORD   e_maxalloc;                  <span class="comment">// +C Minimum extra paragraphs needed  </span></span><br><span class="line">    WORD   e_ss;                        <span class="comment">// +E Initial (relative) SS value              //初始的SS值</span></span><br><span class="line">    WORD   e_sp;                        <span class="comment">// +10 Initial SP value			    //初始的SP值	</span></span><br><span class="line">    WORD   e_csum;                      <span class="comment">// +12 Checksum				    //补码校检值</span></span><br><span class="line">    WORD   e_ip;                        <span class="comment">// +14 Initial IP value			    //初始的IP值</span></span><br><span class="line">    WORD   e_cs;                        <span class="comment">// +16 Initial (relative) CS value		    //初始的CS值</span></span><br><span class="line">    WORD   e_lfarlc;                    <span class="comment">// +18 File address of relocation table	    //重定位表的字节偏移量</span></span><br><span class="line">    WORD   e_ovno;                      <span class="comment">// +20 Overlay number			    //覆盖号</span></span><br><span class="line">    WORD   e_res[<span class="number">4</span>];                    <span class="comment">// +22 Reserved words			    //保留字</span></span><br><span class="line">    WORD   e_oemid;                     <span class="comment">// +24 OEM identifier (for e_oeminfo)           //OEM标识符</span></span><br><span class="line">    WORD   e_oeminfo;                   <span class="comment">// +26 OEM information; e_oemid specific        //OEM信息</span></span><br><span class="line">    WORD   e_res2[<span class="number">10</span>];                  <span class="comment">// +28 Reserved words                           //保留字</span></span><br><span class="line">    LONG   e_lfanew;                    <span class="comment">// +3C File address of new exe header           //PE头相对于文件的偏移地址</span></span><br><span class="line">  } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;</span><br></pre></td></tr></table></figure>
+<p><strong>exe末尾并不载入内存的部分称为覆盖(overlay)</strong></p>
+<h3 id="位dos文件手动脱壳">2-2 16位Dos文件手动脱壳</h3>
+<p>用Soft-Ice打开文件：</p>
+<p><code>ldr hello.exe</code></p>
+<p><img src="/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost\Ubuntu-22.04\home\wingee\w1ngee\wingee\source_posts\软件保护技术Review\image-20240117233215773.png"></p>
+<p>运行到shellcode中解密语句的loop之后，一定不要走到重定位的部分</p>
+<p>同时记录下在loop之前解密的段地址和解密长度：<code>0x67c0</code>(将ds的段地址067c转化成真实地址67c0)，<code>EDX: 0X2023C</code></p>
+<p><img src="/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost\Ubuntu-22.04\home\wingee\w1ngee\wingee\source_posts\软件保护技术Review\image-20240117233410533.png"></p>
+<p>在右侧Bochs虚拟机中 点<code>Break</code>断住。</p>
+<p>在下面输入框中输入：</p>
+<p><code>writemem "d:\K.dat" 0x67c0 0x2023c</code></p>
+<p>把解密后的内容dump下来</p>
+<p>之后打开010 editor，将原exe文件后面的旧头截取出来，扩展到200h字节，将刚才dump下来的东西放到旧头的下面，保存为exe，即脱壳。</p>
+<h3 id="自动脱壳">2-3 自动脱壳</h3>
+<p>C代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_file_size</span><span class="params">(FILE *fp)</span></span><br><span class="line">{</span><br><span class="line">   <span class="type">int</span> old_pos, length;</span><br><span class="line">   old_pos = ftell(fp);</span><br><span class="line">   fseek(fp, <span class="number">0</span>, SEEK_END);</span><br><span class="line">   length = ftell(fp);</span><br><span class="line">   fseek(fp, old_pos, SEEK_SET);</span><br><span class="line">   <span class="keyword">return</span> length;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// int main(int argc, char* argv[])</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">   FILE *infile, *outfile;</span><br><span class="line">   <span class="type">unsigned</span> <span class="type">char</span> *inbuf, *outbuf;</span><br><span class="line">   <span class="type">int</span> infile_len, outfile_len;</span><br><span class="line">   <span class="comment">// infile = fopen(argv[1], "rb");</span></span><br><span class="line">   <span class="comment">// outfile = fopen(argv[2], "wb");</span></span><br><span class="line">   infile = fopen(<span class="string">"hello2"</span>, <span class="string">"rb"</span>);</span><br><span class="line">   outfile = fopen(<span class="string">"result.exe"</span>, <span class="string">"wb"</span>);</span><br><span class="line">   <span class="keyword">if</span>(infile == <span class="literal">NULL</span> || outfile == <span class="literal">NULL</span>)</span><br><span class="line">   {</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"NULL"</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">   }</span><br><span class="line">   infile_len = get_file_size(infile);</span><br><span class="line">   inbuf = (<span class="type">unsigned</span> <span class="type">char</span> *)<span class="built_in">malloc</span>(infile_len);</span><br><span class="line">   fread(inbuf, <span class="number">1</span>, infile_len, infile);</span><br><span class="line">   fclose(infile);</span><br><span class="line">   <span class="comment">/*</span></span><br><span class="line"><span class="comment">      Write your code here</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"></span><br><span class="line">   <span class="type">unsigned</span> <span class="type">char</span> *p;</span><br><span class="line">   p = inbuf;</span><br><span class="line">   <span class="type">int</span> flag = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">while</span>(!flag){</span><br><span class="line">      <span class="keyword">if</span>(*(p) == <span class="number">0xe8</span> &amp;&amp; *(p+<span class="number">1</span>) == <span class="number">0x00</span> &amp;&amp; *(p+<span class="number">2</span>) == <span class="number">0x00</span> &amp;&amp; *(p+<span class="number">3</span>) == <span class="number">0x5b</span>) flag = <span class="number">1</span>;</span><br><span class="line">      p++;</span><br><span class="line">   }</span><br><span class="line">   p--;</span><br><span class="line">   <span class="comment">// 定位shellcode位置</span></span><br><span class="line"></span><br><span class="line">   <span class="type">unsigned</span> <span class="type">char</span>* new_header = p + <span class="number">0x196</span>; <span class="comment">//定位头位置</span></span><br><span class="line">   <span class="type">unsigned</span> <span class="type">short</span> header_len = (new_header[<span class="number">8</span>] + (new_header[<span class="number">9</span>] &lt;&lt; <span class="number">8</span>)) * <span class="number">0x10</span>;</span><br><span class="line">   <span class="type">unsigned</span> <span class="type">short</span> offset_len = *(<span class="type">unsigned</span>  <span class="type">short</span> *)(new_header + <span class="number">2</span>);</span><br><span class="line">   <span class="type">unsigned</span> <span class="type">short</span> num_len = *(<span class="type">unsigned</span> <span class="type">short</span> *)(new_header + <span class="number">4</span>);</span><br><span class="line">   <span class="keyword">if</span>(offset_len == <span class="number">0</span>) outfile_len = (num_len) * <span class="number">0x200</span>;</span><br><span class="line">   <span class="keyword">else</span> outfile_len = (num_len - <span class="number">1</span>) * <span class="number">0x200</span> + offset_len;</span><br><span class="line">   <span class="comment">// outfile_len = (num_len - 1) * 0x200 + offset_len;</span></span><br><span class="line">   <span class="comment">// 计算长度</span></span><br><span class="line">   outbuf = (<span class="type">unsigned</span> <span class="type">char</span> *)<span class="built_in">malloc</span>(outfile_len);</span><br><span class="line">   <span class="built_in">memset</span>(outbuf, <span class="number">0</span>,  outfile_len);</span><br><span class="line"></span><br><span class="line">   <span class="type">int</span> a = (inbuf[<span class="number">8</span>] + (inbuf[<span class="number">9</span>] &lt;&lt; <span class="number">8</span>)) * <span class="number">0x10</span>;</span><br><span class="line">   <span class="type">int</span> i ;</span><br><span class="line">   <span class="type">int</span> j = header_len; </span><br><span class="line">   <span class="keyword">for</span>(i = a; i &lt; p - inbuf ;i++){</span><br><span class="line">      outbuf[j++] = ( ((inbuf[i] &gt;&gt; <span class="number">4</span>))|((inbuf[i] &lt;&lt; <span class="number">4</span>)) ) ^ <span class="number">0x57</span>;</span><br><span class="line">   }</span><br><span class="line">   outfile_len = j;</span><br><span class="line">   <span class="comment">// printf("%x", outfile_len);</span></span><br><span class="line">   <span class="comment">// printf("%x %x %x", *new_header ,offset_len, num_len);</span></span><br><span class="line">   <span class="built_in">memcpy</span>(outbuf, new_header, header_len); </span><br><span class="line">   <span class="comment">// printf("%x", infile_len - (new_header - inbuf));</span></span><br><span class="line">   <span class="keyword">if</span>(outfile_len % <span class="number">0x200</span> == <span class="number">0</span>)</span><br><span class="line">   {</span><br><span class="line">      outbuf[<span class="number">4</span>] = (outfile_len / <span class="number">0x200</span>) % <span class="number">0x100</span>; outbuf[<span class="number">5</span>] = (outfile_len / <span class="number">0x200</span>) / <span class="number">0x100</span>;</span><br><span class="line">      outbuf[<span class="number">2</span>] = <span class="number">0x00</span>; outbuf[<span class="number">3</span>] = <span class="number">0x00</span>;</span><br><span class="line">   }</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   {</span><br><span class="line">      outbuf[<span class="number">4</span>] = ((outfile_len / <span class="number">0x200</span>)+<span class="number">1</span>) % <span class="number">0x100</span>; outbuf[<span class="number">5</span>] = ((outfile_len / <span class="number">0x200</span>)+<span class="number">1</span>) / <span class="number">0x100</span>;</span><br><span class="line">      outbuf[<span class="number">2</span>] = (outfile_len % <span class="number">0x200</span>) % <span class="number">0x100</span>; </span><br><span class="line">      outbuf[<span class="number">3</span>] = (outfile_len % <span class="number">0x200</span>) / <span class="number">0x100</span>;</span><br><span class="line">   }</span><br><span class="line">   <span class="comment">//--------------------------</span></span><br><span class="line">   fwrite(outbuf, <span class="number">1</span>, j, outfile);</span><br><span class="line">   fclose(outfile);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>也可以在exe文件内加代码实现自动脱壳。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">.386</span><br><span class="line">code segment use16</span><br><span class="line">shell:</span><br><span class="line">	call next</span><br><span class="line">next:</span><br><span class="line">	pop bx ; bx=next的运行时的偏移地址</span><br><span class="line">		   ; 现在想知道shell的地址</span><br><span class="line">	sub bx, offset next-offset shell</span><br><span class="line">	cli</span><br><span class="line">	mov ax, cs</span><br><span class="line">	mov ss, ax</span><br><span class="line">	; mov sp, offset stk + 100h是错误的，默认shell的地址为0了</span><br><span class="line">	lea sp, stk[bx + 100h] ; 正确的</span><br><span class="line">	sti</span><br><span class="line">	</span><br><span class="line">	push ds</span><br><span class="line">	push es</span><br><span class="line">	mov ax, ds</span><br><span class="line">	add ax, 10h</span><br><span class="line">	mov ds, ax</span><br><span class="line">	mov es, ax</span><br><span class="line">	mov dx, cs</span><br><span class="line">	sub dx, ax</span><br><span class="line">	movzx edx, dx ; 0扩充</span><br><span class="line">	shl edx, 4</span><br><span class="line">	add edx, ebx</span><br><span class="line">	add edx, ebx; edx = len of code to be decoded</span><br><span class="line">	xor si, si</span><br><span class="line">	xor di, di</span><br><span class="line">decode_next:</span><br><span class="line">	losb</span><br><span class="line">	xor al, 42h</span><br><span class="line">	stosb</span><br><span class="line">	dec edx</span><br><span class="line">	cmp si, 0 ; 判断si已经解密了10000h个字节</span><br><span class="line">	jne skip</span><br><span class="line">	mov ax. ds</span><br><span class="line">	add ax, 1000h</span><br><span class="line">	mov ds, ax</span><br><span class="line">	mov es,ax</span><br><span class="line">skip:</span><br><span class="line">	dec edx </span><br><span class="line">	jnz decode_next</span><br><span class="line">	mov cx, [bx + reloc_count]</span><br><span class="line">	pop es</span><br><span class="line">	pop ds</span><br><span class="line">	lea si, [bx +reloc_table] ; si = bx + reloc_table</span><br><span class="line">reloc_next:</span><br><span class="line">	mov di, ds:[si] ; 先取偏移地址</span><br><span class="line">	mov dx, ds:[si+2]  ; 再取段地址，此地址为相对的段地址</span><br><span class="line">	add dx, bp  ; 加上bp得到真实的段地址</span><br><span class="line">	mov es, dx</span><br><span class="line">	add es:[di], bp</span><br><span class="line">	add si, 4</span><br><span class="line">	loop reloc_next</span><br><span class="line">	; 将堆栈切换为老堆栈</span><br><span class="line">	add [bx+delta_ss], bp</span><br><span class="line">	add [bx+delta_cs], bp</span><br><span class="line">	pop es</span><br><span class="line">	pop ds</span><br><span class="line">	cli</span><br><span class="line">	mov ss, cs:[cx+delta_ss]</span><br><span class="line">	mov sp, cs:[bx_old_sp] ; 激活用户堆栈</span><br><span class="line">	sti</span><br><span class="line">	jmp dword ptr cs:[old_ip]</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">; 下面进行一些原始数据的定义和保存</span><br><span class="line">delta_ss dw 0</span><br><span class="line">old_sp dw 0</span><br><span class="line">old_ip dw 0</span><br><span class="line">delta_cs dw 0</span><br><span class="line">reloc_count dw 0 ; 重定位项</span><br><span class="line">reloc_table db 200h dup(0) ; 重定位表</span><br><span class="line"> ; 按照exe里的数据把这些东西抄下来</span><br><span class="line">stk db 100h dup(0) ; 加标号</span><br><span class="line">code ends</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h2 id="pe文件格式">3 PE文件格式</h2>
+<h3 id="pe文件头">3-1 PE文件头</h3>
+<ul>
+<li>如何判断某个exe文件PE格式的 文件
+<ul>
+<li>用qv打开exe，定位到3C，读取3C中的值，再定位到这个值，若为<strong>50, 45</strong>,即为PE</li>
+</ul></li>
+</ul>
+<blockquote>
+<p>windwos的exe是从<code>cs:400000h</code>处开始载入的，其中<code>400000h</code>称为base addr</p>
+<p>PE+28处查到的32位值是delta_eip,此值需要跟base addr相加才能得到真实的eip的值。</p>
+<p>像PE+28处得到的这种相对地址称为RVA（Relative Virtual Address）</p>
+<p>如果RVA = 1000h，那么程序真正的入口地址为401000h</p>
+</blockquote>
+<p><strong>PE +:</strong>(以下偏移以PE为基址)</p>
+<p><strong>+6：count of sections，节的个数</strong></p>
+<p><strong>+28：程序的32位入口地址RVA。也称为<code>OEP</code>,即Original Entry Point。</strong></p>
+<p><strong>+34：程序载入内存的基址，EXE一般都等于400000h</strong></p>
+<p><strong>+38：内存地址对其标准，例如1000h对齐</strong></p>
+<p><strong>+3c：文件对齐，如200h</strong></p>
+<p>+50：EXE文件载入内存后的总长度</p>
+<p><strong>+54 EXE文件头的文件长度，载入内存后会按内存对齐长度拉伸</strong></p>
+<blockquote>
+<p>EXE载入内存总长度的计算方法：<strong>最后一个节的偏移地址+该节拉伸后的长度</strong></p>
+<p>文件末尾<strong>EOF字节的下标</strong>等于文件的总长度</p>
+</blockquote>
+<blockquote>
+<p>windows中，在将exe文件加载进内存时，把PE文件头当做一个节，同样做0x1000拉伸。此时.text段从0x1000开始，不是从0000开始的。</p>
+</blockquote>
+<h3 id="动态库与静态库">3-2 动态库与静态库</h3>
+<p>对于动态链接产生的exe，所调用的函数/API的函数体本身并不在exe中，在exe执行并载入内存时编译器到指定的dll中将调用到的函数加载进虚拟内存中。</p>
+<p>对于静态链接产生的exe，所有调用的函数的函数体本身都会被直接编译到exe里。</p>
+<p><strong>总而言之，动态链接所调用的某些API的代码在exe文件中是找不到的，而静态链接所调用的API的代码在exe文件中总能找到。</strong></p>
+<ul>
+<li>动态链接：</li>
+</ul>
+<p>Windows下的动态链接库为xx.dll（dynamic linked library）</p>
+<p>在windows中有两个函数调用用来返回某个API的地址，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h=LoadLibrary(<span class="string">"user32.dll"</span>);</span><br><span class="line">p=GetProcAddress(h, <span class="string">"MessageBoxA"</span>);</span><br></pre></td></tr></table></figure>
+<p>其中<code>user32.dll</code>是一个动态链接库，他是多个API函数体的集合，Windows启动时它会自动载入内存</p>
+<ul>
+<li>静态链接：</li>
+</ul>
+<p>windows下静态库为XXX.lib</p>
+<p>由于printf源代码没有开源，所以对printf的机器语言代码是一个obj文件，设为printf.obj，而这个obj文件又包含在一个静态库文件cs.lib中</p>
+<p>编译main.c时，编译器会打开cs.lib并搜索printf.obj，最后把printf.obj和main.obj整合起来生成main.exe</p>
+<blockquote>
+<p>main.c -&gt; compile -&gt; main.obj /*中间产物*/</p>
+<p>在编译时，发现printf函数在该程序中不存在，编译器会自动推断它是一个外部函数，到默认的库中去寻找(cs.lib)，找到后仅仅把printf函数的段复制出来，和原先的main.obj合并在一起(link)</p>
+<p>拼接成功后会产生一个main.exe</p>
+</blockquote>
+<h2 id="输入表输出表重定位表">4 输入表，输出表，重定位表</h2>
+<p><strong>EXE文件中通常只包含输入表(用于API地址重定位);</strong></p>
+<p><strong>DLL文件中一般包含：输入表(用于API地址重定位)、输出表、重定位表(用于变量地址的重定位);</strong></p>
+<p><strong>EXE及DLL通常都包含资源表(用来定义菜单、对话框、图标等);</strong></p>
+<h3 id="输入表">4-1 输入表</h3>
+<blockquote>
+<p>PE + 80 输入表的内存偏移</p>
+<p>PE + 84 输入表的内存长度</p>
+</blockquote>
+<ul>
+<li><strong>一个exe里面可以包含多份输入表，输入表不止有一份，一份输入表对应一个DLL及该DLL包含的函数</strong>。比如某个exe既调用了<code>user32.dll!MesssageBoxA</code>,又调用了<code>kernel32.dll!GetProcAddress</code>, 那么这个exe的输入表就有两个。</li>
+<li>输入表在文件中结束的标志是有连续的<strong>0x14个连续的0</strong>，这样操作系统可以识别输入表在哪里结束。</li>
+</ul>
+<p>输入表可以有多项，每一项的组成如下：</p>
+<p><strong>+C 指向DLL名</strong></p>
+<blockquote>
+<p>在文件中，动态库名称后面必须紧跟0</p>
+</blockquote>
+<p><strong>+0 指向API名字指针表</strong></p>
+<blockquote>
+<p>指针表即指针数组，即每一项都是指针。</p>
+<p><strong>其中指针指向地址的前两位xx,xx是非法的字符</strong></p>
+<p><strong>将指针+2，可以得到真正的API的名字。</strong></p>
+<p><strong>前两个非法字符是API的序号</strong></p>
+<ul>
+<li>windows通过判断指针带入的数值的大小判断是API的序号还是名字。其中API的序号一定是一个16位的数。</li>
+</ul>
+</blockquote>
+<p><strong>+10 指向API地址表</strong></p>
+<blockquote>
+<p>在文件中查看其和API名字指针表一模一样</p>
+<p>他指向API的名字的地址。<strong>但在程序运行过程中，该表可以被改变，而+0处的指针所指向的表不会被改变。</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call GetProcAddress <span class="comment">//此时call的是+10处指向的的地址表</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>输入表的每一项有14h个字节，里面包含了上述3个指针。</strong></p>
+<h3 id="输出表">4-2 输出表</h3>
+<blockquote>
+<p>PE + 78 输出表的内存偏移</p>
+<p>PE + 7C 输出表的内存长度</p>
+</blockquote>
+<ul>
+<li><p><strong>输出表一般存在于动态链接文件DLL中，用于储存API的地址和名字</strong></p></li>
+<li><p><strong>输出表仅有一份</strong>，而输入表可以有多份</p></li>
+</ul>
+<p>输出表的组成：</p>
+<p><strong>+0c DLL名</strong> （同输入表）</p>
+<p><strong>+1c API地址表</strong> （同输入表）</p>
+<p><strong>+20 API名字指针表</strong> （同输入表）</p>
+<p><strong>+24 API序号表</strong></p>
+<p><strong>+14 API个数</strong></p>
+<p><strong>+18 API个数</strong></p>
+<blockquote>
+<p>+14和+18两处的count的含义略有不同</p>
+<p>+14表示有名字的API的个数+没有名字只有序号的API的个数</p>
+<p>+18表示有名字的API的个数</p>
+</blockquote>
+<p><strong>+10 API序号的基数</strong></p>
+<blockquote>
+<p>windows中，在将exe文件加载进内存时，把文件头当做一个节，同样做0x1000拉伸。此时.text段从0x1000开始，不是从0000开始的。</p>
+</blockquote>
+<h3 id="重定位表">4-3 重定位表</h3>
+<blockquote>
+<p>PE + A0 重定位表的内存偏移</p>
+<p>PE + A4 重定位表的内存长度</p>
+</blockquote>
+<ul>
+<li>计算重定位项数： （重定位表长度 - 8）/ 2</li>
+</ul>
+<p>重定位表的组成：</p>
+<blockquote>
+<p>+00 重定位项基地址</p>
+<p>+04 当前重定位表长度</p>
+<p>+08 每两个字节构成一个重定位项</p>
+</blockquote>
+<p>重定位表表示某个变量的地址需要做修正。<strong>重定位的过程在exe载入内存时，由操作系统完成。</strong></p>
+<blockquote>
+<p>由于每次程序载入的程序首段地址都不同，我们在编写代码的时候可能会将一些地址写成绝对地址而不是相对地址。这是就需要根据实际情况对一些取地址或地址访问类的指令进行重定位，<strong>也就是直接修改指令的机器码。</strong></p>
+<p>重定位表的作用就是让操作系统能够知道由多少个指令需要重定位，这些指令都在哪等信息，操作系统就是根据这些信息自动修改机器码了。</p>
+</blockquote>
+<p>需要注意：</p>
+<ul>
+<li><strong>并不是所有的exe程序都有重定位表，但是DLL却是必须需要重定位信息。</strong></li>
+</ul>
+<h4 id="提取重定位项">4-3-1 提取重定位项</h4>
+<p>+08 按照小端规则提取前两个字节，<strong>最高位3忽略掉</strong>，+重定位项基地址，得到重定位项的内存偏移。<strong>将内存偏移转化为文件偏移，得到重定位项。</strong></p>
+<p>计算重定位项数： （重定位表长度 - 8）/ 2</p>
+<p>转到：（直接指向code段）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1034: FF1504500010 CALL DOWRD PTR [10005004]</span><br></pre></td></tr></table></figure>
+<p>在exe开始执行时windows操作系统会对该条指令方括号内的数字进行修正。</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1034</span>: FF<span class="number">1504500030</span> CALL DOWRD <span class="keyword">PTR</span> [<span class="number">30005004</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>不论该数字是否外面有括号，windows操作系统都需要对该数字进行重定位，因为该数字是地址。</strong></p>
+</blockquote>
+<h4 id="对变量地址的重定位">4-3-2 对变量地址的重定位</h4>
+<p>设DLL载入内存的基址为100000h, 则需要重定位的变量地址位于100000h+1B87h=101B87h</p>
+<p>**设DLL编译时设定的基址为a(位于PE+34),</p>
+<p><strong>该DLL实际载入内存的基址为b, 则计算Δ=b-a</strong></p>
+<p><strong>再add dword ptr [101B87h],Δ就完成一项重定位。</strong></p>
+<h4 id="dos-16位文件">4-3-1 Dos 16位文件</h4>
+<blockquote>
+<p>重定位表的内存偏移：+18位置</p>
+<p>重定位项数 ：+6位置</p>
+</blockquote>
+<p>重定位表的长度= +6处描述的重定位项数 * 4</p>
+<ul>
+<li><strong>如何定位重定位项在文件中的地址？</strong></li>
+</ul>
+<p>假设重定位项的段地址为 2， 偏移地址为 D</p>
+<p>其在文件中的位置为：</p>
+<p><strong>200h + 2 * 10h + D = 221h；</strong></p>
+<ul>
+<li>如何防止操作系统进行重定位干扰壳代码的加密？</li>
+</ul>
+<p>将原exe头的重定位项改为0，在shellcode里自己负责重定位。</p>
+<h4 id="pe文件">4-3-2 PE文件：</h4>
+<blockquote>
+<p>PE + A0 重定位表的内存偏移</p>
+<p>PE + A4 重定位表的内存长度</p>
+</blockquote>
+<ul>
+<li>重定位项数 = （重定位表的长度 - 8 ）/ 2</li>
+</ul>
+<p><img src="/2024/01/19/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AFReview/wsl.localhost\Ubuntu-22.04\home\wingee\w1ngee\wingee\source_posts\软件保护技术Review\image-20240118025752624.png"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/12/23/2023D0g3Pwn/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2023-安洵杯-Pwn</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
