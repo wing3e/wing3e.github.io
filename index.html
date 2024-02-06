@@ -329,8 +329,8 @@ mjx-container[display="true"] + br {
       
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<h3 id="引言：">引言：</h3>
-<p>2024BeginCTF，Pwn方向部分题解，包括one_byte，unhappy，gift_rop，ezpwn，no_money。因为放假了所以没怎么认真打…但还是学到了一些东西滴~</p>
+<h3 id="引言">引言：</h3>
+<p>2024BeginCTF，Pwn方向部分题解，包括one_byte，unhappy，gift_rop，ezpwn，no_money。因为放假了所以没怎么认真打.....但还是学到了一些东西滴~</p>
       
     </div>
     
@@ -1005,5 +1005,20 @@ mjx-container[display="true"] + br {
 
 
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
