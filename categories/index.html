@@ -69,7 +69,7 @@
 				        
 							<li><a href="/introduction">About me</a></li>
 				        
-							<li><a href="/pp">Winegee的书房</a></li>
+							<li><a href="/poetry">Winegee的书房</a></li>
 				        
 							<li><a href="/log">Maintenance log</a></li>
 				        
@@ -167,7 +167,7 @@
 		        
 					<li><a href="/introduction">About me</a></li>
 		        
-					<li><a href="/pp">Winegee的书房</a></li>
+					<li><a href="/poetry">Winegee的书房</a></li>
 		        
 					<li><a href="/log">Maintenance log</a></li>
 		        
@@ -277,5 +277,20 @@
 
 
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
