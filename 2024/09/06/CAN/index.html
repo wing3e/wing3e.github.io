@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CAN-bus控制器局域网络总线 | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言 CAN总线知识积累，2024 SRTP 面向CAN总线的入侵管理系统 CAN总线系统结构 CAN总线网络拓扑结构采用总线式结构。  就是把所有的节点连接在一条线上进行通信，拓扑图类似于零线and火线？   CAN总线节点结构 CAN总线上的每个节点大体上可分为以下三个结构：  应用程序：接收总线传输的数据并执行相应的功能 CAN收发器：直接与总线的高线与低线相连，用于将差分信号转化为逻辑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CAN-bus控制器局域网络总线">
+<meta property="og:url" content="http://47.96.29.144/2024/09/06/CAN/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言 CAN总线知识积累，2024 SRTP 面向CAN总线的入侵管理系统 CAN总线系统结构 CAN总线网络拓扑结构采用总线式结构。  就是把所有的节点连接在一条线上进行通信，拓扑图类似于零线and火线？   CAN总线节点结构 CAN总线上的每个节点大体上可分为以下三个结构：  应用程序：接收总线传输的数据并执行相应的功能 CAN收发器：直接与总线的高线与低线相连，用于将差分信号转化为逻辑">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2024/09/06/CAN/image-20240707225918714.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/06/CAN/image-20240707232259738.png">
+<meta property="article:published_time" content="2024-09-06T06:35:46.000Z">
+<meta property="article:modified_time" content="2024-09-06T06:38:45.917Z">
+<meta property="article:tag" content="车联网">
+<meta property="article:tag" content="CAN-IDS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2024/09/06/CAN/image-20240707225918714.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/poetry/poeting">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/tags">Tags</a></li>
+				        
+							<li><a href="/introduction">About me</a></li>
+				        
+							<li><a href="/poetry">Winegee的书房</a></li>
+				        
+							<li><a href="/log">Maintenance log</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1805347343&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/BeginCTF/" style="font-size: 10px;">BeginCTF</a> <a href="/tags/CAN-IDS/" style="font-size: 10px;">CAN-IDS</a> <a href="/tags/Pwn/" style="font-size: 14px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 12px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 12px;">ZJUCTF</a> <a href="/tags/%E4%BF%A1%E6%81%AF%E7%90%86%E8%AE%BA/" style="font-size: 10px;">信息理论</a> <a href="/tags/%E5%AE%89%E6%B4%B5%E6%9D%AF/" style="font-size: 10px;">安洵杯</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 10px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 16px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 18px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" style="font-size: 12px;">计算机体系结构</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 20px;">计算机系统II</a> <a href="/tags/%E8%BD%A6%E8%81%94%E7%BD%91/" style="font-size: 10px;">车联网</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjuccnocc.github.io/Home">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好标题</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjulwind.github.io/home/">ZY老师</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/poetry/poeting">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/tags">Tags</a></li>
+		        
+					<li><a href="/introduction">About me</a></li>
+		        
+					<li><a href="/poetry">Winegee的书房</a></li>
+		        
+					<li><a href="/log">Maintenance log</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-CAN" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/09/06/CAN/" class="article-date">
+  	<time datetime="2024-09-06T06:35:46.000Z" itemprop="datePublished">2024-09-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CAN-bus控制器局域网络总线
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CAN-IDS/" rel="tag">CAN-IDS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BD%A6%E8%81%94%E7%BD%91/" rel="tag">车联网</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言</h3>
+<p>CAN总线知识积累，2024 SRTP 面向CAN总线的入侵管理系统</p>
+<h2 id="can总线系统结构">CAN总线系统结构</h2>
+<p>CAN总线网络拓扑结构采用总线式结构。</p>
+<blockquote>
+<p>就是把所有的节点连接在一条线上进行通信，拓扑图类似于零线and火线？</p>
+</blockquote>
+<p><img src="/2024/09/06/CAN/image-20240707225918714.png"></p>
+<h3 id="can总线节点结构">CAN总线节点结构</h3>
+<p>CAN总线上的每个节点大体上可分为以下三个结构：</p>
+<ul>
+<li>应用程序：接收总线传输的数据并执行相应的功能</li>
+<li>CAN收发器：直接与总线的高线与低线相连，用于将差分信号转化为逻辑值0,1</li>
+<li>CAN控制器：接收控制单元中微处理器发出的数据，处理数据并传给CAN收发器。或接收CAN收发器传回的数据。
+<ul>
+<li>这里CAN控制器和CAN收发器通过两条线路向量：
+<ul>
+<li>CAN_Tx ： 负责当前节点向CAN总线传输数据</li>
+<li>CAN_Rx ：负责从CAN总线上接收数据，回传给控制器</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="can总线电气特性">CAN总线电气特性</h3>
+<p>CAN结点通过CAN_High和CAN_Low两根线接入CAN总线网络。（习惯性把他们叫做高线和低线）</p>
+<p>CAN收发器将CAN_Tx输出的逻辑值0,1转化为电气上的差分信号，通过高线和低线向总线输出。同时将总线上的差分信号转换为逻辑值0,1，通过CAN_Rx向CAN收发器传输。</p>
+<p>关于高线和低线的差分信号与0,1值之间的关系如图：（ISO11898标准）</p>
+<table>
+<thead>
+<tr class="header">
+<th>逻辑值</th>
+<th>CAN_High</th>
+<th>CAN_Low</th>
+<th>差分电压</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>3.5V</td>
+<td>1.5V</td>
+<td>2V</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>2.5V</td>
+<td>2.5V</td>
+<td>0V</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>CAN收发器在接收到总线上的高线和低线的信号时，计算高线和低线的差分电压（电压差），然后转化为相应的逻辑值。</li>
+</ul>
+<blockquote>
+<p>在真实的物理环境下，CAN总线呈双绞线，即高线和低线拧成麻花。这样在收到外界干扰的时候，高线和低线的电压会一起变化（一起升高，或者一起降低），二者的电压差不会变，在一定程度上保证了总线传输的正确性。</p>
+</blockquote>
+<p><strong>根据表中的数据，我们称差分电压为0V的位的显性位, 差分电压为2V的位为隐性位</strong></p>
+<h3 id="can结构系统数据格式">CAN结构系统数据格式</h3>
+<p>CAN-bus的通信帧共分为五种：数据帧，远程帧，错误帧，过载帧和帧间隔。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>帧类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>数据帧</td>
+<td>用于发送节点向接收节点传送数据的帧。（发送）</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>远程帧</td>
+<td>用于接收节点向具有相同ID的发送节点传送数据的帧。（回传）</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>错误帧</td>
+<td>用于当检测出错误时向其他节点通知错误的帧。（报错）</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>过载帧</td>
+<td>用于接收节点通知其尚未做好准备的帧。（等待）</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>帧间隔</td>
+<td>用于将数据帧及远程帧与前面的帧分隔开来。</td>
+</tr>
+</tbody>
+</table>
+<p>帧结构如下图所示：</p>
+<p><img src="/2024/09/06/CAN/image-20240707232259738.png"></p>
+<ul>
+<li>帧起始：由一个显性位构成，（逻辑值1，差分电压0）标志帧的开始</li>
+<li>帧结束：由七个隐性位构成，（逻辑值0，差分电压2）标志帧的结束</li>
+<li>CRC段：为检查帧传输错误的段，由15个位的CRC值和1个位的CRC界定符构成（<strong>界定符隐性</strong>）
+<ul>
+<li>标准格式与扩展格式相同。根据帧的其他部分通过多项式生成，用于检测帧在传输的过程中有没有发生错误。计算范围包括<strong>帧起始，仲裁段，控制段，数据段</strong>。</li>
+<li>接收方在接受数据帧后，用相同的方式计算CRC值并进行比较，<strong>如果不一致生成错误帧请求重新发送</strong></li>
+</ul></li>
+<li>ACK段：包含<strong>ACK槽位，ACK界定符</strong>两个位（界定符保持隐性）
+<ul>
+<li>发送单元：两个位的隐性位（<strong>发送ACK</strong>）</li>
+<li>接收单元：接收到正确消息，在ACK槽位发送显性位，通知发送单元正常接收结束。（<strong>返回ACK</strong>）</li>
+</ul></li>
+<li>数据段：8个bytes（好少好抠啊），从最高位开始输出（<strong>大端格式</strong>）</li>
+<li>控制段：由6个位构成，表示数据段的字节数（0-8）
+<ul>
+<li>扩展格式：保留位r0, r1必须全是显性</li>
+<li>数据长度码（DLC）：数据的字节数必须为0-8字节</li>
+</ul></li>
+<li><strong>仲裁段：表示数据帧优先级的段，标准格式与扩展格式的构成有所不同，均禁止高7位为隐性</strong>
+<ul>
+<li>RTR位：用于区分数据帧和遥控帧
+<ul>
+<li>显性电平为数据帧，隐性电平为遥控帧</li>
+</ul></li>
+<li>IDE位：标识符扩展位，用于区分标准格式与扩展格式。
+<ul>
+<li>显性电平是位标准格式</li>
+<li>隐性电平时为扩展格式</li>
+</ul></li>
+<li>SRR位：只存在于扩展格式，代替标准格式中的RTR位。
+<ul>
+<li>由于扩展帧中的SRR位固定为隐性，RTR在数据帧中为显性。两个相同ID的标准格式与扩展格式，标准格式的优先级更高。</li>
+</ul></li>
+<li>ID段：标准格式ID有11位，扩展格式的ID有29位。<strong>均禁止高7位为隐性</strong>。
+<ul>
+<li>ID越小，消息优先级越高！</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="can总线数据传输规范">CAN总线数据传输规范</h3>
+<p>CAN总线节点上的节点发送数据是以报文的形式广播给网络中所有节点。收发器接收到数据就把数据传送给控制器，再由控制器检查判断是不是所需数据。不是则忽略。</p>
+<ul>
+<li>网络上任何一个节点在任何时候都可以发送数据</li>
+<li>多个节点发送数据，优先级低主动退出发送</li>
+<li>短帧结构，每帧数据信息为0~8字节（具体用户定义），对数据编码而不是地址编码</li>
+<li>CAN每帧都有CRC校验和其他检验措施，严重错误的情况下具有自动关闭输出的功能</li>
+</ul>
+<p>CAN总线上的各个节点同时占有CAN主线，也可以理解为，这条电缆单位时间只能传输一条数据，现在假如A要向B发送一条消息，A就会通过某种方式把总线抢到自己手里，总线上只能跑A发送的这条消息，同时，所有的其他的节点也都会接收到这条消息。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/04/25/%E4%BF%A1%E6%81%AF%E7%90%86%E8%AE%BA/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2024-2025学年秋冬学期信息理论课程笔记</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
