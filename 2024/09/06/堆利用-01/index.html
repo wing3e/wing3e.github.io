@@ -16,13 +16,13 @@
 <meta property="og:site_name" content="晚栀wingee~">
 <meta property="og:description" content="引言： Ptmalloc 内存管理数据结构，备忘笔记。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://47.96.29.144/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/Users/Wingee/AppData/Roaming/Typora/typora-user-images/image-20240907190558422.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/image-20240907190558422.png">
 <meta property="article:published_time" content="2024-09-06T06:40:56.000Z">
-<meta property="article:modified_time" content="2024-09-08T13:51:02.767Z">
+<meta property="article:modified_time" content="2024-09-08T13:52:53.437Z">
 <meta property="article:tag" content="pwn">
 <meta property="article:tag" content="堆利用">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://47.96.29.144/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/Users/Wingee/AppData/Roaming/Typora/typora-user-images/image-20240907190558422.png">
+<meta name="twitter:image" content="http://47.96.29.144/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/image-20240907190558422.png">
   
     <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
   
@@ -364,9 +364,7 @@ mjx-container[display="true"] + br {
 </ul>
 <h3 id="malloc">malloc</h3>
 <p>在从free fastbin从取出空闲块malloc的时候，会有如下比较</p>
-<figure>
-<img src="/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/Users\Wingee\AppData\Roaming\Typora\typora-user-images\image-20240907190558422.png" alt><figcaption>image-20240907190558422</figcaption>
-</figure>
+<p><img src="/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/image-20240907190558422.png"></p>
 <p>比如说我们实际需要的块大小(包括header是0x40),那么只要当前将要被取出的free fastbin size在0x40~0x4f之间，就可以通过比较,不然就报错</p>
 <p>一般在double free的时候，我们可以把指针改到libc里面，这样就可以任意地址写，但在把这个地址malloc出来的时候会做一遍大小check,所以一般fastbin attack需要分配到malloc_hook-0x23，这里对应的size是0x7f,只要我们malloc(0x68)就可以过了check</p>
 <h3 id="malloc_hook-fake-chunk伪造">__malloc_hook fake chunk伪造</h3>
