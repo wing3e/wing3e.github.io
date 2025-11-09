@@ -12,45 +12,45 @@
   <meta name="description" content="引言: 2023年ZJUCTF-Pwn方向部分题题解，包含5rop，welcome，nya，game，logger，drawer。考点基本在栈和数组溢出上。其中有些题目支持本地环境可以在本地复现出来，有些题目需要远程打不能复现。Pwn方向的题难度真的好大......有哪里写的不对的地方还请指出呜呜">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2023-ZJUCTF-Pwn">
-<meta property="og:url" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/index.html">
+<meta property="og:url" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/index.html">
 <meta property="og:site_name" content="晚栀wingee~">
 <meta property="og:description" content="引言: 2023年ZJUCTF-Pwn方向部分题题解，包含5rop，welcome，nya，game，logger，drawer。考点基本在栈和数组溢出上。其中有些题目支持本地环境可以在本地复现出来，有些题目需要远程打不能复现。Pwn方向的题难度真的好大......有哪里写的不对的地方还请指出呜呜">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124171745428.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124171901400.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124173814621.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124180010167.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124181058907.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124181228911.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124181511153.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124184018140.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124184203677.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124204908787.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124210628947.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124214646349.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124215450771.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124220847019.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124220946195.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124221357192.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124223643167.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124225952306.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124230650860.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124231058876.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124231240505.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124231816529.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124232035449.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124232307588.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125001600696.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125002630022.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125004134370.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125123440945.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125124811814.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124171745428.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124171901400.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124173814621.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124180010167.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124181058907.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124181228911.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124181511153.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124184018140.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124184203677.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124204908787.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124210628947.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124214646349.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124215450771.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124220847019.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124220946195.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124221357192.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124223643167.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124225952306.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124230650860.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124231058876.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124231240505.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124231816529.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124232035449.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124232307588.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125001600696.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125002630022.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125004134370.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125123440945.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231125124811814.png">
 <meta property="article:published_time" content="2023-11-25T05:13:32.000Z">
 <meta property="article:modified_time" content="2024-01-11T12:01:10.247Z">
 <meta property="article:tag" content="ZJUCTF">
 <meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://47.96.29.144/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124171745428.png">
+<meta name="twitter:image" content="https://wing3e.github.io/2023/11/25/ZJUCTF-Pwn-Partial/image-20231124171745428.png">
   
     <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
   
@@ -209,7 +209,7 @@ mjx-container[display="true"] + br {
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/poetry/poeting">Home</a></li>
+							<li><a href="/">Home</a></li>
 				        
 							<li><a href="/archives">Archives</a></li>
 				        
@@ -309,7 +309,7 @@ mjx-container[display="true"] + br {
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/poetry/poeting">Home</a></li>
+					<li><a href="/">Home</a></li>
 		        
 					<li><a href="/archives">Archives</a></li>
 		        

@@ -12,30 +12,30 @@
   <meta name="description" content="引言： 2023第六届安洵杯网络安全挑战赛，Pwn方向部分题解。总共三题， 本文主要介绍前两题，Side Channel和Seccomp，考点包括Srop，栈迁移，侧信道攻击等。比赛时间11h还是很有限，做题的时候在一些莫名其妙的地方卡了很久，最后在学长的hint下艰难地搞出来呜呜呜...还是菜，继续练~">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2023-安洵杯-Pwn">
-<meta property="og:url" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/index.html">
+<meta property="og:url" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/index.html">
 <meta property="og:site_name" content="晚栀wingee~">
 <meta property="og:description" content="引言： 2023第六届安洵杯网络安全挑战赛，Pwn方向部分题解。总共三题， 本文主要介绍前两题，Side Channel和Seccomp，考点包括Srop，栈迁移，侧信道攻击等。比赛时间11h还是很有限，做题的时候在一些莫名其妙的地方卡了很久，最后在学长的hint下艰难地搞出来呜呜呜...还是菜，继续练~">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235107261.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235204264.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235603015.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235953255.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235627435.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224001054853.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224004352533.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224004610240.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224005627903.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224005656098.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224011159513.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224011335832.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/480b8c26497340e703f0eb61ade26c5.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231224013629508.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231223235107261.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231223235204264.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231223235603015.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231223235953255.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231223235627435.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224001054853.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224004352533.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224004610240.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224005627903.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224005656098.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224011159513.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224011335832.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/480b8c26497340e703f0eb61ade26c5.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231224013629508.png">
 <meta property="article:published_time" content="2023-12-23T15:48:21.000Z">
 <meta property="article:modified_time" content="2023-12-23T18:14:33.567Z">
 <meta property="article:tag" content="Pwn">
 <meta property="article:tag" content="安洵杯">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://47.96.29.144/2023/12/23/2023D0g3Pwn/image-20231223235107261.png">
+<meta name="twitter:image" content="https://wing3e.github.io/2023/12/23/2023D0g3Pwn/image-20231223235107261.png">
   
     <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
   
@@ -194,7 +194,7 @@ mjx-container[display="true"] + br {
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/poetry/poeting">Home</a></li>
+							<li><a href="/">Home</a></li>
 				        
 							<li><a href="/archives">Archives</a></li>
 				        
@@ -294,7 +294,7 @@ mjx-container[display="true"] + br {
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/poetry/poeting">Home</a></li>
+					<li><a href="/">Home</a></li>
 		        
 					<li><a href="/archives">Archives</a></li>
 		        

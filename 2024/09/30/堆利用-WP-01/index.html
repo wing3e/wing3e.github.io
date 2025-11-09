@@ -12,29 +12,29 @@
   <meta name="description" content="引言： 整理一下之前做过的堆题和考点，备忘一下~">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Heap Exploit [Updating~]">
-<meta property="og:url" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/index.html">
+<meta property="og:url" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/index.html">
 <meta property="og:site_name" content="晚栀wingee~">
 <meta property="og:description" content="引言： 整理一下之前做过的堆题和考点，备忘一下~">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172408669.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172548833.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172733614.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172936168.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180156109.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180442164.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180603097.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180651552.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930175917913.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930190528072.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930190904535.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930191037319.png">
-<meta property="og:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930191215840.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172408669.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172548833.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172733614.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172936168.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180156109.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180442164.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180603097.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930180651552.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930175917913.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930190528072.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930190904535.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930191037319.png">
+<meta property="og:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930191215840.png">
 <meta property="article:published_time" content="2024-09-30T09:16:58.000Z">
 <meta property="article:modified_time" content="2025-02-25T09:22:55.810Z">
 <meta property="article:tag" content="Pwn">
 <meta property="article:tag" content="堆利用">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://47.96.29.144/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172408669.png">
+<meta name="twitter:image" content="https://wing3e.github.io/2024/09/30/%E5%A0%86%E5%88%A9%E7%94%A8-WP-01/image-20240930172408669.png">
   
     <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
   
@@ -193,7 +193,7 @@ mjx-container[display="true"] + br {
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/poetry/poeting">Home</a></li>
+							<li><a href="/">Home</a></li>
 				        
 							<li><a href="/archives">Archives</a></li>
 				        
@@ -293,7 +293,7 @@ mjx-container[display="true"] + br {
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/poetry/poeting">Home</a></li>
+					<li><a href="/">Home</a></li>
 		        
 					<li><a href="/archives">Archives</a></li>
 		        

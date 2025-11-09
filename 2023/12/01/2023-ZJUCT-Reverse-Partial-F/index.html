@@ -12,45 +12,45 @@
   <meta name="description" content="引言: 2023年ZJUCTF-Pwn方向部分题题解，包含rev signin, ZJUdorm, if-else, verifier。因为时间分配的问题，大块时间给pwn和misc了，reverse部分做的题比较少。其中三道题都是算法逆向，一道控制流。做逆向感觉就是，一支笔一根烟一行代码逆一天（×）。很需要耐心，是真的努力的天才。有哪里写的不对的地方还请指出呜呜...">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2023-ZJUCTF-Reverse">
-<meta property="og:url" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/index.html">
+<meta property="og:url" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/index.html">
 <meta property="og:site_name" content="晚栀wingee~">
 <meta property="og:description" content="引言: 2023年ZJUCTF-Pwn方向部分题题解，包含rev signin, ZJUdorm, if-else, verifier。因为时间分配的问题，大块时间给pwn和misc了，reverse部分做的题比较少。其中三道题都是算法逆向，一道控制流。做逆向感觉就是，一支笔一根烟一行代码逆一天（×）。很需要耐心，是真的努力的天才。有哪里写的不对的地方还请指出呜呜...">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231127183734805.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231127183937691.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128214702776.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128214942161.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128220452273.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128220758297.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128221847939.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128222001450.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128222117258.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128223825453.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128224356034.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128231518065.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128231619361.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128231740939.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128233546484.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128233938956.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234031613.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234246448.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234556739.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234933460.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128235259635.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128235038399.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128235442881.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129002257507.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129015803032.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129015924272.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129020835990.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129021859411.png">
-<meta property="og:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129003829830.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231127183734805.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231127183937691.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128214702776.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128214942161.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128220452273.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128220758297.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128221847939.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128222001450.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128222117258.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128223825453.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128224356034.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128231518065.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128231619361.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128231740939.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128233546484.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128233938956.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234031613.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234246448.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234556739.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128234933460.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128235259635.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128235038399.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231128235442881.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129002257507.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129015803032.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129015924272.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129020835990.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129021859411.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231129003829830.png">
 <meta property="article:published_time" content="2023-11-30T17:46:16.000Z">
 <meta property="article:modified_time" content="2023-12-05T07:44:11.000Z">
 <meta property="article:tag" content="ZJUCTF">
 <meta property="article:tag" content="Reverse">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://47.96.29.144/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231127183734805.png">
+<meta name="twitter:image" content="https://wing3e.github.io/2023/12/01/2023-ZJUCT-Reverse-Partial-F/image-20231127183734805.png">
   
     <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
   
@@ -209,7 +209,7 @@ mjx-container[display="true"] + br {
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/poetry/poeting">Home</a></li>
+							<li><a href="/">Home</a></li>
 				        
 							<li><a href="/archives">Archives</a></li>
 				        
@@ -309,7 +309,7 @@ mjx-container[display="true"] + br {
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/poetry/poeting">Home</a></li>
+					<li><a href="/">Home</a></li>
 		        
 					<li><a href="/archives">Archives</a></li>
 		        

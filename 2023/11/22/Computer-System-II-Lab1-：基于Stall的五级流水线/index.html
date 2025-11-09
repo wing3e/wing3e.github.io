@@ -12,37 +12,37 @@
   <meta name="description" content="引言: 单周期CPU固然可以顺序，安全地执行指令，但不可否认的是会有大量时间的浪费。本实验将单周期CPU优化为基于stall的流水线CPU。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，并通过一些手段避免冲突，在安全执行指令的同时，大大提高CPU的运行效率。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Computer System II Lab1 ：基于Stall的五级流水线">
-<meta property="og:url" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/index.html">
+<meta property="og:url" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/index.html">
 <meta property="og:site_name" content="晚栀wingee~">
 <meta property="og:description" content="引言: 单周期CPU固然可以顺序，安全地执行指令，但不可否认的是会有大量时间的浪费。本实验将单周期CPU优化为基于stall的流水线CPU。通过IF，ID，EXE，MEM，WB，五个阶段分别完成对应的任务，并通过一些手段避免冲突，在安全执行指令的同时，大大提高CPU的运行效率。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/2.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/3.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/4.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/5.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/6.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/7.jpg">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/6.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/9.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/10.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/11.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/12.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/13.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/14.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/15.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/16.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/17.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/18.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/19.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/20.png">
-<meta property="og:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/21.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/2.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/3.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/4.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/5.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/6.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/7.jpg">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/6.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/9.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/10.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/11.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/12.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/13.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/14.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/15.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/16.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/17.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/18.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/19.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/20.png">
+<meta property="og:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/21.png">
 <meta property="article:published_time" content="2023-11-22T09:42:08.000Z">
 <meta property="article:modified_time" content="2023-12-21T11:10:13.266Z">
 <meta property="article:tag" content="计算机系统II">
 <meta property="article:tag" content="计算机体系结构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://47.96.29.144/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png">
+<meta name="twitter:image" content="https://wing3e.github.io/2023/11/22/Computer-System-II-Lab1-%EF%BC%9A%E5%9F%BA%E4%BA%8EStall%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF/1.png">
   
     <link rel="alternative" href="/atom.xml" title="晚栀wingee~" type="application/atom+xml">
   
@@ -201,7 +201,7 @@ mjx-container[display="true"] + br {
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/poetry/poeting">Home</a></li>
+							<li><a href="/">Home</a></li>
 				        
 							<li><a href="/archives">Archives</a></li>
 				        
@@ -301,7 +301,7 @@ mjx-container[display="true"] + br {
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/poetry/poeting">Home</a></li>
+					<li><a href="/">Home</a></li>
 		        
 					<li><a href="/archives">Archives</a></li>
 		        
